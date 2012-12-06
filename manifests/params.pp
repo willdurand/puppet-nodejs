@@ -13,4 +13,6 @@
 # It may be imported or inherited by other classes.
 #
 class nodejs::params {
+  $install_dir = '/usr/local/node'
+  $target_dir  = '/usr/local/bin'
 }

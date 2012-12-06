@@ -4,7 +4,8 @@ puppet-nodejs
 Installation
 ------------
 
-This module doesn't have any hard dependencies but you need `wget` installed.
+This module doesn't have any hard dependencies but you need:
+`python`, `g++`, `make`, `wget` and `tar` installed.
 
 Get the module:
 
