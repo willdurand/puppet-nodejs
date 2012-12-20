@@ -25,6 +25,8 @@ class nodejs (
   $with_npm   = true
 ) {
 
+  include nodejs::params
+
   $node_version = $version ? {
     'UNDEF' => 'latest',
     default => $version
@@ -35,7 +37,7 @@ class nodejs (
     default => $target_dir
   }
 
-  file { $::nodejs::install_dir:
+  file { $::nodejs::params::install_dir:
     ensure => directory,
     owner  => root,
     group  => root,
