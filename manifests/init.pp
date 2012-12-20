@@ -60,7 +60,7 @@ class nodejs (
     cwd       => $::nodejs::params::install_dir,
     user      => 'root',
     unless    => "test -f node-${node_version}.tar.gz",
-    require   => File[$::nodejs::install_dir],
+    require   => File[$::nodejs::params::install_dir],
   }
 
   exec { 'node-unpack':
