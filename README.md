@@ -1,6 +1,9 @@
 puppet-nodejs
 =============
 
+[![Build
+Status](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
+
 This module allows to install [Node.js](http://nodejs.org/) and
 [NPM](https://npmjs.org/).
 
