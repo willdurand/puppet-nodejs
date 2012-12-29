@@ -1,6 +1,10 @@
 puppet-nodejs
 =============
 
+This module allows to install [Node.js](http://nodejs.org/) and
+[NPM](https://npmjs.org/).
+
+
 Installation
 ------------
 
@@ -18,6 +22,28 @@ Usage
 Include the `nodejs` class:
 
     include nodejs
+
+You can specify a Node.js version by specifing it:
+
+    class { 'nodejs':
+      version => 'v0.8.0'
+    }
+
+By default, this module creates symlinks for each Node.js version installed into
+`/usr/local/bin`. You can change this behavior by using the `target_dir`
+parameter.
+
+Also, this module installs [NPM](https://npmjs.org/) by default. You can set the
+`with_npm` parameter to `false` to not install it.
+
+
+### NPM Provider
+
+This module adds a new provider: `npm`. You can use it as usual:
+
+    package { 'bower':
+      provider => npm
+    }
 
 
 Running the tests
