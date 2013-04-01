@@ -28,8 +28,15 @@ Include the `nodejs` class:
 
 You can specify a Node.js version by specifing it:
 
-    class { 'nodejs':
-      version => 'v0.8.0'
+    class { 'nodejs':
+      version => 'v0.8.0',
+    }
+
+You can install different versions of Node.js thanks to the `nodejs::install`
+definition:
+
+    nodejs::install { 'v0.7.0':
+      version => 'v0.7.0',
     }
 
 By default, this module creates symlinks for each Node.js version installed into
