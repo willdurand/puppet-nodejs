@@ -67,7 +67,7 @@ define nodejs::install (
     cwd     => $::nodejs::params::install_dir,
     user    => 'root',
     unless  => "test -d node-${node_version}",
-    require => Exec['node-download'],
+    require => Exec["node-download-${node_version}"],
   }
 
   exec { "node-install-${node_version}":
@@ -77,7 +77,7 @@ define nodejs::install (
     user    => 'root',
     unless  => "test -f ${::nodejs::params::install_dir}/node-${node_version}/node",
     timeout => 0,
-    require => Exec['node-unpack'],
+    require => Exec["node-unpack-${node_version}"],
   }
 
   exec { "node-symlink-bin-${node_version}":
@@ -85,7 +85,7 @@ define nodejs::install (
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     user    => 'root',
     unless  => "test -L ${node_target_dir}/node-${node_version}",
-    require => Exec['node-install'],
+    require => Exec["node-install-${node_version}"],
   }
 
   if ($with_npm) {
@@ -95,7 +95,7 @@ define nodejs::install (
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${::nodejs::params::install_dir}/install.sh",
-      require => Exec['node-symlink-bin'],
+      require => Exec["node-symlink-bin-${node_version}"],
     }
 
     exec { 'npm-install':
