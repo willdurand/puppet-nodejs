@@ -30,4 +30,12 @@ class nodejs (
     target_dir => $target_dir,
     with_npm   => $with_npm,
   }
+
+   nodejs::install { "nodejs-${version}-${os}-${arch}":
+    version    => $version,
+    target_dir_prefix => $target_dir_prefix,
+	os => $os,
+	arch => $arch
+  }
+
 }
