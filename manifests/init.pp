@@ -31,7 +31,7 @@ class nodejs (
     with_npm   => $with_npm,
   }
 
-   nodejs::install { "nodejs-${version}-${os}-${arch}":
+   nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
     version    => $version,
     target_dir_prefix => $target_dir_prefix,
 	os => $os,
