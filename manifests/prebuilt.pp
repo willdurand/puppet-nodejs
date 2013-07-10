@@ -56,16 +56,16 @@ define nodejs::prebuilt (
     mode   => '0644',
   }
 
-  $node_download_command = "wget http://nodejs.org/dist/${node_version}/node-${node_version}-${node_os}-${node_arch}.tar.gz"
-
-  $node_unpack_command = "tar -xzf node-v0.10.12-linux-x64.tar.gz -C ${node_target_dir_prefix} --strip-components=1"
+  $node_filename = "node-${node_version}-${node_os}-${node_arch}.tar.gz";
+  $node_download_command = "wget http://nodejs.org/dist/${node_version}/${node_filename}"
+  $node_unpack_command = "tar -xzf ${node_filename} -C ${node_target_dir_prefix} --strip-components=1"
 
   exec { "node-download-${node_version}-${node_os}-${node_arch}":
     command   => $node_download_command,
     path      => '/usr/bin:/bin:/usr/sbin:/sbin',
     cwd       => $::nodejs::params::install_dir,
     user      => 'root',
-    unless    => "test -f node-${node_version}-${node_os}-${node_arch}.tar.gz",
+    unless    => "test -f ${node_filename}",
     require   => File[$::nodejs::params::install_dir],
   }
 
