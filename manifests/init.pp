@@ -34,12 +34,11 @@ class nodejs (
   $version    = 'UNDEF',
   $target_dir = 'UNDEF',
   $with_npm   = true,
-  $build_from_source = true,
-  $target_dir_prefix = 'UNDEF'
+  $build_from_source = false,
+  $target_dir_prefix = 'UNDEF',
   $os = 'UNDEF',
   $arch = 'UNDEF'
 ) {
-
 
   if $build_from_source {
 

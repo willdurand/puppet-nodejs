@@ -30,7 +30,7 @@ define nodejs::prebuilt (
   include nodejs::params
 
   $node_version = $version ? {
-    'UNDEF' => 'v0.10.12',
+    'UNDEF' => 'v0.10.13',
     default => $version
   }
 
@@ -56,7 +56,7 @@ define nodejs::prebuilt (
     mode   => '0644',
   }
 
-  $node_filename = "node-${node_version}-${node_os}-${node_arch}.tar.gz";
+  $node_filename = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
   $node_download_command = "wget http://nodejs.org/dist/${node_version}/${node_filename}"
   $node_unpack_command = "tar -xzf ${node_filename} -C ${node_target_dir_prefix} --strip-components=1"
 
@@ -69,13 +69,29 @@ define nodejs::prebuilt (
     require   => File[$::nodejs::params::install_dir],
   }
 
+  ->
+
   exec { "node-unpack-${node_version}-${node_os}-${node_arch}":
     command => $node_unpack_command,
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     cwd     => $::nodejs::params::install_dir,
     user    => 'root',
-    unless  => "test -d node-${node_version}-${node_os}-${node_arch}",
-    require => Exec["node-download-${node_version}"],
+    unless  => "test -f /usr/local/bin/node",
+    require => Exec["node-download-${node_version}-${node_os}-${node_arch}"],
+  }
+
+  ->
+
+  file { "/usr/bin/node":
+    ensure  =>  "link",
+    target  =>  "/usr/local/bin/node"
+  }
+
+  ->
+
+  file { "/usr/bin/npm":
+    ensure  =>  "link",
+    target  =>  "/usr/local/bin/npm"
   }
 
 }
