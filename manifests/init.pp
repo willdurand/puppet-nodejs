@@ -42,30 +42,37 @@ $build_from_source = false,
 $target_dir_prefix = 'UNDEF',
 $os = 'UNDEF',
 $arch = 'UNDEF',
-$npm_modules = []
+$npm_modules = undef
 ) {
 
-if $build_from_source {
+  if $build_from_source {
 
-nodejs::install { "nodejs-${version}":
-  version    => $version,
-  target_dir => $target_dir,
-  with_npm   => $with_npm
-}
+    nodejs::install { "nodejs-${version}":
+      version    => $version,
+      target_dir => $target_dir,
+      with_npm   => $with_npm
+    }
 
-} else {
+  } else {
 
-nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
-  version           => $version,
-  target_dir_prefix => $target_dir_prefix,
-  os                => $os,
-  arch              => $arch
-}
+    nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
+      version           => $version,
+      target_dir_prefix => $target_dir_prefix,
+      os                => $os,
+      arch              => $arch
+    }
 
-}
+  }
 
-if $npm_modules {
-nodejs::npm { $npm_modules: }
-}
+  if $npm_modules != undef {
+
+    Package {
+    ensure    => 'installed',
+    provider  => 'npm'
+    }
+
+    package { $npm_modules: }
+
+  }
 
 }
