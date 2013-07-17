@@ -22,41 +22,50 @@
 #
 # [*arch*]
 #   For prebuilt installation, Architecture type: x86, x64
+
+# [*npm_modules*]
+#   An array of modules to npm install globally
 # == Example:
 #
 #  include nodejs
 #
 #  class { 'nodejs':
-#    version => 'v0.8.0',
+#    version     => 'v0.8.0',
+#    npm_modules => ['forever', 'stuff']
 #  }
 #
 class nodejs (
-  $version    = 'UNDEF',
-  $target_dir = 'UNDEF',
-  $with_npm   = true,
-  $build_from_source = false,
-  $target_dir_prefix = 'UNDEF',
-  $os = 'UNDEF',
-  $arch = 'UNDEF'
+$version    = 'UNDEF',
+$target_dir = 'UNDEF',
+$with_npm   = true,
+$build_from_source = false,
+$target_dir_prefix = 'UNDEF',
+$os = 'UNDEF',
+$arch = 'UNDEF',
+$npm_modules = []
 ) {
 
-  if $build_from_source {
+if $build_from_source {
 
-    nodejs::install { "nodejs-${version}":
-      version    => $version,
-      target_dir => $target_dir,
-      with_npm   => $with_npm
-    }
+nodejs::install { "nodejs-${version}":
+  version    => $version,
+  target_dir => $target_dir,
+  with_npm   => $with_npm
+}
 
-  } else {
+} else {
 
-    nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
-      version           => $version,
-      target_dir_prefix => $target_dir_prefix,
-      os                => $os,
-      arch              => $arch
-    }
+nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
+  version           => $version,
+  target_dir_prefix => $target_dir_prefix,
+  os                => $os,
+  arch              => $arch
+}
 
-  }
+}
+
+if $npm_modules {
+nodejs::npm { $npm_modules: }
+}
 
 }
