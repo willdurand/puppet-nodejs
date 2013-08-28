@@ -5,15 +5,20 @@ puppet-nodejs
 Status](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
 
 This module allows to install [Node.js](http://nodejs.org/) and
-[NPM](https://npmjs.org/).
+[NPM](https://npmjs.org/). This module is published on the Puppet Forge as
+[willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
 
 
 Installation
 ------------
 
-Get the module:
+Get the module by cloning the repository:
 
     git clone git://github.com/willdurand/puppet-nodejs.git modules/nodejs
+
+Or use the Puppet Module Tool:
+
+    puppet module install willdurand/nodejs
 
 
 Usage
