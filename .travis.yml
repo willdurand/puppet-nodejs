@@ -6,11 +6,7 @@ rvm:
 env:
   - PUPPET_VERSION=2.7.20
   - PUPPET_VERSION=3.0.1
-
-matrix:
-  include:
-    - rvm: 1.8.7
-      env: PUPPET_VERSION=2.6.3
+  - PUPPET_VERSION=3.2.2
 
 script:
   - "rake lint"
