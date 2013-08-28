@@ -11,9 +11,6 @@ This module allows to install [Node.js](http://nodejs.org/) and
 Installation
 ------------
 
-This module doesn't have any hard dependencies but you need:
-`python`, `g++`, `make`, `wget` and `tar` installed.
-
 Get the module:
 
     git clone git://github.com/willdurand/puppet-nodejs.git modules/nodejs
