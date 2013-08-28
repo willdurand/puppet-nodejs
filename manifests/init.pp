@@ -35,13 +35,13 @@
 #  }
 #
 class nodejs (
-$version    = 'UNDEF',
-$target_dir = 'UNDEF',
+$version    = undef,
+$target_dir = undef,
 $with_npm   = true,
 $build_from_source = false,
-$target_dir_prefix = 'UNDEF',
-$os = 'UNDEF',
-$arch = 'UNDEF',
+$target_dir_prefix = undef,
+$os = undef,
+$arch = undef,
 $npm_modules = undef
 ) {
 
@@ -67,8 +67,8 @@ $npm_modules = undef
   if $npm_modules != undef {
 
     Package {
-    ensure    => 'installed',
-    provider  => 'npm'
+      ensure    => 'installed',
+      provider  => 'npm'
     }
 
     package { $npm_modules: }

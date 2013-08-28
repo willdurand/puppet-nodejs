@@ -3,7 +3,7 @@
 # == Parameters:
 #
 # [*version*]
-#   The NodeJS version ('vX.Y.Z' or 'latest').
+#   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
 #
 # [*target_dir*]
 #   Where to install the executables.
@@ -13,25 +13,26 @@
 #
 # == Example:
 #
-#  nodejs::install { 'v0.8.0':
-#    version => 'v0.8.0',
+#  nodejs::install { 'v0.10.17':
+#    version => 'v0.10.17',
 #  }
 #
 define nodejs::install (
-  $version    = 'UNDEF',
-  $target_dir = 'UNDEF',
+  $version    = undef,
+  $target_dir = undef,
   $with_npm   = true
 ) {
 
   include nodejs::params
 
   $node_version = $version ? {
-    'UNDEF' => 'latest',
-    default => $version
+    undef     => 'latest',
+    'stable'  => $::node_version_stable,
+    default   => $version
   }
 
   $node_target_dir = $target_dir ? {
-    'UNDEF' => $::nodejs::params::target_dir,
+    undef   => $::nodejs::params::target_dir,
     default => $target_dir
   }
 

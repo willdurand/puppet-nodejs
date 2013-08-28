@@ -3,7 +3,7 @@
 # == Parameters:
 #
 # [*version*]
-#   The NodeJS version ('vX.Y.Z' or 'latest').
+#   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
 #
 # [*node_target_dir_prefix*]
 #   # For prebuilt installation, where to prefix the file extraction
@@ -16,36 +16,37 @@
 #
 # == Example:
 #
-#  nodejs::prebuilt { 'v0.10.12':
-#    version => 'v0.10.12',
+#  nodejs::prebuilt { 'v0.10.17':
+#    version => 'v0.10.17',
 #  }
 #
 define nodejs::prebuilt (
-  $version    = 'UNDEF',
-  $target_dir_prefix = 'UNDEF',
-  $os = 'UNDEF',
-  $arch = 'UNDEF'
+  $version = undef,
+  $target_dir_prefix = undef,
+  $os = undef,
+  $arch = undef
 ) {
 
   include nodejs::params
 
   $node_version = $version ? {
-    'UNDEF' => 'v0.10.13',
-    default => $version
+    undef     => 'latest',
+    'stable'  => $::node_version_stable,
+    default   => $version
   }
 
   $node_target_dir_prefix = $target_dir_prefix ? {
-    'UNDEF' => $::nodejs::params::prebuilt_dir_prefix,
+    undef   => $::nodejs::params::prebuilt_dir_prefix,
     default => $::nodejs::params::prebuilt_dir_prefix
   }
 
   $node_os = $os ? {
-    'UNDEF' => $::nodejs::params::os,
+    undef   => $::nodejs::params::os,
     default => $os
   }
 
   $node_arch = $os ? {
-    'UNDEF' => $::nodejs::params::arch,
+    undef   => $::nodejs::params::arch,
     default => $arch
   }
 
