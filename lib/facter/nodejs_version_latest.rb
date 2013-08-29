@@ -1,4 +1,3 @@
-require 'logger'
 require 'net/http'
 
 class Version < Array
@@ -17,7 +16,7 @@ class Version < Array
 end
 
 # inspired by https://github.com/visionmedia/n/blob/5630984059fb58f47def8dca2f25163456181ed3/bin/n#L363-L372
-Facter.add("node_version_latest") do
+Facter.add("nodejs_version_latest") do
   setcode do
     uri = URI('http://nodejs.org/dist/')
     res = Net::HTTP.get(uri)

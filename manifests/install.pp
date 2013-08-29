@@ -26,8 +26,9 @@ define nodejs::install (
   include nodejs::params
 
   $node_version = $version ? {
-    undef     => 'latest',
-    'stable'  => $::node_version_stable,
+    undef     => $::nodejs_version_latest,
+    'stable'  => $::nodejs_version_stable,
+    'latest'  => $::nodejs_version_latest,
     default   => $version
   }
 
