@@ -37,7 +37,7 @@ define nodejs::install (
     default => $target_dir
   }
 
-  ensure_packages([ 'python', 'g++', 'make', 'wget', 'tar' ])
+  ensure_packages([ 'python', 'g++', 'make', 'wget', 'tar', 'curl' ])
 
   file { $::nodejs::params::install_dir:
     ensure => directory,
