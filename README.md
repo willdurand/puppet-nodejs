@@ -57,6 +57,12 @@ Shortcuts are provided to easily install the 'latest' or 'stable' release by
 setting the `version` parameter to `latest` or `stable`. It will
 automatically look for the last release available.
 
+```puppet
+class { 'nodejs':
+  version => 'stable',
+}
+```
+
 By default, this module creates symlinks for each Node.js version installed into
 `/usr/local/bin`. You can change this behavior by using the `target_dir`
 parameter.
