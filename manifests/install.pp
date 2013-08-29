@@ -37,6 +37,8 @@ define nodejs::install (
     default => $target_dir
   }
 
+  ensure_packages([ 'python', 'g++', 'make', 'wget', 'tar' ])
+
   file { $::nodejs::params::install_dir:
     ensure => directory,
     owner  => root,
