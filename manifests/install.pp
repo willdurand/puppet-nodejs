@@ -11,16 +11,24 @@
 # [*with_npm*]
 #   Whether to install NPM.
 #
+# [*make_install*]
+#   If false, will install from nodejs.org binary distributions.
+#
 # == Example:
 #
-#  nodejs::install { 'v0.10.17':
+#  class { 'nodejs':
 #    version => 'v0.10.17',
 #  }
 #
+#  nodejs::install { 'v0.10.17':
+#    version => 'v0.10.17'
+#  }
+#
 define nodejs::install (
-  $version    = undef,
-  $target_dir = undef,
-  $with_npm   = true
+  $version      = undef,
+  $target_dir   = undef,
+  $with_npm     = true,
+  $make_install = true,
 ) {
 
   include nodejs::params
@@ -39,98 +47,120 @@ define nodejs::install (
 
   ensure_packages([ 'python', 'g++', 'make', 'wget', 'tar', 'curl' ])
 
-  file { $::nodejs::params::install_dir:
+  $node_os = $::kernel ? {
+    /(?i)(darwin)/  => 'darwin',
+    /(?i)(linux)/   => 'linux',
+    default         => 'linux',
+  }
+
+  $node_arch = $::hardwaremodel ? {
+    /.*64.*/ => 'x64',
+    default  => 'x86',
+  }
+
+  if $make_install {
+    $node_filename        = "node-${node_version}.tar.gz"
+    $node_extract_folder  = "${::nodejs::params::install_dir}/node-${node_version}"
+    $node_fqv             = "${node_version}"
+    $node_symlink_target  = "${node_extract_folder}/node"
+    $message              = "Installing Node.js ${node_version}"
+  } else {
+    $node_filename        = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
+    $node_extract_folder  = "${::nodejs::params::install_dir}/node-${node_version}-${node_os}-${node_arch}"
+    $node_fqv             = "${node_version}-${node_os}-${node_arch}"
+    $node_symlink_target  = "${node_extract_folder}/bin/node"
+    $message              = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
+  }
+
+  $node_symlink = "${node_target_dir}/node"
+
+  notify { "nodejs-start-message-${version}":
+    message => $message,
+  }
+  -> file { "nodejs-install-dir-${version}":
     ensure => directory,
+    path   => $::nodejs::params::install_dir,
     owner  => root,
     group  => root,
     mode   => '0644',
   }
-
-  $node_filename = "node-${node_version}.tar.gz"
-  $node_download_command = "wget http://nodejs.org/dist/${node_version}/${node_filename}"
-  $node_unpack_command = "tar xzvf ${node_filename}"
-
-  exec { "node-download-${node_version}":
-    command   => $node_download_command,
+  -> exec { "nodejs-download-${version}":
+    command   => "wget http://nodejs.org/dist/${node_version}/${node_filename}",
     path      => '/usr/bin:/bin:/usr/sbin:/sbin',
     cwd       => $::nodejs::params::install_dir,
     user      => 'root',
     unless    => "test -f ${node_filename}",
-    require   => File[$::nodejs::params::install_dir],
   }
-
-  file { "${::nodejs::params::install_dir}/${node_filename}":
+  -> file { "nodejs-check-tar-${version}":
     ensure  => file,
+    path    => "${::nodejs::params::install_dir}/${node_filename}",
     owner   => root,
     group   => root,
     mode    => '0644',
-    require => Exec["node-download-${node_version}"];
   }
-
-  exec { "node-unpack-${node_version}":
-    command => $node_unpack_command,
+  -> exec { "nodejs-unpack-${version}":
+    command => "tar xzvf ${node_filename}",
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
     cwd     => $::nodejs::params::install_dir,
     user    => 'root',
-    unless  => "test -d node-${node_version}",
-    require => File["${::nodejs::params::install_dir}/${node_filename}"],
+    unless  => "test -d ${node_extract_folder}",
   }
-
-  file { "${::nodejs::params::install_dir}/node-${node_version}":
+  -> file { "nodejs-check-extract-${version}":
     ensure  => directory,
+    path    => "${node_extract_folder}",
     owner   => root,
     group   => root,
     mode    => '0755',
-    require => Exec["node-unpack-${node_version}"],
   }
 
-  exec { "node-install-${node_version}":
-    command => 'python configure && make install',
+  if $make_install {
+
+    exec { "nodejs-make-install-${version}":
+      command => 'python configure && make install',
+      path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+      cwd     => "${node_extract_folder}",
+      user    => 'root',
+      unless  => "test -f ${node_symlink_target}",
+      timeout => 0,
+      require => File["nodejs-check-extract-${version}"],
+      before  => Exec["nodejs-symlink-bin-${version}"],
+    }
+
+  }
+
+  exec { "nodejs-symlink-bin-${version}":
+    command => "ln -f -s ${node_symlink_target} ${node_symlink}",
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    cwd     => "${::nodejs::params::install_dir}/node-${node_version}",
     user    => 'root',
-    unless  => "test -f ${::nodejs::params::install_dir}/node-${node_version}/node",
-    timeout => 0,
-    require => File["${::nodejs::params::install_dir}/node-${node_version}"],
+    require => File["nodejs-check-extract-${version}"],
   }
-
-  exec { "node-symlink-bin-${node_version}":
-    command => "ln -f -s ${::nodejs::params::install_dir}/node-${node_version}/node ${node_target_dir}/node",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    user    => 'root',
-    require => Exec["node-install-${node_version}"],
-  }
-
-  file { "${node_target_dir}/node":
+  -> file { "nodejs-check-symlink-${version}":
     ensure  => link,
-    target  => "${::nodejs::params::install_dir}/node-${node_version}/node",
-    require => Exec["node-symlink-bin-${node_version}"]
+    path    => "${node_symlink}",
+    target  => "${node_symlink_target}",
   }
 
   if ($with_npm) {
 
-    exec { 'npm-download':
+    exec { "npm-download-${version}":
       command => 'wget --no-check-certificate https://npmjs.org/install.sh',
       path    => '/usr/bin:/bin:/usr/sbin:/sbin',
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${::nodejs::params::install_dir}/install.sh",
-      require => Exec["node-symlink-bin-${node_version}"],
+      require => File["nodejs-check-symlink-${version}"],
     }
-
-    exec { 'npm-install':
+    -> exec { "npm-install-${version}":
       command     => 'sh install.sh',
       path        => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
       cwd         => $::nodejs::params::install_dir,
       user        => 'root',
-      require     => Exec['npm-download'],
       environment => 'clean=yes',
       unless      => 'which npm',
     }
-
-    file { "${node_target_dir}/npm":
+    -> file { "npm-symlink-${version}":
       ensure  => link,
-      require => Exec["npm-install"],
+      path    => "${node_target_dir}/npm",
     }
 
   }

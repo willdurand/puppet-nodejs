@@ -12,7 +12,7 @@
 #   Whether to install NPM.
 #
 # [*make_install*]
-#   If false, will install from nodejs.org binary distributions
+#   If false, will install from nodejs.org binary distributions.
 #
 # == Example:
 #
@@ -26,25 +26,14 @@ class nodejs (
   $version      = undef,
   $target_dir   = undef,
   $with_npm     = true,
-  $make_install = false,
+  $make_install = true,
 ) {
 
-  if $make_install {
-
-    nodejs::install { "nodejs-${version}":
-      version    => $version,
-      target_dir => $target_dir,
-      with_npm   => $with_npm
-    }
-
-  } else {
-
-    nodejs::prebuilt { "nodejs-${version}":
-      version    => $version,
-      target_dir => $target_dir,
-      with_npm   => $with_npm
-    }
-
+  nodejs::install { "nodejs-${version}":
+    version       => $version,
+    target_dir    => $target_dir,
+    with_npm      => $with_npm,
+    make_install  => $make_install,
   }
 
 }
