@@ -21,25 +21,47 @@ Or use the Puppet Module Tool:
     puppet module install willdurand/nodejs
 
 
+### Dependencies
+
+If you `git clone` this module, take care to
+`git clone https://github.com/puppetlabs/puppetlabs-stdlib` too.
+
+
 Usage
 -----
 
 Include the `nodejs` class:
 
-    include nodejs
+```puppet
+include nodejs
+```
 
 You can specify a Node.js version by specifing it:
 
-    class { 'nodejs':
-      version => 'v0.8.0',
-    }
+```puppet
+class { 'nodejs':
+  version => 'v0.10.17',
+}
+```
 
 You can install different versions of Node.js thanks to the `nodejs::install`
 definition:
 
-    nodejs::install { 'v0.7.0':
-      version => 'v0.7.0',
-    }
+```puppet
+nodejs::install { 'v0.10.17':
+  version => 'v0.10.17',
+}
+```
+
+Shortcuts are provided to easily install the 'latest' or 'stable' release by
+setting the `version` parameter to `latest` or `stable`. It will
+automatically look for the last release available.
+
+```puppet
+class { 'nodejs':
+  version => 'stable',
+}
+```
 
 By default, this module creates symlinks for each Node.js version installed into
 `/usr/local/bin`. You can change this behavior by using the `target_dir`
@@ -48,14 +70,36 @@ parameter.
 Also, this module installs [NPM](https://npmjs.org/) by default. You can set the
 `with_npm` parameter to `false` to not install it.
 
+This module will `make install` Node.js by default, to use prebuilt versions
+distributed by Node.js on http://nodejs.org/dist/ set the `make_install`
+parameter to `false`.
+
+```puppet
+class { 'nodejs':
+  version => 'v0.10.17',
+  make_install => false,
+}
+```
+
+or
+
+```puppet
+nodejs::install { 'v0.10.17':
+  version => 'v0.10.17',
+  make_install => false,
+}
+```
+
 
 ### NPM Provider
 
 This module adds a new provider: `npm`. You can use it as usual:
 
-    package { 'bower':
-      provider => npm
-    }
+```puppet
+package { 'express':
+  provider => npm
+}
+```
 
 
 Running the tests

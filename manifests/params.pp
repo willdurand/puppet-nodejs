@@ -16,3 +16,4 @@ class nodejs::params {
   $install_dir = '/usr/local/node'
   $target_dir  = '/usr/local/bin'
 }
+
