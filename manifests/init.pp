@@ -3,7 +3,7 @@
 # == Parameters:
 #
 # [*version*]
-#   The NodeJS version ('vX.Y.Z' or 'latest').
+#   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
 #
 # [*target_dir*]
 #   Where to install the executables.
@@ -11,41 +11,25 @@
 # [*with_npm*]
 #   Whether to install NPM.
 #
-# [*build_from_source*]
+# [*make_install*]
 #   If false, will install from nodejs.org binary distributions
 #
-# [*node_target_dir_prefix*]
-#   For prebuilt installation, where to prefix the file extraction
-#
-# [*os*]
-#   For prebuilt installation, OS type: linux, sunos, darwin
-#
-# [*arch*]
-#   For prebuilt installation, Architecture type: x86, x64
-
-# [*npm_modules*]
-#   An array of modules to npm install globally
 # == Example:
 #
 #  include nodejs
 #
 #  class { 'nodejs':
-#    version     => 'v0.8.0',
-#    npm_modules => ['forever', 'stuff']
+#    version  => 'v0.10.17'
 #  }
 #
 class nodejs (
-$version    = undef,
-$target_dir = undef,
-$with_npm   = true,
-$build_from_source = false,
-$target_dir_prefix = undef,
-$os = undef,
-$arch = undef,
-$npm_modules = undef
+  $version      = undef,
+  $target_dir   = undef,
+  $with_npm     = true,
+  $make_install = false,
 ) {
 
-  if $build_from_source {
+  if $make_install {
 
     nodejs::install { "nodejs-${version}":
       version    => $version,
@@ -55,23 +39,11 @@ $npm_modules = undef
 
   } else {
 
-    nodejs::prebuilt { "nodejs-${version}-${os}-${arch}":
-      version           => $version,
-      target_dir_prefix => $target_dir_prefix,
-      os                => $os,
-      arch              => $arch
+    nodejs::prebuilt { "nodejs-${version}":
+      version    => $version,
+      target_dir => $target_dir,
+      with_npm   => $with_npm
     }
-
-  }
-
-  if $npm_modules != undef {
-
-    Package {
-      ensure    => 'installed',
-      provider  => 'npm'
-    }
-
-    package { $npm_modules: }
 
   }
 

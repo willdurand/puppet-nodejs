@@ -13,15 +13,6 @@
 # It may be imported or inherited by other classes.
 #
 class nodejs::params {
-  # linux, sunos, darwin
-  $os = 'linux'
-
-  # x86, x64
-  $arch = 'x64'
-
-  # For prebuilt installation, where to prefix the file extraction
-  $prebuilt_dir_prefix = '/usr/local/'
-
   $install_dir = '/usr/local/node'
   $target_dir  = '/usr/local/bin'
 }
