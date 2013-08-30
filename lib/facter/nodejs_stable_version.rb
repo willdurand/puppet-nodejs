@@ -16,7 +16,7 @@ class Version < Array
 end
 
 # inspired by https://github.com/visionmedia/n/blob/5630984059fb58f47def8dca2f25163456181ed3/bin/n#L374-L383
-Facter.add("nodejs_version_stable") do
+Facter.add("nodejs_stable_version") do
   setcode do
     uri = URI('http://nodejs.org/dist/')
     res = Net::HTTP.get(uri)

@@ -35,5 +35,4 @@ class nodejs (
     with_npm      => $with_npm,
     make_install  => $make_install,
   }
-
 }

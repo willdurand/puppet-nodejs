@@ -2,33 +2,45 @@ require 'spec_helper'
 
 describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
+  let(:facts) {{
+    :nodejs_stable_version => 'stable'
+  }}
 
-  it { should contain_file('/usr/local/node').with_ensure('directory') }
+  it { should contain_file('nodejs-install-dir-stable').with_ensure('directory') }
 
-  it { should contain_exec('nodejs-download-latest') \
-    .with_command('wget http://nodejs.org/dist/node-latest.tar.gz') \
+  it { should contain_exec('nodejs-download-stable') \
+    .with_command('wget http://nodejs.org/dist/stable/node-stable.tar.gz') \
     .with_cwd('/usr/local/node') \
-    .with_unless('test -f node-latest.tar.gz')
+    .with_unless('test -f node-stable.tar.gz')
   }
 
-  it { should contain_exec('nodejs-unpack-latest') \
-    .with_command('tar xzvf node-latest.tar.gz && mv `ls -rd node-v*` node-latest') \
+  it { should contain_file('nodejs-check-tar-stable') \
+    .with_ensure('file') \
+    .with_path('/usr/local/node/node-stable.tar.gz')
+  }
+
+  it { should contain_exec('nodejs-unpack-stable') \
+    .with_command('tar xzvf node-stable.tar.gz') \
     .with_cwd('/usr/local/node') \
-    .with_unless('test -d node-latest')
+    .with_unless('test -d /usr/local/node/node-stable')
   }
 
-  it { should contain_exec('nodejs-install-latest') \
-    .with_cwd('/usr/local/node/node-latest') \
-    .with_unless('test -f /usr/local/node/node-latest/node')
+  it { should contain_file('nodejs-check-extract-stable') \
+    .with_ensure('directory') \
+    .with_path('/usr/local/node/node-stable')
   }
 
-  it { should contain_exec('nodejs-symlink-bin-latest') \
-    .with_command('ln -s /usr/local/node/node-latest/node /usr/local/bin/node') \
-    .with_unless('test -L /usr/local/bin/node')
+  it { should contain_exec('nodejs-make-install-stable') \
+    .with_cwd('/usr/local/node/node-stable') \
+    .with_unless('test -f /usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('nodejs-download') }
-  it { should contain_exec('nodejs-install') }
+  it { should contain_exec('nodejs-symlink-bin-stable') \
+    .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node')
+  }
+
+  it { should contain_exec('npm-download-stable') }
+  it { should contain_exec('npm-install-stable') }
 
   describe 'with a given version' do
     let(:params) {{ :version => 'v0.8.0' }}
@@ -39,36 +51,47 @@ describe 'nodejs', :type => :class do
       .with_unless('test -f node-v0.8.0.tar.gz')
     }
 
+    it { should contain_file('nodejs-check-tar-v0.8.0') \
+      .with_ensure('file') \
+      .with_path('/usr/local/node/node-v0.8.0.tar.gz')
+    }
+
     it { should contain_exec('nodejs-unpack-v0.8.0') \
       .with_command('tar xzvf node-v0.8.0.tar.gz') \
       .with_cwd('/usr/local/node') \
-      .with_unless('test -d node-v0.8.0')
+      .with_unless('test -d /usr/local/node/node-v0.8.0')
     }
 
-    it { should contain_exec('nodejs-install-v0.8.0') \
+    it { should contain_file('nodejs-check-extract-v0.8.0') \
+      .with_ensure('directory') \
+      .with_path('/usr/local/node/node-v0.8.0')
+    }
+
+    it { should contain_exec('nodejs-make-install-v0.8.0') \
       .with_cwd('/usr/local/node/node-v0.8.0') \
       .with_unless('test -f /usr/local/node/node-v0.8.0/node')
     }
 
     it { should contain_exec('nodejs-symlink-bin-v0.8.0') \
-      .with_command('ln -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node') \
-      .with_unless('test -L /usr/local/bin/node')
+      .with_command('ln -f -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node')
     }
+
+    it { should contain_exec('npm-download-v0.8.0') }
+    it { should contain_exec('npm-install-v0.8.0') }
   end
 
   describe 'with a given target_dir' do
     let(:params) {{ :target_dir => '/bin' }}
 
-    it { should contain_exec('nodejs-symlink-bin-latest') \
-      .with_command('ln -s /usr/local/node/node-latest/node /bin/node') \
-      .with_unless('test -L /bin/node')
+    it { should contain_exec('nodejs-symlink-bin-stable') \
+      .with_command('ln -f -s /usr/local/node/node-stable/node /bin/node')
     }
   end
 
   describe 'without NPM' do
     let(:params) {{ :with_npm => false }}
 
-    it { should_not contain_exec('nodejs-download') }
-    it { should_not contain_exec('nodejs-install') }
+    it { should_not contain_exec('npm-download-stable') }
+    it { should_not contain_exec('npm-install-stable') }
   end
 end
