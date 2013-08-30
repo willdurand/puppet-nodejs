@@ -6,7 +6,10 @@ describe 'nodejs', :type => :class do
     :nodejs_stable_version => 'stable'
   }}
 
-  it { should contain_file('nodejs-install-dir-stable').with_ensure('directory') }
+  it { should contain_file('nodejs-install-dir-stable') \
+    .with_ensure('directory') \
+    .with_path('/usr/local/node')
+  }
 
   it { should contain_exec('nodejs-download-stable') \
     .with_command('wget http://nodejs.org/dist/stable/node-stable.tar.gz') \
@@ -25,18 +28,29 @@ describe 'nodejs', :type => :class do
     .with_unless('test -d /usr/local/node/node-stable')
   }
 
-  it { should contain_file('nodejs-check-extract-stable') \
+  it { should contain_file('nodejs-check-unpack-stable') \
     .with_ensure('directory') \
     .with_path('/usr/local/node/node-stable')
   }
 
   it { should contain_exec('nodejs-make-install-stable') \
+    .with_command('python configure && make install') \
     .with_cwd('/usr/local/node/node-stable') \
     .with_unless('test -f /usr/local/node/node-stable/node')
   }
 
   it { should contain_exec('nodejs-symlink-bin-stable') \
     .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node')
+  }
+
+  it { should contain_file('nodejs-check-symlink-stable') \
+    .with_ensure('link') \
+    .with_path('/usr/local/bin/node') \
+    .with_target('/usr/local/node/node-stable/node')
+  }
+
+  it { should contain_exec('nodejs-symlink-bin-with-version-stable') \
+    .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node-stable')
   }
 
   it { should contain_exec('npm-download-stable') }
@@ -62,7 +76,7 @@ describe 'nodejs', :type => :class do
       .with_unless('test -d /usr/local/node/node-v0.8.0')
     }
 
-    it { should contain_file('nodejs-check-extract-v0.8.0') \
+    it { should contain_file('nodejs-check-unpack-v0.8.0') \
       .with_ensure('directory') \
       .with_path('/usr/local/node/node-v0.8.0')
     }
@@ -74,6 +88,16 @@ describe 'nodejs', :type => :class do
 
     it { should contain_exec('nodejs-symlink-bin-v0.8.0') \
       .with_command('ln -f -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node')
+    }
+
+    it { should contain_file('nodejs-check-symlink-v0.8.0') \
+      .with_ensure('link') \
+      .with_target('/usr/local/node/node-v0.8.0/node') \
+      .with_path('/usr/local/bin/node')
+    }
+
+    it { should contain_exec('nodejs-symlink-bin-with-version-v0.8.0') \
+      .with_command('ln -f -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node-v0.8.0')
     }
 
     it { should contain_exec('npm-download-v0.8.0') }
@@ -93,5 +117,11 @@ describe 'nodejs', :type => :class do
 
     it { should_not contain_exec('npm-download-stable') }
     it { should_not contain_exec('npm-install-stable') }
+  end
+
+  describe 'with make_install = false' do
+    let(:params) {{ :make_install => false }}
+
+    it { should_not contain_exec('nodejs-make-install-stable') }
   end
 end

@@ -25,7 +25,7 @@ describe 'nodejs::install', :type => :define do
     .with_unless('test -d /usr/local/node/node-stable')
   }
 
-  it { should contain_file('nodejs-check-extract-stable') \
+  it { should contain_file('nodejs-check-unpack-stable') \
     .with_ensure('directory') \
     .with_path('/usr/local/node/node-stable')
   }
