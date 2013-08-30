@@ -21,10 +21,14 @@ Or use the Puppet Module Tool:
     puppet module install willdurand/nodejs
 
 
-### Dependencies
+Requirements
+------------
 
-If you `git clone` this module, take care to
-`git clone https://github.com/puppetlabs/puppetlabs-stdlib` too.
+This modules depends on
+[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib). You MUST
+clone it if you don't use the Puppet Module Tool:
+
+    git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
 
 
 Usage
@@ -111,7 +115,7 @@ Install the dependencies using [Bundler](http://gembundler.com):
 
 Run the following command:
 
-    BUNDLE_GEMFILE=.gemfile bundle exec rake spec
+    BUNDLE_GEMFILE=.gemfile bundle exec rake test
 
 
 License
