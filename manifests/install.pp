@@ -56,7 +56,7 @@ define nodejs::install (
     default  => 'x86',
   }
 
-  ensure_packages([ 'wget', 'tar' ])
+  ensure_packages([ 'wget', 'tar', 'curl' ])
 
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
