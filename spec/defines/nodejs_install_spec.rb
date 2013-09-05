@@ -35,8 +35,10 @@ describe 'nodejs::install', :type => :define do
     .with_unless('test -f /usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('nodejs-symlink-bin-stable') \
-    .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node')
+  it { should contain_file('nodejs-symlink-bin-stable') \
+    .with_ensure('link') \
+    .with_path('/usr/local/bin/node') \
+    .with_target('/usr/local/node/node-stable/node')
   }
 
   it { should contain_exec('npm-download-stable') }
