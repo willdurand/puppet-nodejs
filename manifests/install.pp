@@ -74,10 +74,6 @@ define nodejs::install (
 
   $node_symlink = "${node_target_dir}/node"
 
-  notify { "nodejs-start-message-${node_version}":
-    message => $message,
-  }
-
   ensure_resource('file', "nodejs-install-dir-${node_version}", {
     ensure => 'directory',
     path   => $::nodejs::params::install_dir,
@@ -133,29 +129,20 @@ define nodejs::install (
       unless  => "test -f ${node_symlink_target}",
       timeout => 0,
       require => File["nodejs-check-unpack-${node_version}"],
-      before  => Exec["nodejs-symlink-bin-${node_version}"],
+      before  => File["nodejs-symlink-bin-${node_version}"],
     }
   }
 
-  exec { "nodejs-symlink-bin-${node_version}":
-    command => "ln -f -s ${node_symlink_target} ${node_symlink}",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    user    => 'root',
-    require => File["nodejs-check-unpack-${node_version}"],
-  }
-
-  file { "nodejs-check-symlink-${node_version}":
+  file { "nodejs-symlink-bin-${node_version}":
     ensure  => 'link',
     path    => $node_symlink,
     target  => $node_symlink_target,
-    require => Exec["nodejs-symlink-bin-${node_version}"],
   }
 
-  exec { "nodejs-symlink-bin-with-version-${node_version}":
-    command => "ln -f -s ${node_symlink_target} ${node_symlink}-${node_version}",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    user    => 'root',
-    require => File["nodejs-check-unpack-${node_version}"],
+  file { "nodejs-symlink-bin-with-version-${node_version}":
+    ensure  => 'link',
+    path    => "${node_symlink}-${node_version}",
+    target  => $node_symlink_target,
   }
 
   if ($with_npm) {
@@ -165,7 +152,7 @@ define nodejs::install (
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${::nodejs::params::install_dir}/install.sh",
-      require => File["nodejs-check-symlink-${node_version}"],
+      require => File["nodejs-symlink-bin-${node_version}"]
     }
 
     exec { "npm-install-${node_version}":
