@@ -152,7 +152,7 @@ define nodejs::install (
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${::nodejs::params::install_dir}/install.sh",
-      require => File["nodejs-check-symlink-${node_version}"],
+      require => File["nodejs-symlink-bin-${node_version}"]
     }
 
     exec { "npm-install-${node_version}":
