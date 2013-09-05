@@ -39,18 +39,16 @@ describe 'nodejs', :type => :class do
     .with_unless('test -f /usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('nodejs-symlink-bin-stable') \
-    .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node')
-  }
-
-  it { should contain_file('nodejs-check-symlink-stable') \
+  it { should contain_file('nodejs-symlink-bin-stable') \
     .with_ensure('link') \
     .with_path('/usr/local/bin/node') \
     .with_target('/usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('nodejs-symlink-bin-with-version-stable') \
-    .with_command('ln -f -s /usr/local/node/node-stable/node /usr/local/bin/node-stable')
+  it { should contain_file('nodejs-symlink-bin-with-version-stable') \
+    .with_ensure('link') \
+    .with_path('/usr/local/bin/node-stable') \
+    .with_target('/usr/local/node/node-stable/node')
   }
 
   it { should contain_exec('npm-download-stable') }
@@ -86,18 +84,16 @@ describe 'nodejs', :type => :class do
       .with_unless('test -f /usr/local/node/node-v0.8.0/node')
     }
 
-    it { should contain_exec('nodejs-symlink-bin-v0.8.0') \
-      .with_command('ln -f -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node')
-    }
-
-    it { should contain_file('nodejs-check-symlink-v0.8.0') \
+    it { should contain_file('nodejs-symlink-bin-v0.8.0') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.8.0/node') \
-      .with_path('/usr/local/bin/node')
+      .with_path('/usr/local/bin/node') \
+      .with_target('/usr/local/node/node-v0.8.0/node')
     }
 
-    it { should contain_exec('nodejs-symlink-bin-with-version-v0.8.0') \
-      .with_command('ln -f -s /usr/local/node/node-v0.8.0/node /usr/local/bin/node-v0.8.0')
+    it { should contain_file('nodejs-symlink-bin-with-version-v0.8.0') \
+      .with_ensure('link') \
+      .with_path('/usr/local/bin/node-v0.8.0') \
+      .with_target('/usr/local/node/node-v0.8.0/node')
     }
 
     it { should contain_exec('npm-download-v0.8.0') }
@@ -107,8 +103,10 @@ describe 'nodejs', :type => :class do
   describe 'with a given target_dir' do
     let(:params) {{ :target_dir => '/bin' }}
 
-    it { should contain_exec('nodejs-symlink-bin-stable') \
-      .with_command('ln -f -s /usr/local/node/node-stable/node /bin/node')
+    it { should contain_file('nodejs-symlink-bin-stable') \
+      .with_ensure('link') \
+      .with_path('/bin/node') \
+      .with_target('/usr/local/node/node-stable/node')
     }
   end
 
