@@ -94,7 +94,7 @@ define nodejs::install (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    require => Exec["nodejs-download-${node_version}"],
+    require => Wget::Fetch["nodejs-download-${node_version}"],
   }
 
   exec { "nodejs-unpack-${node_version}":
@@ -166,7 +166,7 @@ define nodejs::install (
       environment => 'clean=yes',
       unless      => 'which npm',
       require     => [
-        Exec["npm-download-${node_version}"],
+        Wget::Fetch["npm-download-${node_version}"],
         Package['curl'],
       ],
     }
