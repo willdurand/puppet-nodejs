@@ -8,6 +8,7 @@ end
 
 PuppetLint.configuration.log_format       = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
+PuppetLint.configuration.send("disable_80chars")
 
 exclude_paths = [
   "pkg/**/*",
