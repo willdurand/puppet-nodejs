@@ -60,13 +60,13 @@ define nodejs::install (
 
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
-    $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
+    $node_unpack_folder  = "${::nodejs::params::install_dir}/node-${node_version}"
     $node_fqv            = $node_version
     $node_symlink_target = "${node_unpack_folder}/node"
     $message             = "Installing Node.js ${node_version}"
   } else {
     $node_filename       = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
-    $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}-${node_os}-${node_arch}"
+    $node_unpack_folder  = "${::nodejs::params::install_dir}/node-${node_version}-${node_os}-${node_arch}"
     $node_fqv            = "${node_version}-${node_os}-${node_arch}"
     $node_symlink_target = "${node_unpack_folder}/bin/node"
     $message             = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
