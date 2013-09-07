@@ -103,7 +103,10 @@ define nodejs::install (
     cwd     => $::nodejs::params::install_dir,
     user    => 'root',
     unless  => "test -d ${node_unpack_folder}",
-    require => File["nodejs-check-tar-${node_version}"],
+    require => [
+      File["nodejs-check-tar-${node_version}"],
+      Package['tar']
+    ],
   }
 
   file { "nodejs-check-unpack-${node_version}":
@@ -125,7 +128,12 @@ define nodejs::install (
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
       timeout => 0,
-      require => File["nodejs-check-unpack-${node_version}"],
+      require => [
+        File["nodejs-check-unpack-${node_version}"],
+        Package['python'],
+        Package['g++'],
+        Package['make']
+      ],
       before  => File["nodejs-symlink-bin-${node_version}"],
     }
   }
@@ -157,7 +165,10 @@ define nodejs::install (
       user        => 'root',
       environment => 'clean=yes',
       unless      => 'which npm',
-      require     => Exec["npm-download-${node_version}"],
+      require     => [
+        Exec["npm-download-${node_version}"],
+        Package['curl'],
+      ],
     }
 
     file { "npm-symlink-${node_version}":
