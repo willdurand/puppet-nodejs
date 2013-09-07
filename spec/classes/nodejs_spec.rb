@@ -11,10 +11,9 @@ describe 'nodejs', :type => :class do
     .with_path('/usr/local/node')
   }
 
-  it { should contain_exec('nodejs-download-stable') \
-    .with_command('wget http://nodejs.org/dist/stable/node-stable.tar.gz') \
-    .with_cwd('/usr/local/node') \
-    .with_unless('test -f node-stable.tar.gz')
+  it { should contain_wget__fetch('nodejs-download-stable') \
+    .with_source('http://nodejs.org/dist/stable/node-stable.tar.gz') \
+    .with_destination('/usr/local/node/node-stable.tar.gz')
   }
 
   it { should contain_file('nodejs-check-tar-stable') \
@@ -51,16 +50,15 @@ describe 'nodejs', :type => :class do
     .with_target('/usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('npm-download-stable') }
+  it { should contain_wget__fetch('npm-download-stable') }
   it { should contain_exec('npm-install-stable') }
 
   describe 'with a given version' do
     let(:params) {{ :version => 'v0.8.0' }}
 
-    it { should contain_exec('nodejs-download-v0.8.0') \
-      .with_command('wget http://nodejs.org/dist/v0.8.0/node-v0.8.0.tar.gz') \
-      .with_cwd('/usr/local/node') \
-      .with_unless('test -f node-v0.8.0.tar.gz')
+    it { should contain_wget__fetch('nodejs-download-v0.8.0') \
+      .with_source('http://nodejs.org/dist/v0.8.0/node-v0.8.0.tar.gz') \
+      .with_destination('/usr/local/node/node-v0.8.0.tar.gz')
     }
 
     it { should contain_file('nodejs-check-tar-v0.8.0') \
@@ -96,7 +94,7 @@ describe 'nodejs', :type => :class do
       .with_target('/usr/local/node/node-v0.8.0/node')
     }
 
-    it { should contain_exec('npm-download-v0.8.0') }
+    it { should contain_wget__fetch('npm-download-v0.8.0') }
     it { should contain_exec('npm-install-v0.8.0') }
   end
 

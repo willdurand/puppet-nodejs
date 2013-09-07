@@ -6,3 +6,4 @@ license     'MIT'
 author      'William Durand'
 
 dependency  'puppetlabs/stdlib'
+dependency  'maestrodev/wget'

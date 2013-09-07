@@ -8,10 +8,9 @@ describe 'nodejs::install', :type => :define do
 
   it { should contain_file('nodejs-install-dir-stable').with_ensure('directory') }
 
-  it { should contain_exec('nodejs-download-stable') \
-    .with_command('wget http://nodejs.org/dist/stable/node-stable.tar.gz') \
-    .with_cwd('/usr/local/node') \
-    .with_unless('test -f node-stable.tar.gz')
+  it { should contain_wget__fetch('nodejs-download-stable') \
+    .with_source('http://nodejs.org/dist/stable/node-stable.tar.gz') \
+    .with_destination('/usr/local/node/node-stable.tar.gz')
   }
 
   it { should contain_file('nodejs-check-tar-stable') \
@@ -41,6 +40,6 @@ describe 'nodejs::install', :type => :define do
     .with_target('/usr/local/node/node-stable/node')
   }
 
-  it { should contain_exec('npm-download-stable') }
+  it { should contain_wget__fetch('npm-download-stable') }
   it { should contain_exec('npm-install-stable') }
 end

@@ -56,7 +56,7 @@ define nodejs::install (
     default  => 'x86',
   }
 
-  ensure_packages([ 'wget', 'tar', 'curl' ])
+  ensure_packages([ 'tar', 'curl' ])
 
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
@@ -82,13 +82,10 @@ define nodejs::install (
     mode   => '0644',
   })
 
-  exec { "nodejs-download-${node_version}":
-    command => "wget http://nodejs.org/dist/${node_version}/${node_filename}",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    cwd     => $::nodejs::params::install_dir,
-    user    => 'root',
-    unless  => "test -f ${node_filename}",
-    require => File["nodejs-install-dir-${node_version}"],
+  wget::fetch { "nodejs-download-${node_version}":
+    source      => "http://nodejs.org/dist/${node_version}/${node_filename}",
+    destination => "${::nodejs::params::install_dir}/${node_filename}",
+    require     => File["nodejs-install-dir-${node_version}"],
   }
 
   file { "nodejs-check-tar-${node_version}":
@@ -146,13 +143,11 @@ define nodejs::install (
   }
 
   if ($with_npm) {
-    exec { "npm-download-${node_version}":
-      command => 'wget --no-check-certificate https://npmjs.org/install.sh',
-      path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-      cwd     => $::nodejs::params::install_dir,
-      user    => 'root',
-      unless  => "test -f ${::nodejs::params::install_dir}/install.sh",
-      require => File["nodejs-symlink-bin-${node_version}"]
+    wget::fetch { "npm-download-${node_version}":
+      source             => 'https://npmjs.org/install.sh',
+      nocheckcertificate => true,
+      destination        => "${::nodejs::params::install_dir}/install.sh",
+      require            => File["nodejs-symlink-bin-${node_version}"]
     }
 
     exec { "npm-install-${node_version}":
