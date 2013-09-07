@@ -25,10 +25,11 @@ Requirements
 ------------
 
 This modules depends on
-[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib). You MUST
-clone it if you don't use the Puppet Module Tool:
+[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) and [maestrodev/puppet-wget](https://github.com/maestrodev/puppet-wget). You MUST
+clone them if you don't use the Puppet Module Tool:
 
     git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
+    git clone git@github.com:maestrodev/puppet-wget.git modules/wget
 
 
 Usage
