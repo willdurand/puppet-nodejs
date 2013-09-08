@@ -29,7 +29,7 @@ This modules depends on
 clone them if you don't use the Puppet Module Tool:
 
     git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
-    git clone git@github.com:maestrodev/puppet-wget.git modules/wget
+    git clone git://github.com/maestrodev/puppet-wget.git modules/wget
 
 
 Usage
