@@ -58,6 +58,12 @@ define nodejs::install (
 
   ensure_packages([ 'tar', 'curl' ])
 
+  package { 'semver':
+    ensure   => installed,
+    provider => gem,
+    before   => File["nodejs-symlink-bin-${node_version}"],
+  }
+
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
     $node_unpack_folder  = "${::nodejs::params::install_dir}/node-${node_version}"
@@ -150,7 +156,9 @@ define nodejs::install (
     target  => $node_symlink_target,
   }
 
-  if ($with_npm) {
+  # automatic installation of npm is introduced since nodejs v0.6.3
+  # so we just install npm for nodejs below v0.6.3
+  if ($with_npm and !is_npm_provided($node_version)) {
     wget::fetch { "npm-download-${node_version}":
       source             => 'https://npmjs.org/install.sh',
       nocheckcertificate => true,
