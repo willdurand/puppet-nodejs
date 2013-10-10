@@ -33,7 +33,8 @@ describe 'nodejs', :type => :class do
   }
 
   it { should contain_exec('nodejs-make-install-stable') \
-    .with_command('python configure && make install') \
+    .with_command('./configure && make && make install') \
+    .with_path('/usr/local/node/node-stable:/usr/bin:/bin:/usr/sbin:/sbin') \
     .with_cwd('/usr/local/node/node-stable') \
     .with_unless('test -f /usr/local/node/node-stable/node')
   }
