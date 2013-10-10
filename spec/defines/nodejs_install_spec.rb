@@ -3,43 +3,43 @@ require 'spec_helper'
 describe 'nodejs::install', :type => :define do
   let(:title) { 'nodejs::install' }
   let(:facts) {{
-    :nodejs_stable_version => 'stable'
+    :nodejs_stable_version => 'v0.10.20'
   }}
 
-  it { should contain_file('nodejs-install-dir-stable').with_ensure('directory') }
+  it { should contain_file('nodejs-install-dir-v0.10.20').with_ensure('directory') }
 
-  it { should contain_wget__fetch('nodejs-download-stable') \
-    .with_source('http://nodejs.org/dist/stable/node-stable.tar.gz') \
-    .with_destination('/usr/local/node/node-stable.tar.gz')
+  it { should contain_wget__fetch('nodejs-download-v0.10.20') \
+    .with_source('http://nodejs.org/dist/v0.10.20/node-v0.10.20.tar.gz') \
+    .with_destination('/usr/local/node/node-v0.10.20.tar.gz')
   }
 
-  it { should contain_file('nodejs-check-tar-stable') \
+  it { should contain_file('nodejs-check-tar-v0.10.20') \
     .with_ensure('file') \
-    .with_path('/usr/local/node/node-stable.tar.gz')
+    .with_path('/usr/local/node/node-v0.10.20.tar.gz')
   }
 
-  it { should contain_exec('nodejs-unpack-stable') \
-    .with_command('tar xzvf node-stable.tar.gz') \
+  it { should contain_exec('nodejs-unpack-v0.10.20') \
+    .with_command('tar xzvf node-v0.10.20.tar.gz') \
     .with_cwd('/usr/local/node') \
-    .with_unless('test -d /usr/local/node/node-stable')
+    .with_unless('test -d /usr/local/node/node-v0.10.20')
   }
 
-  it { should contain_file('nodejs-check-unpack-stable') \
+  it { should contain_file('nodejs-check-unpack-v0.10.20') \
     .with_ensure('directory') \
-    .with_path('/usr/local/node/node-stable')
+    .with_path('/usr/local/node/node-v0.10.20')
   }
 
-  it { should contain_exec('nodejs-make-install-stable') \
-    .with_cwd('/usr/local/node/node-stable') \
-    .with_unless('test -f /usr/local/node/node-stable/node')
+  it { should contain_exec('nodejs-make-install-v0.10.20') \
+    .with_cwd('/usr/local/node/node-v0.10.20') \
+    .with_unless('test -f /usr/local/node/node-v0.10.20/node')
   }
 
-  it { should contain_file('nodejs-symlink-bin-stable') \
+  it { should contain_file('nodejs-symlink-bin-v0.10.20') \
     .with_ensure('link') \
     .with_path('/usr/local/bin/node') \
-    .with_target('/usr/local/node/node-stable/node')
+    .with_target('/usr/local/node/node-v0.10.20/node')
   }
 
-  it { should contain_wget__fetch('npm-download-stable') }
-  it { should contain_exec('npm-install-stable') }
+  it { should_not contain_wget__fetch('npm-download-v0.10.20') }
+  it { should_not contain_exec('npm-install-v0.10.20') }
 end
