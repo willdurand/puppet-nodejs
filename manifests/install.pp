@@ -122,8 +122,8 @@ define nodejs::install (
     ensure_packages([ 'python', 'g++', 'make' ])
 
     exec { "nodejs-make-install-${node_version}":
-      command => 'python configure && make install',
-      path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+      command => './configure && make && make install',
+      path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
       cwd     => $node_unpack_folder,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
