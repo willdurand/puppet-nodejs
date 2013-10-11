@@ -178,12 +178,5 @@ define nodejs::install (
         Package['curl'],
       ],
     }
-
-    file { "npm-symlink-${node_version}":
-      ensure  => 'link',
-      path    => "${node_target_dir}/npm",
-      target  => "${node_unpack_folder}/bin/npm",
-      require => Exec["npm-install-${node_version}"],
-    }
   }
 }
