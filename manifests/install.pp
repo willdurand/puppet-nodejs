@@ -155,7 +155,10 @@ define nodejs::install (
       source             => 'https://npmjs.org/install.sh',
       nocheckcertificate => true,
       destination        => "${::nodejs::params::install_dir}/install.sh",
-      require            => File["nodejs-symlink-bin-${node_version}"]
+      require            => [
+        File["nodejs-symlink-bin-${node_version}"],
+        Exec["nodejs-unpack-${node_version}"],
+      ],
     }
 
     exec { "npm-install-${node_version}":
