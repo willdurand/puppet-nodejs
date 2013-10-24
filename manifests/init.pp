@@ -23,8 +23,8 @@
 #  }
 #
 class nodejs (
-  $version      = undef,
-  $target_dir   = undef,
+  $version      = 'stable',
+  $target_dir   = '/usr/local/bin',
   $with_npm     = true,
   $make_install = true,
 ) {
@@ -35,4 +35,25 @@ class nodejs (
     with_npm      => $with_npm,
     make_install  => $make_install,
   }
+
+  $node_version = $version ? {
+    undef     => $::nodejs_stable_version,
+    'stable'  => $::nodejs_stable_version,
+    'latest'  => $::nodejs_latest_version,
+    default   => $version
+  }
+
+  $symlink_target = "/usr/local/node/node-${$node_version}/bin/node"
+
+  $node_binary = $target_dir ? {
+    undef   => '/usr/local/bin/node',
+    default => "${target_dir}/node"
+  }
+
+  file { $node_binary:
+    ensure  => 'link',
+    target  => $symlink_target,
+  }
+
+  # TODO handle default npm symlink
 }

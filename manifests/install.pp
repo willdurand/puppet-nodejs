@@ -58,29 +58,30 @@ define nodejs::install (
 
   ensure_packages([ 'tar', 'curl' ])
 
-  package { 'semver':
-    ensure   => installed,
-    provider => gem,
-    before   => File["nodejs-symlink-bin-${node_version}"],
+  if !defined(Package['semver']){
+    package { 'semver':
+      ensure   => installed,
+      provider => gem,
+      before   => File["nodejs-symlink-bin-with-version-${node_version}"],
+    }
   }
+
+  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
 
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
-    $node_unpack_folder  = "${::nodejs::params::install_dir}/node-${node_version}"
-    $node_fqv            = $node_version
-    $node_symlink_target = "${node_unpack_folder}/node"
+    $node_fqv            = $node_version # TODO remove not used
     $message             = "Installing Node.js ${node_version}"
   } else {
     $node_filename       = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
-    $node_unpack_folder  = "${::nodejs::params::install_dir}/node-${node_version}-${node_os}-${node_arch}"
-    $node_fqv            = "${node_version}-${node_os}-${node_arch}"
-    $node_symlink_target = "${node_unpack_folder}/bin/node"
+    $node_fqv            = "${node_version}-${node_os}-${node_arch}" # TODO remove not used
     $message             = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
   }
 
-  $node_symlink = "${node_target_dir}/node"
+  $node_symlink_target = "${node_unpack_folder}/bin/node"
+  $node_symlink = "${node_target_dir}/node-${node_version}"
 
-  ensure_resource('file', "nodejs-install-dir-${node_version}", {
+  ensure_resource('file', 'nodejs-install-dir', {
     ensure => 'directory',
     path   => $::nodejs::params::install_dir,
     owner  => 'root',
@@ -91,7 +92,7 @@ define nodejs::install (
   wget::fetch { "nodejs-download-${node_version}":
     source      => "http://nodejs.org/dist/${node_version}/${node_filename}",
     destination => "${::nodejs::params::install_dir}/${node_filename}",
-    require     => File["nodejs-install-dir-${node_version}"],
+    require     => File['nodejs-install-dir'],
   }
 
   file { "nodejs-check-tar-${node_version}":
@@ -103,62 +104,61 @@ define nodejs::install (
     require => Wget::Fetch["nodejs-download-${node_version}"],
   }
 
-  exec { "nodejs-unpack-${node_version}":
-    command => "tar xzvf ${node_filename}",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    cwd     => $::nodejs::params::install_dir,
-    user    => 'root',
-    unless  => "test -d ${node_unpack_folder}",
-    require => [
-      File["nodejs-check-tar-${node_version}"],
-      Package['tar']
-    ],
-  }
-
-  file { "nodejs-check-unpack-${node_version}":
+  file { $node_unpack_folder:
     ensure  => 'directory',
-    path    => $node_unpack_folder,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    require => Exec["nodejs-unpack-${node_version}"],
+    require => File['nodejs-install-dir'],
+  }
+
+  exec { "nodejs-unpack-${node_version}":
+    command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
+    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+    cwd     => $::nodejs::params::install_dir,
+    user    => 'root',
+    unless  => "test -f ${node_symlink_target}",
+    require => [
+      File["nodejs-check-tar-${node_version}"],
+      File[$node_unpack_folder],
+      Package['tar'],
+    ],
   }
 
   if $make_install {
     ensure_packages([ 'python', 'g++', 'make' ])
 
     exec { "nodejs-make-install-${node_version}":
-      command => './configure && make && make install',
+      command => "./configure --prefix=${node_unpack_folder} && make && make install",
       path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
       cwd     => $node_unpack_folder,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
       timeout => 0,
       require => [
-        File["nodejs-check-unpack-${node_version}"],
+        Exec["nodejs-unpack-${node_version}"],
         Package['python'],
         Package['g++'],
         Package['make']
       ],
-      before  => File["nodejs-symlink-bin-${node_version}"],
+      before  => File["nodejs-symlink-bin-with-version-${node_version}"],
     }
-  }
-
-  file { "nodejs-symlink-bin-${node_version}":
-    ensure  => 'link',
-    path    => $node_symlink,
-    target  => $node_symlink_target,
   }
 
   file { "nodejs-symlink-bin-with-version-${node_version}":
     ensure  => 'link',
-    path    => "${node_symlink}-${node_version}",
+    path    => $node_symlink,
     target  => $node_symlink_target,
   }
 
   # automatic installation of npm is introduced since nodejs v0.6.3
   # so we just install npm for nodejs below v0.6.3
   if ($with_npm and !is_npm_provided($node_version)) {
+
+    # TODO npm install is not puppet `define` save
+
+    # Known limitation: just a single nodejs::install define of versions below v0.6.3 is supportet!
+
     wget::fetch { "npm-download-${node_version}":
       source             => 'https://npmjs.org/install.sh',
       nocheckcertificate => true,
