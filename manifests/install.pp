@@ -68,6 +68,10 @@ define nodejs::install (
 
   $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
 
+  if (!$make_install and !is_binary_download_available($node_version)) {
+    fail("No binary download available for nodejs ${node_version}! Please run with make_install => true")
+  }
+
   if $make_install {
     $node_filename       = "node-${node_version}.tar.gz"
     $node_fqv            = $node_version # TODO remove not used
