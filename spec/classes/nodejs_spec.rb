@@ -19,6 +19,11 @@ describe 'nodejs', :type => :class do
       .with_ensure('link') \
       .with_target('/usr/local/node/node-v0.10.20/bin/node')
     }
+
+    it { should contain_file('/usr/local/bin/npm') \
+      .with_ensure('link') \
+      .with_target('/usr/local/node/node-v0.10.20/bin/npm')
+    }
   end
 
   describe 'with a given version' do
@@ -59,6 +64,8 @@ describe 'nodejs', :type => :class do
     it { should contain_nodejs__install('nodejs-stable') \
       .with_with_npm('false')
     }
+
+    it { should_not contain_file('/usr/local/bin/npm') }
   end
 
   describe 'with make_install = false' do

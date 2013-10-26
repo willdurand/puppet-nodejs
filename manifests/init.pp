@@ -43,17 +43,30 @@ class nodejs (
     default   => $version
   }
 
-  $symlink_target = "/usr/local/node/node-${$node_version}/bin/node"
+  $node_symlink_target = "/usr/local/node/node-${$node_version}/bin/node"
+  $npm_symlink_target = "/usr/local/node/node-${$node_version}/bin/npm"
 
   $node_binary = $target_dir ? {
     undef   => '/usr/local/bin/node',
     default => "${target_dir}/node"
   }
 
-  file { $node_binary:
-    ensure  => 'link',
-    target  => $symlink_target,
+  $npm_binary = $target_dir ? {
+    undef   => '/usr/local/bin/npm',
+    default => "${target_dir}/npm"
   }
 
-  # TODO handle default npm symlink
+  file { $node_binary:
+    ensure  => 'link',
+    target  => $node_symlink_target,
+    require => Nodejs::Install["node-${version}"],
+  }
+
+  if $with_npm {
+    file { $npm_binary:
+      ensure  => 'link',
+      target  => $npm_symlink_target,
+      require => Nodejs::Install["node-${version}"],
+    }
+  }
 }
