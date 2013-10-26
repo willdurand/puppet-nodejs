@@ -117,6 +117,14 @@ Run the following command:
 
     BUNDLE_GEMFILE=.gemfile bundle exec rake test
 
+
+Authors
+-------
+
+* William Durand <william.durand1@gmail.com>
+* Johannes Graf ([@grafjo](https://github.com/grafjo))
+
+
 License
 -------
 
