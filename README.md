@@ -117,10 +117,6 @@ Run the following command:
 
     BUNDLE_GEMFILE=.gemfile bundle exec rake test
 
-Known Limitations
------------------
-* Just a single nodejs::install define of versions below v0.6.3 is supported!
-
 License
 -------
 
