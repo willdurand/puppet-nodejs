@@ -159,24 +159,20 @@ define nodejs::install (
   # so we just install npm for nodejs below v0.6.3
   if ($with_npm and !is_npm_provided($node_version)) {
 
-    # TODO npm install is not puppet `define` save
-
-    # Known limitation: just a single nodejs::install define of versions below v0.6.3 is supportet!
-
     wget::fetch { "npm-download-${node_version}":
       source             => 'https://npmjs.org/install.sh',
       nocheckcertificate => true,
-      destination        => "${::nodejs::params::install_dir}/install.sh",
-      require            => File["nodejs-symlink-bin-${node_version}"]
+      destination        => "${node_unpack_folder}/install-npm.sh",
+      require            => File["nodejs-symlink-bin-with-version-${node_version}"]
     }
 
     exec { "npm-install-${node_version}":
-      command     => 'sh install.sh',
-      path        => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
-      cwd         => $::nodejs::params::install_dir,
+      command     => 'sh install-npm.sh',
+      path        => ["${node_unpack_folder}/bin", '/bin', '/usr/bin'],
+      cwd         => $node_unpack_folder,
       user        => 'root',
-      environment => 'clean=yes',
-      unless      => 'which npm',
+      environment => ['clean=yes', "npm_config_prefix=${node_unpack_folder}"],
+      unless      => "test -f ${node_unpack_folder}/bin/npm",
       require     => [
         Wget::Fetch["npm-download-${node_version}"],
         Package['curl'],
