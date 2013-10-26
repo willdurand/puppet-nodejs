@@ -1,5 +1,5 @@
 name        'willdurand-nodejs'
-version '1.4.1'
+version     '1.5.0'
 summary     'This module allows to install Node.js and NPM.'
 description 'This module allows to install Node.js and NPM.'
 license     'MIT'
