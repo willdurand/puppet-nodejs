@@ -29,7 +29,7 @@ class nodejs (
   $make_install = true,
 ) {
 
-  nodejs::install { "nodejs-${version}":
+  nodejs::install { "node-${version}":
     version       => $version,
     target_dir    => $target_dir,
     with_npm      => $with_npm,
