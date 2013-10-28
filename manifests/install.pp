@@ -128,7 +128,7 @@ define nodejs::install (
       Package['tar'],
     ],
   }
-  
+
   $gplusplus_package = $::operatingsystem ? {
     'CentOS'   => 'gcc-c++',
     default    => 'g++',
