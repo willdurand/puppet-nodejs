@@ -59,14 +59,14 @@ class nodejs (
   file { $node_binary:
     ensure  => 'link',
     target  => $node_symlink_target,
-    require => Nodejs::Install["node-${version}"],
+    require => Nodejs::Install["nodejs-${version}"],
   }
 
   if $with_npm {
     file { $npm_binary:
       ensure  => 'link',
       target  => $npm_symlink_target,
-      require => Nodejs::Install["node-${version}"],
+      require => Nodejs::Install["nodejs-${version}"],
     }
   }
 }
