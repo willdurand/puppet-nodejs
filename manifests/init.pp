@@ -29,7 +29,7 @@ class nodejs (
   $make_install = true,
 ) {
 
-  nodejs::install { "node-${version}":
+  nodejs::install { "nodejs-${version}":
     version       => $version,
     target_dir    => $target_dir,
     with_npm      => $with_npm,
@@ -59,14 +59,14 @@ class nodejs (
   file { $node_binary:
     ensure  => 'link',
     target  => $node_symlink_target,
-    require => Nodejs::Install["node-${version}"],
+    require => Nodejs::Install["nodejs-${version}"],
   }
 
   if $with_npm {
     file { $npm_binary:
       ensure  => 'link',
       target  => $npm_symlink_target,
-      require => Nodejs::Install["node-${version}"],
+      require => Nodejs::Install["nodejs-${version}"],
     }
   }
 }
