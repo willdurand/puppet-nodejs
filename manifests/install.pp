@@ -128,9 +128,14 @@ define nodejs::install (
       Package['tar'],
     ],
   }
+  
+  $gplusplus_package = $::operatingsystem ? {
+    'CentOS'   => 'gcc-c++',
+    default    => 'g++',
+  }
 
   if $make_install {
-    ensure_packages([ 'python', 'g++', 'make' ])
+    ensure_packages([ 'python', $gplusplus_package, 'make' ])
 
     exec { "nodejs-make-install-${node_version}":
       command => "./configure --prefix=${node_unpack_folder} && make && make install",
@@ -142,7 +147,7 @@ define nodejs::install (
       require => [
         Exec["nodejs-unpack-${node_version}"],
         Package['python'],
-        Package['g++'],
+        Package[$gplusplus_package],
         Package['make']
       ],
       before  => File["nodejs-symlink-bin-with-version-${node_version}"],
