@@ -7,7 +7,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   has_feature :versionable
 
-  commands :npm => 'npm'
+  commands :npm => '/usr/local/node/node-current/bin/npm'
 
   def self.npmlist
     begin
