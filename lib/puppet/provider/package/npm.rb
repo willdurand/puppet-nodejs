@@ -14,10 +14,10 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
       output = npm('list', '--json', '--global')
       # ignore any npm output lines to be a bit more robust
       output = PSON.parse(output.lines.select{ |l| l =~ /^((?!^npm).*)$/}.join("\n"))
-      @npmlist = output['dependencies'] || {}
+      output['dependencies'] || {}
     rescue Exception => e
       Puppet.debug("Error: npm list --json command error #{e.message}")
-      @npmlist = {}
+      {}
     end
   end
 
@@ -26,8 +26,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
   end
 
   def self.instances
-    @npmlist ||= npmlist
-    @npmlist.collect do |k,v|
+    npmlist.collect do |k,v|
       new({:name=>k, :ensure=>v['version'], :provider=>'npm'})
     end
   end
