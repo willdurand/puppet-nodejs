@@ -68,8 +68,10 @@ class { 'nodejs':
 }
 ```
 
+A symlink is created from the `./bin` folder of the last installed `version` of node to `/usr/local/node/node-current/bin` and this path is added to your environment's `PATH`.
+
 By default, this module creates symlinks for each Node.js version installed into
-`/usr/local/bin`. A nodejs::install define creates a versioned symlink like `/usr/local/bin/node-v0.10.17`. The class `nodejs` creates the default symlink `/usr/local/bin/node`. You can change this behavior by using the `target_dir` parameter.
+`/usr/local/bin`. A nodejs::install define creates a versioned symlink like `/usr/local/bin/node-v0.10.17`. You can change this behavior by using the `target_dir` parameter.
 
 Also, this module installs [NPM](https://npmjs.org/) by default. You can set the
 `with_npm` parameter to `false` to not install it.
