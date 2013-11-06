@@ -6,7 +6,7 @@
 #   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
 #
 # [*target_dir*]
-#   Where to install the links to every installed node varsion.
+#   Where to install the links to every installed node version.
 #   (e.g. /usr/local/bin/node-v0.10.21)
 #
 # [*with_npm*]
