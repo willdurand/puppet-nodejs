@@ -15,14 +15,9 @@ describe 'nodejs', :type => :class do
       .with_make_install('true')
     }
 
-    it { should contain_file('/usr/local/bin/node') \
+    it { should contain_file('/usr/local/node/node-current') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/node')
-    }
-
-    it { should contain_file('/usr/local/bin/npm') \
-      .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/npm')
+      .with_target('/usr/local/node/node-v0.10.20')
     }
   end
 
@@ -35,9 +30,9 @@ describe 'nodejs', :type => :class do
       .with_version('v0.10.0')
     }
 
-    it { should contain_file('/usr/local/bin/node') \
+    it { should contain_file('/usr/local/node/node-current') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.0/bin/node')
+      .with_target('/usr/local/node/node-v0.10.0')
     }
   end
 
@@ -49,10 +44,10 @@ describe 'nodejs', :type => :class do
     it { should contain_nodejs__install('nodejs-stable') \
       .with_target_dir('/bin') \
     }
-  
-    it { should contain_file('/bin/node') \
+
+    it { should contain_file('/usr/local/node/node-current') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/node')
+      .with_target('/usr/local/node/node-v0.10.20')
     }
   end
 

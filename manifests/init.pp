@@ -6,7 +6,8 @@
 #   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
 #
 # [*target_dir*]
-#   Where to install the executables.
+#   Where to install the links to every installed node version.
+#   (e.g. /usr/local/bin/node-v0.10.21)
 #
 # [*with_npm*]
 #   Whether to install NPM.
@@ -43,30 +44,15 @@ class nodejs (
     default   => $version
   }
 
-  $node_symlink_target = "/usr/local/node/node-${$node_version}/bin/node"
-  $npm_symlink_target = "/usr/local/node/node-${$node_version}/bin/npm"
-
-  $node_binary = $target_dir ? {
-    undef   => '/usr/local/bin/node',
-    default => "${target_dir}/node"
-  }
-
-  $npm_binary = $target_dir ? {
-    undef   => '/usr/local/bin/npm',
-    default => "${target_dir}/npm"
-  }
-
-  file { $node_binary:
+  file { '/usr/local/node/node-current':
     ensure  => 'link',
-    target  => $node_symlink_target,
+    target  => "/usr/local/node/node-${$node_version}",
     require => Nodejs::Install["nodejs-${version}"],
   }
 
-  if $with_npm {
-    file { $npm_binary:
-      ensure  => 'link',
-      target  => $npm_symlink_target,
-      require => Nodejs::Install["nodejs-${version}"],
-    }
+  file_line { 'node-bin-in-path':
+    path  => '/etc/profile',
+    line  => 'export PATH="/usr/local/node/node-current/bin:$PATH"'
   }
+
 }
