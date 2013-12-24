@@ -129,8 +129,8 @@ define nodejs::install (
     ],
   }
 
-  $gplusplus_package = $::operatingsystem ? {
-    'CentOS'   => 'gcc-c++',
+  $gplusplus_package = $::osfamily ? {
+    'RedHat'   => 'gcc-c++',
     default    => 'g++',
   }
 
