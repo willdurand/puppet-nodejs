@@ -15,15 +15,12 @@ describe 'nodejs', :type => :class do
       .with_make_install('true')
     }
 
-    it { should contain_file('/usr/local/bin/node') \
+    it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/node')
+      .with_target('/usr/local/node/node-v0.10.20')
     }
 
-    it { should contain_file('/usr/local/bin/npm') \
-      .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/npm')
-    }
+    it { should contain_file('/etc/profile.d/nodejs.sh') }
   end
 
   describe 'with a given version' do
@@ -35,9 +32,9 @@ describe 'nodejs', :type => :class do
       .with_version('v0.10.0')
     }
 
-    it { should contain_file('/usr/local/bin/node') \
+    it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.0/bin/node')
+      .with_target('/usr/local/node/node-v0.10.0')
     }
   end
 
@@ -49,11 +46,6 @@ describe 'nodejs', :type => :class do
     it { should contain_nodejs__install('nodejs-stable') \
       .with_target_dir('/bin') \
     }
-  
-    it { should contain_file('/bin/node') \
-      .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20/bin/node')
-    }
   end
 
   describe 'without NPM' do
@@ -64,8 +56,6 @@ describe 'nodejs', :type => :class do
     it { should contain_nodejs__install('nodejs-stable') \
       .with_with_npm('false')
     }
-
-    it { should_not contain_file('/usr/local/bin/npm') }
   end
 
   describe 'with make_install = false' do
@@ -78,3 +68,4 @@ describe 'nodejs', :type => :class do
     }
   end
 end
+
