@@ -68,8 +68,9 @@ class { 'nodejs':
 }
 ```
 
-By default, this module creates symlinks for each Node.js version installed into
-`/usr/local/bin`. A nodejs::install define creates a versioned symlink like `/usr/local/bin/node-v0.10.17`. The class `nodejs` creates the default symlink `/usr/local/bin/node`. You can change this behavior by using the `target_dir` parameter.
+By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v0.10.17`.
+You can change this behavior by using the `target_dir` parameter.
+Using the nodejs class, binary files are exposed to the system $PATH without a version string appended.
 
 Also, this module installs [NPM](https://npmjs.org/) by default. You can set the
 `with_npm` parameter to `false` to not install it.

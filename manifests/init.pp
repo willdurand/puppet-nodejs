@@ -43,30 +43,22 @@ class nodejs (
     default   => $version
   }
 
-  $node_symlink_target = "/usr/local/node/node-${$node_version}/bin/node"
-  $npm_symlink_target = "/usr/local/node/node-${$node_version}/bin/npm"
+  $nodejs_version_path = "/usr/local/node/node-${$node_version}"
+  $nodejs_default_path = '/usr/local/node/node-default'
 
-  $node_binary = $target_dir ? {
-    undef   => '/usr/local/bin/node',
-    default => "${target_dir}/node"
-  }
-
-  $npm_binary = $target_dir ? {
-    undef   => '/usr/local/bin/npm',
-    default => "${target_dir}/npm"
-  }
-
-  file { $node_binary:
-    ensure  => 'link',
-    target  => $node_symlink_target,
+  file { $nodejs_default_path:
+    ensure  => link,
+    target  => $nodejs_version_path,
     require => Nodejs::Install["nodejs-${version}"],
   }
 
-  if $with_npm {
-    file { $npm_binary:
-      ensure  => 'link',
-      target  => $npm_symlink_target,
-      require => Nodejs::Install["nodejs-${version}"],
-    }
+  file { '/etc/profile.d/nodejs.sh':
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template("${module_name}/nodejs.sh.erb"),
+    require => File[$nodejs_default_path],
   }
+
 }
