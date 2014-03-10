@@ -56,7 +56,17 @@ define nodejs::install (
     default  => 'x86',
   }
 
-  ensure_packages([ 'tar', 'curl' ])
+  if !defined(Package['curl']) {
+    package {'curl':
+      ensure => installed
+    }
+  }
+
+  if !defined(Package['tar']) {
+    package {'tar':
+      ensure => installed
+    }
+  }
 
   if !defined(Package['semver']){
     package { 'semver':
