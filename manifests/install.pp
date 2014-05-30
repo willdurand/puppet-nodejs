@@ -56,13 +56,13 @@ define nodejs::install (
     default  => 'x86',
   }
 
-  if !defined(Package['curl']) {
-    package {'curl':
+  if !defined(Package[$::nodejs::params::curl_package]) {
+    package {$::nodejs::params::curl_package:
       ensure => installed
     }
   }
 
-  if !defined(Package['tar']) {
+  if !defined(Package['tar']) and $::osfamily != 'FreeBSD' {
     package {'tar':
       ensure => installed
     }
@@ -99,7 +99,7 @@ define nodejs::install (
     ensure => 'directory',
     path   => $::nodejs::params::install_dir,
     owner  => 'root',
-    group  => 'root',
+    group  => $::nodejs::params::admin_group,
     mode   => '0644',
   })
 
@@ -113,7 +113,7 @@ define nodejs::install (
     ensure  => 'file',
     path    => "${::nodejs::params::install_dir}/${node_filename}",
     owner   => 'root',
-    group   => 'root',
+    group   => $::nodejs::params::admin_group,
     mode    => '0644',
     require => Wget::Fetch["nodejs-download-${node_version}"],
   }
@@ -121,7 +121,7 @@ define nodejs::install (
   file { $node_unpack_folder:
     ensure  => 'directory',
     owner   => 'root',
-    group   => 'root',
+    group   => $::nodejs::params::admin_group,
     mode    => '0644',
     require => File['nodejs-install-dir'],
   }
@@ -139,13 +139,12 @@ define nodejs::install (
     ],
   }
 
-  $gplusplus_package = $::osfamily ? {
-    'RedHat'   => 'gcc-c++',
-    default    => 'g++',
-  }
-
   if $make_install {
-    ensure_packages([ 'python', $gplusplus_package, 'make' ])
+    ensure_packages([
+      $::nodejs::params::python_package,
+      $::nodejs::params::gplusplus_package,
+      'make'
+    ])
 
     exec { "nodejs-make-install-${node_version}":
       command => "./configure --prefix=${node_unpack_folder} && make && make install",
@@ -156,8 +155,8 @@ define nodejs::install (
       timeout => 0,
       require => [
         Exec["nodejs-unpack-${node_version}"],
-        Package['python'],
-        Package[$gplusplus_package],
+        Package[$::nodejs::params::python_package],
+        Package[$::nodejs::params::gplusplus_package],
         Package['make']
       ],
       before  => File["nodejs-symlink-bin-with-version-${node_version}"],
@@ -190,7 +189,7 @@ define nodejs::install (
       unless      => "test -f ${node_unpack_folder}/bin/npm",
       require     => [
         Wget::Fetch["npm-download-${node_version}"],
-        Package['curl'],
+        Package[$::nodejs::params::curl_package],
       ],
     }
   }

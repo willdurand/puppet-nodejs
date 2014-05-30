@@ -15,5 +15,24 @@
 class nodejs::params {
   $install_dir = '/usr/local/node'
   $target_dir  = '/usr/local/bin'
-}
 
+  $admin_group = $::osfamily ? {
+    'FreeBSD' => 'wheel',
+    default   => 'root',
+  }
+  $curl_package = $::osfamily ? {
+    'FreeBSD' => 'ftp/curl',
+    default   => 'curl',
+  }
+
+  $gplusplus_package = $::osfamily ? {
+    'RedHat'  => 'gcc-c++',
+    'FreeBSD' => undef,
+    default   => 'g++',
+  }
+
+  $python_package = $::osfamily ? {
+    'FreeBSD' => 'lang/python',
+    default   => 'python',
+  }
+}
