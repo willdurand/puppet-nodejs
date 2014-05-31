@@ -68,6 +68,12 @@ define nodejs::install (
     }
   }
 
+  if !define(Package[$::nodejs::params::gplusplus_package]) and $::osfamily != 'FreeBSD' {
+    package {$::nodejs::params::gplusplus_package:
+      ensure => installed
+    }
+  }
+
   if !defined(Package['semver']){
     package { 'semver':
       ensure   => installed,
@@ -153,19 +159,26 @@ define nodejs::install (
     ])
 
     exec { "nodejs-make-install-${node_version}":
-      command => "./configure --prefix=${node_unpack_folder} && make && make install",
-      path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
-      cwd     => $node_unpack_folder,
-      user    => 'root',
-      unless  => "test -f ${node_symlink_target}",
-      timeout => 0,
-      require => [
-        Exec["nodejs-unpack-${node_version}"],
-        Package[$::nodejs::params::python_package],
-        Package[$::nodejs::params::gplusplus_package],
-        Package[$::nodejs::params::make_package]
-      ],
-      before  => File["nodejs-symlink-bin-with-version-${node_version}"],
+      command     => "./configure --prefix=${node_unpack_folder} && make && make install",
+      path        => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
+      cwd         => $node_unpack_folder,
+      user        => 'root',
+      unless      => "test -f ${node_symlink_target}",
+      timeout     => 0,
+      before      => File["nodejs-symlink-bin-with-version-${node_version}"],
+      require     => $::osfamily ? {
+        'FreeBSD' => [
+          Exec["nodejs-unpack-${node_version}"],
+          Package[$::nodejs::params::python_package],
+          Package[$::nodejs::params::make_package]
+        ],
+        default   => [
+          Exec["nodejs-unpack-${node_version}"],
+          Package[$::nodejs::params::python_package],
+          Package[$::nodejs::params::gplusplus_package],
+          Package[$::nodejs::params::make_package]
+        ],
+      }
     }
   }
 
