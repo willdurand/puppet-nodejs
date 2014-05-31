@@ -68,7 +68,7 @@ define nodejs::install (
     }
   }
 
-  if !define(Package[$::nodejs::params::gplusplus_package]) and $::osfamily != 'FreeBSD' {
+  if !defined(Package[$::nodejs::params::gplusplus_package]) and $::osfamily != 'FreeBSD' {
     package {$::nodejs::params::gplusplus_package:
       ensure => installed
     }

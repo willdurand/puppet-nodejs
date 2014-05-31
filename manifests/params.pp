@@ -27,7 +27,6 @@ class nodejs::params {
 
   $gplusplus_package = $::osfamily ? {
     'RedHat'  => 'gcc-c++',
-    'FreeBSD' => undef,
     default   => 'g++',
   }
 
