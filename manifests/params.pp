@@ -35,4 +35,16 @@ class nodejs::params {
     'FreeBSD' => 'lang/python',
     default   => 'python',
   }
+
+  $unpack_node_version_require = $::osfamily ? {
+    'Freebsd' => [
+      File["nodejs-check-tar-${node_version}"],
+      File[$node_unpack_folder]
+    ],
+    default => [
+      File["nodejs-check-tar-${node_version}"],
+      File[$node_unpack_folder],
+      Package['tar']
+    ],
+  }
 }

@@ -132,11 +132,7 @@ define nodejs::install (
     cwd     => $::nodejs::params::install_dir,
     user    => 'root',
     unless  => "test -f ${node_symlink_target}",
-    require => [
-      File["nodejs-check-tar-${node_version}"],
-      File[$node_unpack_folder],
-      Package['tar'],
-    ],
+    require => $::nodejs::params::unpack_node_version_require,
   }
 
   if $make_install {
