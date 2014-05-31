@@ -149,7 +149,7 @@ define nodejs::install (
     ensure_packages([
       $::nodejs::params::python_package,
       $::nodejs::params::gplusplus_package,
-      'make'
+      $::nodejs::params::make_package
     ])
 
     exec { "nodejs-make-install-${node_version}":
@@ -163,7 +163,7 @@ define nodejs::install (
         Exec["nodejs-unpack-${node_version}"],
         Package[$::nodejs::params::python_package],
         Package[$::nodejs::params::gplusplus_package],
-        Package['make']
+        Package[$::nodejs::params::make_package]
       ],
       before  => File["nodejs-symlink-bin-with-version-${node_version}"],
     }

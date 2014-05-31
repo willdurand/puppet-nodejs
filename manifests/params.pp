@@ -31,6 +31,11 @@ class nodejs::params {
     default   => 'g++',
   }
 
+  $make_package = $::osfamily ? {
+    'FreeBSD' => 'devel/gmake',
+    default   => 'make',
+  }
+
   $python_package = $::osfamily ? {
     'FreeBSD' => 'lang/python',
     default   => 'python',
