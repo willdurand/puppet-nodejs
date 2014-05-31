@@ -39,4 +39,16 @@ class nodejs::params {
     'FreeBSD' => 'lang/python',
     default   => 'python',
   }
+
+  $make_install_packages = $::osfamily ? {
+    'FreeBSD' => [
+      $python_package,
+      $make_package
+    ],
+    default => [
+      $python_package,
+      $gplusplus_package,
+      $make_package
+    ],
+  }
 }

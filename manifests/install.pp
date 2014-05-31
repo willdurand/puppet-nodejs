@@ -152,11 +152,7 @@ define nodejs::install (
   }
 
   if $make_install {
-    ensure_packages([
-      $::nodejs::params::python_package,
-      $::nodejs::params::gplusplus_package,
-      $::nodejs::params::make_package
-    ])
+    ensure_packages($::nodejs::params::make_install_packages)
 
     exec { "nodejs-make-install-${node_version}":
       command     => "./configure --prefix=${node_unpack_folder} && make && make install",
