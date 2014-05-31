@@ -127,12 +127,22 @@ define nodejs::install (
   }
 
   exec { "nodejs-unpack-${node_version}":
-    command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    cwd     => $::nodejs::params::install_dir,
-    user    => 'root',
-    unless  => "test -f ${node_symlink_target}",
-    require => $::nodejs::params::unpack_node_version_require,
+    command         => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
+    path            => '/usr/bin:/bin:/usr/sbin:/sbin',
+    cwd             => $::nodejs::params::install_dir,
+    user            => 'root',
+    unless          => "test -f ${node_symlink_target}",
+    require         => $::osfamily ? {
+      'Freebsd'     => [
+        File["nodejs-check-tar-${node_version}"],
+        File[$node_unpack_folder]
+      ],
+      default       => [
+        File["nodejs-check-tar-${node_version}"],
+        File[$node_unpack_folder],
+        Package['tar']
+      ],
+    }
   }
 
   if $make_install {
