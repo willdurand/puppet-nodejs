@@ -26,20 +26,27 @@ class nodejs::params {
     default   => 'curl',
   }
 
+  $python_package = $::osfamily ? {
+    'FreeBSD' => 'lang/python',
+    default   => 'python',
+  }
+
   $gplusplus_package = $::osfamily ? {
     'RedHat'  => 'gcc-c++',
     default   => 'g++',
   }
 
-  $make_package = $::osfamily ? {
-    'FreeBSD' => 'devel/gmake',
+  $make_binary = $::osfamily ? {
+    'FreeBSD' => 'gmake',
     default   => 'make',
   }
 
-  $python_package = $::osfamily ? {
-    'FreeBSD' => 'lang/python',
-    default   => 'python',
+  $make_package = $::osfamily ? {
+    'FreeBSD' => "devel/${make_binary}",
+    default   => $make_binary,
   }
+
+  $make_command = "${make_binary} && ${make_binary} install"
 
   $make_install_packages = $::osfamily ? {
     'FreeBSD' => [

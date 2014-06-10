@@ -155,7 +155,7 @@ define nodejs::install (
     ensure_packages($::nodejs::params::make_install_packages)
 
     exec { "nodejs-make-install-${node_version}":
-      command     => "./configure --prefix=${node_unpack_folder} && make && make install",
+      command     => "./configure --prefix=${node_unpack_folder} && ${::nodejs::params::make_command}",
       path        => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin",
       cwd         => $node_unpack_folder,
       user        => 'root',
