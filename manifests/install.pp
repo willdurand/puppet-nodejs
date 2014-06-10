@@ -126,27 +126,43 @@ define nodejs::install (
     require => File['nodejs-install-dir'],
   }
 
+  $node_unpack_require = $::osfamily ? {
+    'Freebsd'     => [
+      File["nodejs-check-tar-${node_version}"],
+      File[$node_unpack_folder]
+    ],
+    default       => [
+      File["nodejs-check-tar-${node_version}"],
+      File[$node_unpack_folder],
+      Package['tar']
+    ],
+  }
+
   exec { "nodejs-unpack-${node_version}":
     command         => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
     path            => '/usr/bin:/bin:/usr/sbin:/sbin',
     cwd             => $::nodejs::params::install_dir,
     user            => 'root',
     unless          => "test -f ${node_symlink_target}",
-    require         => $::osfamily ? {
-      'Freebsd'     => [
-        File["nodejs-check-tar-${node_version}"],
-        File[$node_unpack_folder]
-      ],
-      default       => [
-        File["nodejs-check-tar-${node_version}"],
-        File[$node_unpack_folder],
-        Package['tar']
-      ],
-    }
+    require         => $node_unpack_require,
   }
 
   if $make_install {
     ensure_packages($::nodejs::params::make_install_packages)
+
+    $node_make_install_require = $::osfamily ? {
+      'FreeBSD' => [
+        Exec["nodejs-unpack-${node_version}"],
+        Package[$::nodejs::params::python_package],
+        Package[$::nodejs::params::make_package]
+      ],
+      default   => [
+        Exec["nodejs-unpack-${node_version}"],
+        Package[$::nodejs::params::python_package],
+        Package[$::nodejs::params::gplusplus_package],
+        Package[$::nodejs::params::make_package]
+      ],
+    }
 
     exec { "nodejs-make-install-${node_version}":
       command     => "./configure --prefix=${node_unpack_folder} && ${::nodejs::params::make_command}",
@@ -156,19 +172,7 @@ define nodejs::install (
       unless      => "test -f ${node_symlink_target}",
       timeout     => 0,
       before      => File["nodejs-symlink-bin-with-version-${node_version}"],
-      require     => $::osfamily ? {
-        'FreeBSD' => [
-          Exec["nodejs-unpack-${node_version}"],
-          Package[$::nodejs::params::python_package],
-          Package[$::nodejs::params::make_package]
-        ],
-        default   => [
-          Exec["nodejs-unpack-${node_version}"],
-          Package[$::nodejs::params::python_package],
-          Package[$::nodejs::params::gplusplus_package],
-          Package[$::nodejs::params::make_package]
-        ],
-      }
+      require     => $node_make_install_require,
     }
   }
 
