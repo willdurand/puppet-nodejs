@@ -68,12 +68,6 @@ define nodejs::install (
     }
   }
 
-  if !defined(Package[$::nodejs::params::gplusplus_package]) and $::osfamily != 'FreeBSD' {
-    package {$::nodejs::params::gplusplus_package:
-      ensure => installed
-    }
-  }
-
   if !defined(Package['semver']){
     package { 'semver':
       ensure   => installed,
