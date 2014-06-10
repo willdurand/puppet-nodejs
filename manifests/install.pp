@@ -156,7 +156,7 @@ define nodejs::install (
 
     exec { "nodejs-make-install-${node_version}":
       command     => "./configure --prefix=${node_unpack_folder} && make && make install",
-      path        => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
+      path        => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin",
       cwd         => $node_unpack_folder,
       user        => 'root',
       unless      => "test -f ${node_symlink_target}",

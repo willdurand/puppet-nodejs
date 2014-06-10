@@ -20,6 +20,7 @@ class nodejs::params {
     'FreeBSD' => 'wheel',
     default   => 'root',
   }
+
   $curl_package = $::osfamily ? {
     'FreeBSD' => 'ftp/curl',
     default   => 'curl',
