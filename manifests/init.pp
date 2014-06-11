@@ -52,13 +52,15 @@ class nodejs (
     require => Nodejs::Install["nodejs-${version}"],
   }
 
-  file { '/etc/profile.d/nodejs.sh':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template("${module_name}/nodejs.sh.erb"),
-    require => File[$nodejs_default_path],
+  if $::osfamily != 'FreeBSD' {
+    file { '/etc/profile.d/nodejs.sh':
+      ensure  => file,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("${module_name}/nodejs.sh.erb"),
+      require => File[$nodejs_default_path],
+    }
   }
 
 }
