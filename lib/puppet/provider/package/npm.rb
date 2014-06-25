@@ -7,11 +7,18 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   has_feature :versionable
 
-  commands :npm => '/usr/local/node/node-default/bin/npm'
+  if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
+    has_command(:npm, '/usr/local/node/node-default/bin/npm') do
+      is_optional
+      environment :HOME => "/root"
+    end
+  else
+    optional_commands :npm => 'npm'
+  end
 
   def self.npmlist
     begin
-      output = npm('list', '--json', '--global')
+      output = execute([command(:npm), 'list', '--json', '--global'], {:combine => false})
       # ignore any npm output lines to be a bit more robust
       output = PSON.parse(output.lines.select{ |l| l =~ /^((?!^npm).*)$/}.join("\n"))
       @npmlist = output['dependencies'] || {}
