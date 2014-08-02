@@ -193,5 +193,13 @@ define nodejs::install (
         Package['curl'],
       ],
     }
+    
+    file{'npm-make-exec':
+      path    => '/usr/local/node/node-default/bin/npm',
+      ensure  => present,
+      mode    => '+x',
+      require => Exec["npm-install-${node_version}"]
+    }
+    
   }
 }
