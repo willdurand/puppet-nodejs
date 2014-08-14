@@ -115,6 +115,19 @@ package { 'express':
 }
 ```
 
+Note: When deploying a new machine without nodejs already installed, your npm package definition requires the nodejs class:
+
+```puppet
+class { 'nodejs':
+  version => 'stable'
+}
+
+package { 'express':
+  provider => 'npm',
+  require  => Class['nodejs']
+}
+```
+
 
 Running the tests
 -----------------
