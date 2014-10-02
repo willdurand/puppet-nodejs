@@ -39,10 +39,10 @@ class nodejs (
   }
 
   $node_version = $version ? {
-    undef     => $::nodejs_stable_version,
-    'stable'  => $::nodejs_stable_version,
-    'latest'  => $::nodejs_latest_version,
-    default   => $version
+    undef    => $::nodejs_stable_version,
+    'stable' => $::nodejs_stable_version,
+    'latest' => $::nodejs_latest_version,
+    default  => $version
   }
 
   $nodejs_version_path = "/usr/local/node/node-${$node_version}"
@@ -62,5 +62,4 @@ class nodejs (
     content => template("${module_name}/nodejs.sh.erb"),
     require => File[$nodejs_default_path],
   }
-
 }

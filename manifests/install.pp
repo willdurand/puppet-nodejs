@@ -35,10 +35,10 @@ define nodejs::install (
   include nodejs::params
 
   $node_version = $version ? {
-    undef     => $::nodejs_stable_version,
-    'stable'  => $::nodejs_stable_version,
-    'latest'  => $::nodejs_latest_version,
-    default   => $version
+    undef    => $::nodejs_stable_version,
+    'stable' => $::nodejs_stable_version,
+    'latest' => $::nodejs_latest_version,
+    default  => $version
   }
 
   $node_target_dir = $target_dir ? {
@@ -47,9 +47,9 @@ define nodejs::install (
   }
 
   $node_os = $::kernel ? {
-    /(?i)(darwin)/  => 'darwin',
-    /(?i)(linux)/   => 'linux',
-    default         => 'linux',
+    /(?i)(darwin)/ => 'darwin',
+    /(?i)(linux)/  => 'linux',
+    default        => 'linux',
   }
 
   $node_arch = $::hardwaremodel ? {
@@ -84,13 +84,13 @@ define nodejs::install (
   }
 
   if $make_install {
-    $node_filename       = "node-${node_version}.tar.gz"
-    $node_fqv            = $node_version # TODO remove not used
-    $message             = "Installing Node.js ${node_version}"
+    $node_filename = "node-${node_version}.tar.gz"
+    $node_fqv      = $node_version # TODO remove not used
+    $message       = "Installing Node.js ${node_version}"
   } else {
-    $node_filename       = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
-    $node_fqv            = "${node_version}-${node_os}-${node_arch}" # TODO remove not used
-    $message             = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
+    $node_filename = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
+    $node_fqv      = "${node_version}-${node_os}-${node_arch}" # TODO remove not used
+    $message       = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
   }
 
   $node_symlink_target = "${node_unpack_folder}/bin/node"
@@ -170,6 +170,7 @@ define nodejs::install (
     path   => $node_symlink,
     target => $node_symlink_target,
   }
+
   if $make_default {
     file { 'nodejs-default-symlink':
       ensure  => 'link',
