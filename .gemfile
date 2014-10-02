@@ -8,6 +8,7 @@ gem 'puppet-lint'
 gem 'puppet-syntax'
 gem 'rspec-puppet'
 gem 'puppetlabs_spec_helper'
+gem 'iconv'
 
 if RUBY_VERSION !~ /^1.8/
   gem 'puppet-blacksmith'
