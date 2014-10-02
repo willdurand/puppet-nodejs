@@ -29,6 +29,7 @@ define nodejs::install (
   $target_dir   = undef,
   $with_npm     = true,
   $make_install = true,
+  $make_default = false,
 ) {
 
   include nodejs::params
@@ -165,9 +166,17 @@ define nodejs::install (
   }
 
   file { "nodejs-symlink-bin-with-version-${node_version}":
-    ensure  => 'link',
-    path    => $node_symlink,
-    target  => $node_symlink_target,
+    ensure => 'link',
+    path   => $node_symlink,
+    target => $node_symlink_target,
+  }
+  if $make_default {
+    file { 'nodejs-default-symlink':
+      ensure  => 'link',
+      target  => $node_symlink,
+      path    => '/usr/local/bin/node',
+      require => File["nodejs-symlink-bin-with-version-${node_version}"],
+    }
   }
 
   # automatic installation of npm is introduced since nodejs v0.6.3

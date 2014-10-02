@@ -27,13 +27,15 @@ class nodejs (
   $target_dir   = '/usr/local/bin',
   $with_npm     = true,
   $make_install = true,
+  $make_default = false,
 ) {
 
   nodejs::install { "nodejs-${version}":
-    version       => $version,
-    target_dir    => $target_dir,
-    with_npm      => $with_npm,
-    make_install  => $make_install,
+    version      => $version,
+    target_dir   => $target_dir,
+    with_npm     => $with_npm,
+    make_install => $make_install,
+    make_default => $make_default,
   }
 
   $node_version = $version ? {
