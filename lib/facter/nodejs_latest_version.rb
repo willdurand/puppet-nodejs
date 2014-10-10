@@ -1,8 +1,7 @@
 require 'net/http'
 require 'yaml'
 require 'fileutils'
-require_relative 'nodejs_functions'
-
+require File.join(File.dirname(__FILE__), 'nodejs_functions.rb')
 
 Facter.add("nodejs_latest_version") do
   setcode do
