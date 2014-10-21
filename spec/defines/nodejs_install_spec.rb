@@ -173,6 +173,19 @@ describe 'nodejs::install', :type => :define do
     )} 
   end
 
+  describe 'on a OpenSuse based OS (osfamily = Suse)' do
+    let(:facts) {{
+      :osfamily => 'Suse'
+    }}
+    let(:params) {{
+      :version => '0.10.20'
+    }}
+
+    it { should contain_package('gcc-c++').with(
+      :ensure => 'present'
+    )}
+  end
+
   describe 'on a Non-RedHat based OS (osfamily != RedHat)' do
     let(:facts) {{
         :osfamily => 'Debian'
