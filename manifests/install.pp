@@ -142,6 +142,7 @@ define nodejs::install (
 
   $gplusplus_package = $::osfamily ? {
     'RedHat'   => 'gcc-c++',
+    'Suse'     => 'gcc-c++',
     default    => 'g++',
   }
 
