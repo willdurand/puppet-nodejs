@@ -29,7 +29,7 @@ define nodejs::install (
   $target_dir   = undef,
   $with_npm     = true,
   $make_install = true,
-  $make_default = false,
+  $create_symlinks = true,
 ) {
 
   include nodejs::params
@@ -171,7 +171,7 @@ define nodejs::install (
     target => $node_symlink_target,
   }
 
-  if $make_default {
+  if $create_symlinks {
     file { 'nodejs-default-symlink':
       ensure  => 'link',
       target  => $node_symlink,
