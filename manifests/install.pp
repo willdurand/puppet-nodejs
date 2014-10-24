@@ -142,10 +142,19 @@ define nodejs::install (
 
   $gplusplus_package = $::osfamily ? {
     'RedHat'   => 'gcc-c++',
+    'Suse'     => 'gcc-c++',
     default    => 'g++',
   }
 
   if $make_install {
+
+    if $::osfamily == 'Suse'{
+
+        package { "patterns-openSUSE-minimal_base-conflicts-12.3-7.10.1.x86_64":
+            ensure => "absent"
+        }
+    }
+
     ensure_packages([ 'python', $gplusplus_package, 'make' ])
 
     exec { "nodejs-make-install-${node_version}":
