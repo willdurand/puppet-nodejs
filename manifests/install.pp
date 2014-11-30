@@ -212,4 +212,13 @@ define nodejs::install (
       ],
     }
   }
+
+  if ($with_npm and $create_symlinks) {
+    file { 'npm-default-symlink':
+      ensure  => 'link',
+      target  => "${node_unpack_folder}/bin/npm",
+      path    => '/usr/local/bin/npm',
+      require => File["nodejs-symlink-bin-with-version-${node_version}"],
+    }
+  }
 }
