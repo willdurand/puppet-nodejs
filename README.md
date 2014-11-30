@@ -42,7 +42,7 @@ class { 'nodejs':
   version => 'v0.10.25',
 }
 ```
-This will compile and install Node.js version `v0.10.25` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-current/bin` so you can just start using `node`.
+This will compile and install Node.js version `v0.10.25` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
 
 Shortcuts are provided to easily install the `latest` or `stable` release by setting the `version` parameter to `latest` or `stable`. It will automatically look for the last release available on http://nodejs.org.
 
