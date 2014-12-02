@@ -27,7 +27,6 @@ class nodejs (
   $target_dir   = '/usr/local/bin',
   $with_npm     = true,
   $make_install = true,
-  $create_symlinks = false,
 ) {
 
   nodejs::install { "nodejs-${version}":
@@ -35,7 +34,6 @@ class nodejs (
     target_dir   => $target_dir,
     with_npm     => $with_npm,
     make_install => $make_install,
-    create_symlinks => $create_symlinks,
   }
 
   $node_version = $version ? {
