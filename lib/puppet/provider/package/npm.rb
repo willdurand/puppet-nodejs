@@ -13,7 +13,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
       environment :HOME => "/root"
     end
   else
-    optional_commands :npm => 'npm'
+    optional_commands :npm => '/usr/local/node/node-default/bin/npm'
   end
 
   def self.npmlist
