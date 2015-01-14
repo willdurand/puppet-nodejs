@@ -128,6 +128,13 @@ package { 'express':
 }
 ```
 
+### Proxy
+
+When your puppet agent is behind a web proxy, export the `http_proxy` environment variable:
+
+```bash
+export http_proxy=http://myHttpProxy:8888
+```
 
 Running the tests
 -----------------
