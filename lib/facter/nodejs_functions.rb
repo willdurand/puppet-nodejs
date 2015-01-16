@@ -47,21 +47,41 @@ def set_cached_value(key, value, dir = '/tmp/puppetfacts/nodejs', file = 'cache.
   end
 end
 
+def proxy
+  http_proxy = ENV["http_proxy"]
+  URI.parse(http_proxy) rescue nil
+end
 
 # inspired by https://github.com/visionmedia/n/blob/5630984059fb58f47def8dca2f25163456181ed3/bin/n#L363-L372
+# and http://www.jethrocarr.com/2014/08/14/ruby-nethttp-proxies/
 def get_latest_version
   uri = URI('http://nodejs.org/dist/')
-  res = Net::HTTP.get(uri)
-  match = res.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) }
+
+  if proxy
+    request = Net::HTTP::Proxy(proxy.host, proxy.port).new(uri.host, uri.port)
+  else
+    request = Net::HTTP.new(uri.host, uri.port)
+  end
+
+  res = request.get(uri.request_uri)
+  match = res.body.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
+  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
   'v' + match.last
 end
 
 
 def get_stable_version
   uri = URI('http://nodejs.org/dist/')
-  res = Net::HTTP.get(uri)
-  match = res.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) }
+
+  if proxy
+    request = Net::HTTP::Proxy(proxy.host, proxy.port).new(uri.host, uri.port)
+  else
+    request = Net::HTTP.new(uri.host, uri.port)
+  end
+
+  res = request.get(uri.request_uri)
+  match = res.body.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
+  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
   'v' + match.last
 end
+
