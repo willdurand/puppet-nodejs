@@ -49,19 +49,30 @@ end
 
 
 # inspired by https://github.com/visionmedia/n/blob/5630984059fb58f47def8dca2f25163456181ed3/bin/n#L363-L372
-def get_latest_version
+def get_version_list
   uri = URI('http://nodejs.org/dist/')
-  res = Net::HTTP.get(uri)
-  match = res.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) }
+  
+  http_proxy = ENV["http_proxy"]
+  if http_proxy.to_s != ''
+    proxy = URI.parse(http_proxy)
+    request = Net::HTTP::Proxy(proxy.host, proxy.port).new(uri.host, uri.port)
+  else
+    request = Net::HTTP.new(uri.host, uri.port)
+  end
+  
+  request.get(uri.request_uri).body
+end
+
+
+def get_latest_version
+  match = get_version_list.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
+  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
   'v' + match.last
 end
 
 
 def get_stable_version
-  uri = URI('http://nodejs.org/dist/')
-  res = Net::HTTP.get(uri)
-  match = res.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) }
+  match = get_version_list.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
+  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
   'v' + match.last
 end
