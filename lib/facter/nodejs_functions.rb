@@ -18,7 +18,7 @@ end
 def get_cached_value(key, ttl=86400, dir = '/tmp/puppetfacts/nodejs', file = 'cache.yaml')
   cache_file = File.join(dir, file)
 
-  if File::exist?(cache_file)    
+  if File::exist?(cache_file)
     cache = YAML.load_file(cache_file)
     value = cache[key]
     cache_time = File.mtime(cache_file)
@@ -37,8 +37,8 @@ end
 
 def set_cached_value(key, value, dir = '/tmp/puppetfacts/nodejs', file = 'cache.yaml')
   FileUtils.mkdir_p(dir) if !File::exists?(dir)
-  cache_file = File.join(dir, file)  
-  
+  cache_file = File.join(dir, file)
+
   cache = File::exist?(cache_file) ? YAML.load_file(cache_file) : Hash.new
   cache[key] = value
 
@@ -51,7 +51,7 @@ end
 # inspired by https://github.com/visionmedia/n/blob/5630984059fb58f47def8dca2f25163456181ed3/bin/n#L363-L372
 def get_version_list
   uri = URI('http://nodejs.org/dist/')
-  
+
   http_proxy = ENV["http_proxy"]
   if http_proxy.to_s != ''
     proxy = URI.parse(http_proxy)
@@ -59,7 +59,7 @@ def get_version_list
   else
     request = Net::HTTP.new(uri.host, uri.port)
   end
-  
+
   request.get(uri.request_uri).body
 end
 
