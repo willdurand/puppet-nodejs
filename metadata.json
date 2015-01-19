@@ -1,6 +1,6 @@
 {
   "name": "willdurand-nodejs",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "author": "William Durand",
   "license": "MIT",
   "summary": "A module to install Node.js and NPM.",
