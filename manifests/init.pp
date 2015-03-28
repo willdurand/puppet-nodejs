@@ -37,9 +37,9 @@ class nodejs (
   }
 
   $node_version = $version ? {
-    undef    => $::nodejs_stable_version,
-    'stable' => $::nodejs_stable_version,
-    'latest' => $::nodejs_latest_version,
+    undef    => nodejs_stable_version(),
+    'stable' => nodejs_stable_version(),
+    'latest' => nodejs_latest_version(),
     default  => $version
   }
 
