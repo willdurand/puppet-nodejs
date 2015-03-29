@@ -10,6 +10,7 @@ gem 'rspec-puppet'
 gem 'puppetlabs_spec_helper'
 gem 'iconv'
 gem 'webmock'
+gem 'rspec', '< 3.2.0'
 
 if RUBY_VERSION !~ /^1.8/
   gem 'puppet-blacksmith'
