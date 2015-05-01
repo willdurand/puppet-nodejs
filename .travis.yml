@@ -10,6 +10,7 @@ env:
   - PUPPET_VERSION="~> 3.2.0"
   - PUPPET_VERSION="~> 3.4.0"
   - PUPPET_VERSION="~> 3.6.0"
+  - PUPPET_VERSION="~> 3.7.0"
 
 matrix:
     allow_failures:
