@@ -6,6 +6,7 @@ gem 'rake'
 gem 'puppet', puppetVersion
 gem 'puppet-lint'
 gem 'puppet-syntax'
+gem 'rspec', '< 3.2.0'
 gem 'rspec-puppet'
 gem 'puppetlabs_spec_helper'
 gem 'iconv'
