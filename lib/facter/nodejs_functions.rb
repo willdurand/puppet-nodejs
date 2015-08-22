@@ -1,4 +1,4 @@
-class Version < Array
+class NodeVersion < Array
   def initialize s
     super(s.split('.').map { |e| e.to_i })
   end
@@ -66,13 +66,13 @@ end
 
 def get_latest_version
   match = get_version_list.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
+  match.sort! { |a,b| NodeVersion.new(a) <=> NodeVersion.new(b) };
   'v' + match.last
 end
 
 
 def get_stable_version
   match = get_version_list.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
-  match.sort! { |a,b| Version.new(a) <=> Version.new(b) };
+  match.sort! { |a,b| NodeVersion.new(a) <=> NodeVersion.new(b) };
   'v' + match.last
 end
