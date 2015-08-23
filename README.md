@@ -4,7 +4,7 @@ puppet-nodejs
 [![Build
 Status](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
 
-This module allows to install [Node.js](http://nodejs.org/) and
+This module allows you to install [Node.js](http://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
 [willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
 
@@ -12,11 +12,11 @@ This module allows to install [Node.js](http://nodejs.org/) and
 Installation
 ------------
 
-### Manuall installation
+### Manual installation
 
 This modules depends on
 [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) and [maestrodev/puppet-wget](https://github.com/maestrodev/puppet-wget).
-so all repositories have to be checked out:
+So all repositories have to be checked out:
 
 ```bash
 git clone git://github.com/willdurand/puppet-nodejs.git modules/nodejs
@@ -28,14 +28,14 @@ git clone git://github.com/maestrodev/puppet-wget.git modules/wget
 
     puppet module install willdurand/nodejs
 
-### Librarian-puppet
+### Librarian-puppet:
 
     mod 'willdurand/nodejs', '1.x.x'
 
 Usage
 -----
 
-There are a few ways how to use this puppet module. The easiest one is just using the class definition
+There are a few ways to use this puppet module. The easiest one is just using the class definition:
 
 ```puppet
 class { 'nodejs':
@@ -52,7 +52,7 @@ class { 'nodejs':
 }
 ```
 
-### Setup using pre-built installer
+### Setup using the pre-built installer
 
 To use the pre-built installer version provided via http://nodejs.org/download you have to set `make_install` to `false`
 
@@ -65,7 +65,7 @@ class { 'nodejs':
 
 ### Setup multiple versions of Node.js
 
-If you need mode than one installed version of Node.js on your machine, you can just do it using the `nodejs::install` puppet define.
+If you need more than one installed version of Node.js on your machine, you can just do it using the `nodejs::install` puppet define.
 
 ```puppet
 nodejs::install { 'v0.10.17':
