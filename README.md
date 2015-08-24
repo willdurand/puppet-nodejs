@@ -24,6 +24,12 @@ git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
 git clone git://github.com/maestrodev/puppet-wget.git modules/wget
 ```
 
+For Redhat based OS, the following are (typical) additional requirements:
+
+```bash
+git clone git://github.com/treydock/puppet-gpg_key.git modules/gpg_key
+```
+
 ### Puppet Module Tool:
 
     puppet module install willdurand/nodejs
