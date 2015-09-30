@@ -57,7 +57,7 @@ define nodejs::npm (
   if $ensure == present {
     exec { "npm_install_${name}":
       command     => "npm install ${install_opt} ${install_pkg}",
-      unless      => "npm list -p -l | grep '${validate}'",
+      unless      => "npm list -p -l | grep '${validate}$'",
       cwd         => $npm_dir,
       path        => $::path,
       require     => Class['nodejs'],
@@ -70,7 +70,7 @@ define nodejs::npm (
   } else {
     exec { "npm_remove_${name}":
       command     => "npm remove ${npm_pkg}",
-      onlyif      => "npm list -p -l | grep '${validate}'",
+      onlyif      => "npm list -p -l | grep '${validate}$'",
       cwd         => $npm_dir,
       path        => $::path,
       require     => Class['nodejs'],
