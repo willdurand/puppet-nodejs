@@ -59,7 +59,8 @@ def get_version_list
   else
     request = Net::HTTP.new(uri.host, uri.port)
   end
-
+  request.open_timeout = 2
+  request.read_timeout = 2
   request.get(uri.request_uri).body
 end
 
