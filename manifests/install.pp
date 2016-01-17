@@ -100,6 +100,10 @@ define nodejs::install (
   $node_symlink_target = "${node_unpack_folder}/bin/node"
   $node_symlink = "${node_target_dir}/node-${node_version}"
 
+  $npm_version    = npm_version($node_unpack_folder)
+  $npm_target_dir = "${node_unpack_folder}/bin"
+  $npm_filename   = "${node_target_dir}/npm-${npm_version}"
+
   ensure_resource('file', 'nodejs-install-dir', {
     ensure => 'directory',
     path   => $::nodejs::params::install_dir,
@@ -205,6 +209,15 @@ define nodejs::install (
         Wget::Fetch["npm-download-${node_version}"],
         Package['curl'],
       ],
+    }
+  }
+  else {
+    $npm_template_name = "${module_name}/npm.erb"
+
+    file { $npm_filename:
+      ensure  => file,
+      mode    => '0777',
+      content => template($npm_template_name)
     }
   }
 }
