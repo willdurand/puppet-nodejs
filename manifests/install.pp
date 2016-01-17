@@ -100,9 +100,9 @@ define nodejs::install (
   $node_symlink_target = "${node_unpack_folder}/bin/node"
   $node_symlink = "${node_target_dir}/node-${node_version}"
 
-  $npm_version     = npm_version($node_unpack_folder)
-  $npm_target_dir  = "${node_unpack_folder}/bin"
-  $npm_filename    = "${node_target_dir}/npm-${npm_version}"
+  $npm_version    = npm_version($node_unpack_folder)
+  $npm_target_dir = "${node_unpack_folder}/bin"
+  $npm_filename   = "${node_target_dir}/npm-${npm_version}"
 
   ensure_resource('file', 'nodejs-install-dir', {
     ensure => 'directory',
@@ -216,7 +216,7 @@ define nodejs::install (
 
     file { $npm_filename:
       ensure  => file,
-      mode    => 0777,
+      mode    => '0777',
       content => template($npm_template_name)
     }
   }

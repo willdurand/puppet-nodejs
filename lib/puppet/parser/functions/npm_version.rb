@@ -1,6 +1,6 @@
 module Puppet::Parser::Functions
   newfunction(:npm_version, :type => :rvalue) do |args|
-    node_unpack_folder = args[0]
+    node_unpack_folder = args.shift
     version            = `#{node_unpack_folder}/bin/npm -v`
 
     # the version will be extracted from the CLI.
