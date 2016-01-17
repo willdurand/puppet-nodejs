@@ -25,3 +25,5 @@ before_install:
 script: "rake test"
 
 gemfile: .gemfile
+
+sudo: false
