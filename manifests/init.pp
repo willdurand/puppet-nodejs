@@ -51,7 +51,7 @@ class nodejs (
     target  => $nodejs_version_path,
     require => Nodejs::Install["nodejs-${version}"],
   }
-  
+
   $node_default_symlink = "${target_dir}/node"
   $node_default_symlink_target = "${nodejs_default_path}/bin/node"
   $npm_default_symlink = "${target_dir}/npm"
