@@ -30,10 +30,9 @@ define nodejs::npm (
     $install_pkg = $npm_pkg
   }
 
-  if $version {
-    $validate = "${npm_dir}/node_modules/${npm_pkg}:${npm_pkg}@${version}"
-  } else {
-    $validate = "${npm_dir}/node_modules/${npm_pkg}"
+  $validate = $version ? {
+    undef   => "${npm_dir}/node_modules/${npm_pkg}:${npm_pkg}",
+    default => "${npm_dir}/node_modules/${npm_pkg}:${npm_pkg}@${version}"
   }
 
   # exec_as_user allows to install an npm package only for a certain user
@@ -44,12 +43,12 @@ define nodejs::npm (
   } else {
     # if exec user is defined, exec environment depends on the operating system
     case $::operatingsystem {
-      'Debian','Ubuntu','RedHat','SLEL','Fedora','CentOS': {
+      'Debian','Ubuntu','RedHat','SLES','Fedora','CentOS': {
         $exec_env = "HOME=/home/${exec_as_user}"
       }
       default: {
         # so far only linux systems are supported with this option
-        fail('unsupported operating system')
+        fail("This feature does not support the operating system '${::operatingsystem}'!")
       }
     }
   }
