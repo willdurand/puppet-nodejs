@@ -77,5 +77,15 @@ describe 'nodejs', :type => :class do
       .with_make_install('false')
     }
   end
-end
 
+  describe 'with node_path' do
+    let(:params) {{
+      :node_path => '/usr/local/node/node-v5.4.1/lib/node_modules'
+    }}
+
+    it do
+      should contain_file('/etc/profile.d/nodejs.sh')
+        .with_content(/(.*)NODE_PATH=\/usr\/local\/node\/node-v5.4.1\/lib\/node_modules/)
+    end
+  end
+end

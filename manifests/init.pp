@@ -27,7 +27,9 @@ class nodejs (
   $target_dir   = '/usr/local/bin',
   $with_npm     = true,
   $make_install = true,
+  $node_path    = '/usr/local/node/node-default/lib/node_modules'
 ) {
+  validate_string($node_path)
 
   nodejs::install { "nodejs-${version}":
     version      => $version,
