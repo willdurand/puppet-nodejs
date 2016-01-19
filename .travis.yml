@@ -3,7 +3,6 @@ language: ruby
 rvm:
   - 1.8.7
   - 1.9.3
-  - 2.0.0
   - 2.1.0
 
 env:
@@ -16,8 +15,17 @@ env:
   - PUPPET_VERSION="~> 4.3.0" FUTURE_PARSER="yes"
 
 matrix:
-    allow_failures:
-        - rvm: 1.8.7
+  allow_failures:
+    - rvm: 1.8.7
+  exclude:
+    - env: PUPPET_VERSION="~> 4.3.0" FUTURE_PARSER="yes"
+      rvm: 1.8.7
+    - env: PUPPET_VERSION="~> 2.7.20"
+      rvm: 2.1.0
+    - env: PUPPET_VERSION="~> 3.2.0"
+      rvm: 2.1.0
+    - env: PUPPET_VERSION="~> 3.1.0"
+      rvm: 2.1.0
 
 before_install:
   - gem update bundler
