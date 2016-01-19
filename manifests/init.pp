@@ -14,6 +14,9 @@
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
+# [*node_path*]
+#   Value of the system environment variable (default: "/usr/local/node/node-default/lib/node_modules").
+#
 # == Example:
 #
 #  include nodejs
@@ -27,7 +30,9 @@ class nodejs (
   $target_dir   = '/usr/local/bin',
   $with_npm     = true,
   $make_install = true,
+  $node_path    = '/usr/local/node/node-default/lib/node_modules'
 ) {
+  validate_string($node_path)
 
   nodejs::install { "nodejs-${version}":
     version      => $version,

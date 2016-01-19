@@ -95,6 +95,17 @@ This snippet will install version `v0.10.17` and `v0.10.25` on your machine. Kee
 By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v0.10.17`.
 All parameters available in the `class` definition are also available for `nodejs::install`.
 
+### Configuring $NODE_PATH
+
+The environment variable $NODE_PATH can be configured using the `init` manifest:
+
+```puppet
+class { '::nodejs':
+  version   => 'latest',
+  node_path => '/your/custom/node/path',
+}
+```
+
 ### Binary path
 
 `node` and `npm` are linked to `/usr/local/bin` to be available in your system `$PATH` by default. To link those binaries to e.g `/bin`, just set the parameter `target_dir`.
