@@ -14,6 +14,9 @@
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
+# [*node_path*]
+#   Value of the system environment variable (default: "/usr/local/node/node-default/lib/node_modules").
+#
 # == Example:
 #
 #  include nodejs
