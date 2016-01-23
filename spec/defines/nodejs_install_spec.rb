@@ -198,4 +198,27 @@ describe 'nodejs::install', :type => :define do
       :ensure => 'present'
     )}
   end
+
+  describe 'uninstall' do
+    before(:each) do
+      Puppet::Parser::Functions.newfunction(:node_default_instance_directory, :type => :rvalue) {
+        |args| "#{args[0]}/node-v5.4.1"
+      }
+    end
+
+    describe 'any instance' do
+      let(:params) {{
+        :version => 'v0.12',
+        :ensure  => 'absent',
+      }}
+
+      it { should contain_file('/usr/local/node/node-v0.12') \
+        .with(:ensure => 'absent', :force => true, :recurse => true) \
+      }
+
+      it { should contain_file('/usr/local/bin/node-v0.12') \
+        .with_ensure('absent') \
+      }
+    end
+  end
 end
