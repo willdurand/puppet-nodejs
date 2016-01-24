@@ -86,14 +86,37 @@ This snippet will install version `v0.10.17` and `v0.10.25` on your machine. Kee
 
 ```
 /usr/local/bin/node-v0.10.17
-/usr/local/bin/npm-v0.10.17
-
 /usr/local/bin/node-v0.10.25
-/usr/local/bin/npm-v0.10.25
 ```
 
 By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v0.10.17`.
 All parameters available in the `class` definition are also available for `nodejs::install`.
+
+NPM symlinks cannot be created since every npm instance would use the default node interpreter which may cause errors.
+If you'd like to use another npm interpreter, please do something like this:
+
+```
+/usr/local/node/node-vx.x/bin/node /usr/local/node/node-vx.x/bin/npm run your_command
+```
+
+For 2.x it is planned to use NVM and refactor the whole nodejs installer (See [#119](https://github.com/willdurand/puppet-nodejs/issues/119)
+
+It is also possible to remove those versions again:
+
+```puppet
+::nodejs::install { 'node-v5.4':
+  ensure  => absent,
+  version => 'v5.4.1',
+}
+```
+
+After the run the directory __/usr/local/node/node-v5.4.1__ has been purged.
+The link __/usr/local/bin/node-v5.4.1__ is also purged.
+
+If the instance is the default one, an error will be thrown.
+
+__Note:__ It is not possible to install and uninstall an instance in the same run.
+__Note:__ The default instance of nodejs cannot be removed. In this case an error will be raised.
 
 ### Configuring $NODE_PATH
 
@@ -105,6 +128,8 @@ class { '::nodejs':
   node_path => '/your/custom/node/path',
 }
 ```
+
+It is not possible to adjust a $NODE_PATH through ``::nodejs::install``.
 
 ### Binary path
 
