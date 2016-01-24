@@ -8,12 +8,12 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
   has_feature :versionable
 
   if Puppet::Util::Package.versioncmp(Puppet.version, '3.0') >= 0
-    has_command(:npm, '/usr/local/node/node-default/bin/npm') do
+    has_command(:npm, 'npm') do
       is_optional
       environment :HOME => "/root"
     end
   else
-    optional_commands :npm => '/usr/local/node/node-default/bin/npm'
+    optional_commands :npm => 'npm'
   end
 
   def self.npmlist
