@@ -170,6 +170,39 @@ package { 'express':
 }
 ```
 
+### NPM installer
+
+The nodejs installer can be used if a npm package should not be installed globally, but in a certain directory.
+
+There are two approaches how to use this feature:
+
+#### Installing a single package into a directory
+
+```puppet
+::nodejs::npm { 'npm-webpack':
+  ensure       => present, # absent would uninstall this package
+  pkg_name     => 'webpack',
+  version      => 'x.x', # optional
+  install_opt  => '-x -y -z', # options passed to the "npm install" cmd, optional
+  remove_opt   => '-x -y -z', # options passed to the "npm remove" cmd (in case of ensure => absent), optional
+  exec_as_user => 'vagrant',  # exec user, optional
+  directory    => '/target/directory', # target directory
+}
+```
+
+This would install the package ``webpack`` into ``/target/directory`` with version ``x.x``.
+
+#### Executing a ``package.json`` file
+
+```puppet
+::nodejs::npm { 'npm-install-dir':
+  list         => true, # flag to tell puppet to execute the package.json file
+  directory    => '/target',
+  exec_as_user => 'vagrant',
+  install_opt  => '-x -y -z',
+}
+```
+
 ### Proxy
 
 When your puppet agent is behind a web proxy, export the `http_proxy` environment variable:

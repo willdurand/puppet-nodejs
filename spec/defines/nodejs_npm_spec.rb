@@ -8,9 +8,12 @@ describe 'nodejs::npm', :type => :define do
 
   describe 'install npm package' do
     let (:params) {{
-      :name => '/foo:yo',    }}
+      :name      => 'yo-foo',
+      :pkg_name  => 'yo',
+      :directory => '/foo'
+    }}
 
-    it { should contain_exec('npm_install_/foo:yo') \
+    it { should contain_exec('npm_install_yo_/foo') \
       .with_command('npm install  yo') \
       .with_unless("npm list -p -l | grep '/foo/node_modules/yo:yo'")
     }
@@ -18,11 +21,13 @@ describe 'nodejs::npm', :type => :define do
 
   describe 'uninstall npm package' do
     let (:params) {{
-      :name   => '/foo:yo',
-      :ensure => 'absent'
+      :name      => 'foo-yo',
+      :ensure    => 'absent',
+      :pkg_name  => 'yo',
+      :directory => '/foo'
     }}
 
-    it { should contain_exec('npm_remove_/foo:yo') \
+    it { should contain_exec('npm_remove_yo_/foo') \
       .with_command('npm remove yo') \
       .with_onlyif("npm list -p -l | grep '/foo/node_modules/yo:yo'")
     }
@@ -30,27 +35,15 @@ describe 'nodejs::npm', :type => :define do
 
   describe 'install npm package with version' do
     let (:params) {{
-      :name    => '/foo:yo',
-      :version => '1.4'
+      :name      => 'foo-yo',
+      :version   => '1.4',
+      :pkg_name  => 'yo',
+      :directory => '/foo'
     }}
 
-    it { should contain_exec('npm_install_/foo:yo') \
+    it { should contain_exec('npm_install_yo_/foo') \
       .with_command('npm install  yo@1.4') \
       .with_unless("npm list -p -l | grep '/foo/node_modules/yo:yo@1.4'")
-    }
-  end
-
-  describe 'install package globally from source' do
-    let (:params) {{
-      :name        => '/foo:source',
-      :version     => '1.4',
-      :source      => 'source',
-      :install_opt => '-g'
-    }}
-
-    it { should contain_exec('npm_install_/foo:source') \
-      .with_command('npm install -g source') \
-      .with_unless("npm list -p -l | grep '/foo/node_modules/source:source@1.4'")
     }
   end
 
@@ -58,19 +51,33 @@ describe 'nodejs::npm', :type => :define do
     operating_systems = ['Debian', 'Ubuntu', 'RedHat', 'SLES', 'Fedora', 'CentOS']
     operating_systems.each do |os|
       let (:params) {{
-        :name         => '/foo:yo',
-        :exec_as_user => 'Ma27'
+        :name         => 'foo-yo',
+        :exec_as_user => 'Ma27',
+        :pkg_name  => 'yo',
+        :directory => '/foo'
       }}
       let(:facts) {{
         :operatingsystem       => os,
         :nodejs_stable_version => 'v0.10.20'
       }}
 
-      it { should contain_exec('npm_install_/foo:yo') \
+      it { should contain_exec('npm_install_yo_/foo') \
         .with_command('npm install  yo') \
         .with_unless("npm list -p -l | grep '/foo/node_modules/yo:yo'") \
         .with_environment('HOME=/home/Ma27')
       }
     end
+  end
+
+  describe 'installation from a package.json file' do
+    let (:params) {{
+      :list        => true,
+      :directory   => '/foo',
+      :install_opt => '-x -z'
+    }}
+
+    it { should contain_exec('npm_install_dir_/foo') \
+      .with_command('npm install -x -z')
+    }
   end
 end
