@@ -1,12 +1,53 @@
-# Define: nodejs::npm
+# = Define: nodejs::npm
 #
-# Parameters:
+# Define to install packages in a certain directory.
 #
-# Actions:
+# == Parameters:
 #
-# Requires:
+# [*ensure*]
+#   Whether to install or uninstall the package.
 #
-# Usage:
+# [*version*]
+#   The specific version of the package to install (optional).
+#
+# [*source*]
+#   [DEPRECATED] Parameter to adjust a certain package name.
+#
+# [*install_opt*]
+#   Options to adjust for the npm commands (optional).
+#
+# [*remove_opt*]
+#   Options to adjust for npm removal commands (optional).
+#
+# [*exec_as_user*]
+#   User which should execute the command (optional).
+#
+# [*list*]
+#   Whehter to apply a package.json or installing a custom package (default: false).
+#
+# [*directory*]
+#   Target directory.
+#
+# [*pkg_name*]
+#   Package name.
+#
+# == Example:
+#
+# Single package:
+#
+#   ::nodejs::npm { 'webpack-directory':
+#     ensure => present,
+#     version => 'x.x',
+#     pkg_name => 'webpack',
+#     directory => '/directory',
+#   }
+#
+# From package.json:
+#
+#   ::nodejs::npm { 'directory-npm-install':
+#     list => true,
+#     directory => '/directory',
+#   }
 #
 define nodejs::npm (
   $ensure       = present,
@@ -14,36 +55,19 @@ define nodejs::npm (
   $source       = undef,
   $install_opt  = undef,
   $remove_opt   = undef,
-  $exec_as_user = undef
+  $exec_as_user = undef,
+  $list         = false,
+  $directory    = undef,
+  $pkg_name     = undef,
 ) {
   include nodejs
 
-  $npm = split($name, ':')
-  $npm_dir = $npm[0]
-  $npm_pkg = $npm[1]
-
-  if $source {
-    $install_pkg = $source
-  } elsif $version {
-    $install_pkg = "${npm_pkg}@${version}"
-  } else {
-    $install_pkg = $npm_pkg
-  }
-
-  $validate = $version ? {
-    undef   => "${npm_dir}/node_modules/${npm_pkg}:${npm_pkg}",
-    default => "${npm_dir}/node_modules/${npm_pkg}:${npm_pkg}@${version}"
-  }
-
-  # exec_as_user allows to install an npm package only for a certain user
-  # exec environment depends on exec user
   if $exec_as_user == undef {
-    # if exec user is undefined, exec environment should not be set, so the package will get installed globally
     $exec_env = undef
   } else {
     # if exec user is defined, exec environment depends on the operating system
     case $::operatingsystem {
-      'Debian','Ubuntu','RedHat','SLES','Fedora','CentOS': {
+      'Debian', 'Ubuntu', 'RedHat', 'SLES', 'Fedora', 'CentOS': {
         $exec_env = "HOME=/home/${exec_as_user}"
       }
       default: {
@@ -53,28 +77,47 @@ define nodejs::npm (
     }
   }
 
-  if $ensure == present {
-    exec { "npm_install_${name}":
-      command     => "npm install ${install_opt} ${install_pkg}",
-      unless      => "npm list -p -l | grep '${validate}'",
-      cwd         => $npm_dir,
-      path        => $::path,
-      require     => Class['nodejs'],
-      user        => $exec_as_user,
-      environment => $exec_env,
+  if $list {
+    if $remove_opt != undef {
+      fail('Remove options cannot be applied for an install from directory!')
     }
 
-    # Conditionally require npm_proxy only if resource exists.
-    Exec<| title=='npm_proxy' |> -> Exec["npm_install_${name}"]
-  } else {
-    exec { "npm_remove_${name}":
-      command     => "npm remove ${npm_pkg}",
-      onlyif      => "npm list -p -l | grep '${validate}'",
-      cwd         => $npm_dir,
-      path        => $::path,
-      require     => Class['nodejs'],
-      user        => $exec_as_user,
-      environment => $exec_env,
+    ::nodejs::npm::file { "npm-install-dir-${directory}":
+      directory => $directory,
+      exec_user => $exec_as_user,
+      exec_env  => $exec_env,
+      options   => $install_opt,
+    }
+  }
+  else {
+    $npm = split($name, ':')
+    if $directory == undef and $pkg_name == undef and $source == undef and $npm[0] and $npm[1] {
+      warning('It is deprecated to pass the target directory and the package as resource name. Use "$directory" and "$pkg_name instead!')
+
+      $npm_dir = $npm[0]
+      $npm_pkg = $npm[1]
+    }
+    else {
+      $npm_dir = $directory
+
+      if $source != undef and $pkg_name == undef {
+        warning('It is deprecated to use the "$source" parameter. Use "$pkg_name" instead!')
+        $npm_pkg = $source
+      }
+      else {
+        $npm_pkg = $pkg_name
+      }
+    }
+
+    ::nodejs::npm::package { "npm-install-${npm_pkg}-${npm_dir}":
+      ensure      => $ensure,
+      remove_opt  => $remove_opt,
+      exec_user   => $exec_as_user,
+      npm_dir     => $npm_dir,
+      npm_pkg     => $npm_pkg,
+      version     => $version,
+      exec_env    => $exec_env,
+      install_opt => $install_opt,
     }
   }
 }
