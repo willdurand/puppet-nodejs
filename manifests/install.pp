@@ -66,6 +66,13 @@ define nodejs::install (
     }
   }
 
+  if !defined(Package['ruby']){
+    package { 'ruby':
+      ensure   => installed,
+      before   => Package['semver'],
+    }
+  }
+
   if !defined(Package['semver']){
     package { 'semver':
       ensure   => installed,
