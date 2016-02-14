@@ -213,8 +213,8 @@ define nodejs::install (
         environment => ['clean=yes', "npm_config_prefix=${node_unpack_folder}"],
         unless      => "test -f ${node_unpack_folder}/bin/npm",
         require     => [
-          Download["npm-download-${node_version}"],
-          ::Nodejs::Install::Download['curl'],
+          ::Nodejs::Install::Download["npm-download-${node_version}"],
+          Package['curl'],
         ],
       }
     }
