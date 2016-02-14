@@ -1,0 +1,17 @@
+require 'spec_helper'
+
+describe 'nodejs::install::download', :type => :define do
+  let(:title) { 'nodejs::install::download' }
+
+  describe 'wget download' do
+    let(:params) {{
+      :source      => 'https://test.dev/foo',
+      :destination => '/usr/local/bin/foo'
+    }}
+
+    it { should contain_exec('nodejs-wget-download-https://test.dev/foo-/usr/local/bin/foo') \
+      .with_command('wget --output-document /usr/local/bin/foo https://test.dev/foo') \
+      .with_creates('/usr/local/bin/foo')
+    }
+  end
+end

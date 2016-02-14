@@ -120,7 +120,7 @@ define nodejs::install (
       mode   => '0644',
     })
 
-    wget::fetch { "nodejs-download-${node_version}":
+    ::nodejs::install::download { "nodejs-download-${node_version}":
       source      => "http://nodejs.org/dist/${node_version}/${node_filename}",
       destination => "${::nodejs::params::install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
@@ -132,7 +132,7 @@ define nodejs::install (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      require => Wget::Fetch["nodejs-download-${node_version}"],
+      require => ::Nodejs::Install::Download["nodejs-download-${node_version}"],
     }
 
     file { $node_unpack_folder:
@@ -199,11 +199,10 @@ define nodejs::install (
     # so we just install npm for nodejs below v0.6.3
     if ($with_npm and !is_npm_provided($node_version)) {
 
-      wget::fetch { "npm-download-${node_version}":
-        source             => 'https://npmjs.org/install.sh',
-        nocheckcertificate => true,
-        destination        => "${node_unpack_folder}/install-npm.sh",
-        require            => File["nodejs-symlink-bin-with-version-${node_version}"]
+      ::nodejs::install::download { "npm-download-${node_version}":
+        source      => 'https://npmjs.org/install.sh',
+        destination => "${node_unpack_folder}/install-npm.sh",
+        require     => File["nodejs-symlink-bin-with-version-${node_version}"]
       }
 
       exec { "npm-install-${node_version}":
@@ -214,8 +213,8 @@ define nodejs::install (
         environment => ['clean=yes', "npm_config_prefix=${node_unpack_folder}"],
         unless      => "test -f ${node_unpack_folder}/bin/npm",
         require     => [
-          Wget::Fetch["npm-download-${node_version}"],
-          Package['curl'],
+          Download["npm-download-${node_version}"],
+          ::Nodejs::Install::Download['curl'],
         ],
       }
     }
