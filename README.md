@@ -8,7 +8,11 @@ This module allows you to install [Node.js](http://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
 [willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
 
+Important announcements
+-----------------------
+
 __NOTE:__ the master branch is used for puppet-nodejs 2.x which will be rewritten completly in the next time. When creating PRs then please open them for the ``1.9`` branch.
+
 __NOTE:__ the ``puppet-wget`` package is required until ``1.9.1``. In ``1.9.2`` the dependency has been removed in order to provide proper ``strict_vars`` support.
 
 Installation
