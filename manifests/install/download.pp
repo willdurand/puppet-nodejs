@@ -29,7 +29,7 @@ define nodejs::install::download(
 
   exec { "nodejs-wget-download-${source}-${destination}":
     command => "wget --output-document ${destination} ${source}",
-    creates => $destination,
+    creates => $creates,
     path    => $::path,
     require => [
       Package['wget'],
