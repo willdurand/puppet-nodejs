@@ -33,6 +33,6 @@ define nodejs::install::download(
     path    => $::path,
     require => [
       Package['wget'],
-    ]
+    ],
   }
 }
