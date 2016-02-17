@@ -14,7 +14,7 @@ describe 'nodejs::install', :type => :define do
       .with_ensure('directory')
     }
 
-    it { should contain_wget__fetch('nodejs-download-v0.10.20') \
+    it { should contain_nodejs__install__download('nodejs-download-v0.10.20') \
       .with_source('http://nodejs.org/dist/v0.10.20/node-v0.10.20.tar.gz') \
       .with_destination('/usr/local/node/node-v0.10.20.tar.gz')
     }
@@ -49,7 +49,7 @@ describe 'nodejs::install', :type => :define do
     it { should_not contain_file('/usr/local/bin/node') }
     it { should_not contain_file('/usr/local/bin/npm') }
 
-    it { should_not contain_wget__fetch('npm-download-v0.10.20') }
+    it { should_not contain_nodejs__install__download('npm-download-v0.10.20') }
     it { should_not contain_exec('npm-install-v0.10.20') }
   end
 
@@ -63,7 +63,7 @@ describe 'nodejs::install', :type => :define do
       .with_ensure('directory')
     }
 
-    it { should contain_wget__fetch('nodejs-download-v0.10.19') \
+    it { should contain_nodejs__install__download('nodejs-download-v0.10.19') \
       .with_source('http://nodejs.org/dist/v0.10.19/node-v0.10.19.tar.gz') \
       .with_destination('/usr/local/node/node-v0.10.19.tar.gz')
     }
@@ -98,7 +98,7 @@ describe 'nodejs::install', :type => :define do
     it { should_not contain_file('/usr/local/bin/node') }
     it { should_not contain_file('/usr/local/bin/npm') }
 
-    it { should_not contain_wget__fetch('npm-download-v0.10.19') }
+    it { should_not contain_nodejs__install__download('npm-download-v0.10.19') }
     it { should_not contain_exec('npm-install-v0.10.19') }
   end
 
@@ -113,7 +113,7 @@ describe 'nodejs::install', :type => :define do
       .with_ensure('directory')
     }
 
-    it { should contain_wget__fetch('npm-download-v0.6.2') \
+    it { should contain_nodejs__install__download('npm-download-v0.6.2') \
       .with_source('https://npmjs.org/install.sh') \
       .with_destination('/usr/local/node/node-v0.6.2/install-npm.sh')
     }

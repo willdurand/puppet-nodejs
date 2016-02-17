@@ -8,13 +8,12 @@ This module allows you to install [Node.js](http://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
 [willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
 
+Important announcements
+-----------------------
+
 __NOTE:__ the master branch is used for puppet-nodejs 2.x which will be rewritten completly in the next time. When creating PRs then please open them for the ``1.9`` branch.
 
-Known Issues
-------------
-
-``puppet-nodejs`` introduced support for puppet 4.x in the ``1.9.0`` release. Due to some issues with other dependencies it is not possible to provide support for the ``strict_variables`` mode.
-See [#130](https://github.com/willdurand/puppet-nodejs/issues/130) for further information.
+__NOTE:__ the ``puppet-wget`` package is required until ``1.9.1``. In ``1.9.2`` the dependency has been removed in order to provide proper ``strict_vars`` support.
 
 Installation
 ------------
@@ -22,13 +21,12 @@ Installation
 ### Manual installation
 
 This modules depends on
-[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) and [maestrodev/puppet-wget](https://github.com/maestrodev/puppet-wget).
+[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib).
 So all repositories have to be checked out:
 
 ```bash
 git clone git://github.com/willdurand/puppet-nodejs.git modules/nodejs
 git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
-git clone git://github.com/maestrodev/puppet-wget.git modules/wget
 ```
 
 For Redhat based OS, the following are (typical) additional requirements:
