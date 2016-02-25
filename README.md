@@ -118,10 +118,9 @@ It is also possible to remove those versions again:
 After the run the directory __/usr/local/node/node-v5.4.1__ has been purged.
 The link __/usr/local/bin/node-v5.4.1__ is also purged.
 
-If the instance is the default one, an error will be thrown.
-
 __Note:__ It is not possible to install and uninstall an instance in the same run.
-__Note:__ The default instance of nodejs cannot be removed. In this case an error will be raised.
+
+When attempting to remove the default instance this can be only done when having the ``::nodejs`` class __NOT__ defined as otherwise ``duplicate resource`` errors would occur. 
 
 ### Configuring $NODE_PATH
 
