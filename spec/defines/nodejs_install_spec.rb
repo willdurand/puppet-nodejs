@@ -232,7 +232,7 @@ describe 'nodejs::install', :type => :define do
         .with_ensure('absent') \
       }
 
-      it { should contain_file('/usr/local/bin/node-v0.12') \
+      it { should contain_file('/usr/local/bin/node-v5.6.0') \
         .with_ensure('absent') \
       }
     end
