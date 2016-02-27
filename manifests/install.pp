@@ -73,15 +73,15 @@ define nodejs::install (
     }
   }
 
+  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
+
   if !defined(Package['semver']){
     package { 'semver':
       ensure   => installed,
       provider => gem,
-      before   => File["nodejs-symlink-bin-with-version-${node_version}"],
+      before   => File[$node_unpack_folder],
     }
   }
-
-  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
 
   if $ensure == present {
     $node_os = $::kernel ? {
@@ -220,12 +220,13 @@ define nodejs::install (
     }
   }
   else {
-    $install_dir = "${::nodejs::params::install_dir}/node-${node_version}"
-    if node_default_instance_directory($::nodejs::params::install_dir) == $install_dir {
-      fail('Cannot remove "default" node instance!')
+    if $::nodejs_installed_version == $node_version {
+      file { "${::nodejs::params::install_dir}/node-default":
+        ensure => absent,
+      }
     }
 
-    file { $install_dir:
+    file { $node_unpack_folder:
       ensure  => absent,
       force   => true,
       recurse => true,
