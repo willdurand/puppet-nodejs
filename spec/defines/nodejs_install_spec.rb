@@ -3,7 +3,10 @@ require 'spec_helper'
 describe 'nodejs::install', :type => :define do
   let(:title) { 'nodejs::install' }
   let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20'
+    :nodejs_stable_version => 'v0.10.20',
+    :kernel                => 'linux',
+    :hardwaremodel         => 'x86',
+    :osfamily              => 'Ubuntu'
   }}
 
   describe 'with default parameters' do
@@ -162,7 +165,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a RedHat based OS (osfamily = RedHat)' do
     let(:facts) {{
-      :osfamily => 'RedHat'
+      :osfamily              => 'RedHat',
+      :kernel                => 'linux',
+      :hardwaremodel         => 'x86',
+      :nodejs_stable_version => 'v0.10.20',
     }}
     let(:params) {{
       :version => '0.10.20'
@@ -175,7 +181,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a OpenSuse based OS (osfamily = Suse)' do
     let(:facts) {{
-      :osfamily => 'Suse'
+      :osfamily              => 'Suse',
+      :kernel                => 'linux',
+      :hardwaremodel         => 'x86',
+      :nodejs_stable_version => 'v0.10.20',
     }}
     let(:params) {{
       :version => '0.10.20'
@@ -188,7 +197,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a Non-RedHat based OS (osfamily != RedHat)' do
     let(:facts) {{
-        :osfamily => 'Debian'
+        :osfamily              => 'Debian',
+        :kernel                => 'linux',
+        :hardwaremodel         => 'x86',
+        :nodejs_stable_version => 'v0.10.20',
     }}
     let(:params) {{
       :version => '0.10.20'
@@ -204,6 +216,9 @@ describe 'nodejs::install', :type => :define do
       let(:params) {{
         :version => 'v0.12',
         :ensure  => 'absent',
+      }}
+      let(:facts) {{
+        :nodejs_installed_version => 'v0.12'
       }}
 
       it { should contain_file('/usr/local/node/node-v0.12') \

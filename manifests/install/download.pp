@@ -11,11 +11,19 @@
 # [*unless_test*]
 #   Test whether the destination is already in use.
 #
+# [*timeout*]
+#   Timeout for the download command.
+#
 define nodejs::install::download(
   $source,
   $destination,
-  $unless_test = true
+  $unless_test = true,
+  $timeout     = '0'
 ) {
+  validate_bool($unless_test)
+  validate_string($destination)
+  validate_string($source)
+
   ensure_packages(['wget'])
 
   if $caller_module_name != $module_name {
@@ -28,9 +36,9 @@ define nodejs::install::download(
   }
 
   exec { "nodejs-wget-download-${source}-${destination}":
-    command => "wget --output-document ${destination} ${source}",
+    command => "/usr/bin/wget --output-document ${destination} ${source}",
     creates => $creates,
-    path    => $::path,
+    timeout => $timeout,
     require => [
       Package['wget'],
     ],

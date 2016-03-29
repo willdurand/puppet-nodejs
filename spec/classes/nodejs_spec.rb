@@ -4,7 +4,10 @@ describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
 
   let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20'
+    :nodejs_stable_version => 'v0.10.20',
+    :kernel                => 'linux',
+    :hardwaremodel         => 'x86',
+    :osfamily              => 'Ubuntu',
   }}
 
   describe 'with default parameters' do

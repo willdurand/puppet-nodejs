@@ -74,6 +74,21 @@ class { 'nodejs':
 }
 ```
 
+### Setup with a given download timeout
+
+Due to infrastructures with slower connections the download of the nodejs binaries should be
+configurable:
+
+``` puppet
+::Nodejs::Install::Download {
+  timeout => 300
+}
+
+class { '::nodejs':
+  make_install => false,
+}
+```
+
 ### Setup multiple versions of Node.js
 
 If you need more than one installed version of Node.js on your machine, you can just do it using the `nodejs::install` puppet define.
