@@ -17,6 +17,9 @@
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
+# [*python_package*]
+#   Python package name, defaults to python
+#
 # == Example:
 #
 #  class { 'nodejs':
@@ -28,11 +31,12 @@
 #  }
 #
 define nodejs::install (
-  $ensure       = present,
-  $version      = undef,
-  $target_dir   = undef,
-  $with_npm     = true,
-  $make_install = true,
+  $ensure         = present,
+  $version        = undef,
+  $target_dir     = undef,
+  $with_npm       = true,
+  $make_install   = true,
+  $python_package = 'python',
 ) {
 
   include nodejs::params
@@ -170,7 +174,7 @@ define nodejs::install (
         }
       }
 
-      ensure_packages([ 'python', $gplusplus_package, 'make' ])
+      ensure_packages([ $python_package, $gplusplus_package, 'make' ])
 
       exec { "nodejs-make-install-${node_version}":
         command => "./configure --prefix=${node_unpack_folder} && make && make install",
@@ -181,7 +185,7 @@ define nodejs::install (
         timeout => 0,
         require => [
           Exec["nodejs-unpack-${node_version}"],
-          Package['python'],
+          Package[$python_package],
           Package[$gplusplus_package],
           Package['make']
         ],
