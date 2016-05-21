@@ -3,6 +3,13 @@ require 'spec_helper'
 describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
 
+  let(:facts) {{
+    :nodejs_stable_version => 'v0.10.20',
+    :kernel                => 'linux',
+    :hardwaremodel         => 'x86',
+    :osfamily              => 'Ubuntu',
+  }}
+
   before(:each) {
      Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
          |args| 'v0.10.20'

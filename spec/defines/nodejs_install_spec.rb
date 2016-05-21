@@ -2,8 +2,14 @@ require 'spec_helper'
 
 describe 'nodejs::install', :type => :define do
   let(:title) { 'nodejs::install' }
+  let(:facts) {{
+    :nodejs_stable_version => 'v0.10.20',
+    :kernel                => 'linux',
+    :hardwaremodel         => 'x86',
+    :osfamily              => 'Ubuntu'
+  }}
 
- before(:each) {
+  before(:each) {
     Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
         |args| 'v0.10.20'
     }
