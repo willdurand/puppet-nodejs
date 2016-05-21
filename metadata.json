@@ -1,6 +1,6 @@
 {
   "name": "willdurand-nodejs",
-  "version": "1.9.5",
+  "version": "2.0.0",
   "author": "William Durand",
   "license": "MIT",
   "summary": "A module to install Node.js and NPM.",
@@ -17,27 +17,31 @@
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "5",
-        "6"
+        "6",
+        "7"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
         "5",
-        "6"
+        "6",
+        "7"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "12.04",
-        "14.04"
+        "14.04",
+        "16.04"
       ]
     },
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "7"
+        "7",
+        "8"
       ]
     }
   ],
@@ -45,6 +49,12 @@
     {
       "name": "puppetlabs/stdlib",
       "version_requirement": ">=3.2.1"
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">=3.4.0 <5.0.0"
     }
   ]
 }
