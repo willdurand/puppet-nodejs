@@ -9,6 +9,15 @@ describe 'nodejs::install', :type => :define do
     :osfamily              => 'Ubuntu'
   }}
 
+  before(:each) {
+    Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
+        |args| 'v0.10.20'
+    }
+    Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
+        |args| 'v0.10.21'
+    }
+  }
+
   describe 'with default parameters' do
     
     let(:params) {{ }}
