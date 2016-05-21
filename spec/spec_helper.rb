@@ -33,8 +33,8 @@ HTML
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, "http://nodejs.org/dist/").
-         to_return(:status => 200, :body => nodejs_response, :headers => {})
+    stub_request(:get, "http://nodejs.org/dist/")
+      .to_return(:status => 200, :body => nodejs_response, :headers => {})
   end
 end
 

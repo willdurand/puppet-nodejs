@@ -28,7 +28,7 @@
 #    version  => 'v0.10.17'
 #  }
 #
-class nodejs (
+class nodejs(
   $version        = 'stable',
   $target_dir     = '/usr/local/bin',
   $with_npm       = true,
@@ -38,19 +38,19 @@ class nodejs (
 ) {
   validate_string($node_path)
 
-  nodejs::install { "nodejs-${version}":
-    version        => $version,
-    target_dir     => $target_dir,
-    with_npm       => $with_npm,
-    make_install   => $make_install,
-    python_package => $python_package,
-  }
-
   $node_version = $version ? {
     undef    => nodejs_stable_version(),
     'stable' => nodejs_stable_version(),
     'latest' => nodejs_latest_version(),
     default  => $version
+  }
+
+  nodejs::install { "nodejs-${version}":
+    version        => $node_version,
+    target_dir     => $target_dir,
+    with_npm       => $with_npm,
+    make_install   => $make_install,
+    python_package => $python_package,
   }
 
   $nodejs_version_path = "/usr/local/node/node-${$node_version}"
