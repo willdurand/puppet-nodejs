@@ -1,10 +1,7 @@
-require 'net/http'
-require 'yaml'
-require 'fileutils'
 require File.join(File.dirname(__FILE__), 'nodejs_functions.rb')
 
-Facter.add("nodejs_latest_version") do
-  setcode do
+module Puppet::Parser::Functions
+  newfunction(:nodejs_latest_version, :type => :rvalue) do |args|
     value = get_cached_value('latest_version')
     if !value
       value = get_latest_version

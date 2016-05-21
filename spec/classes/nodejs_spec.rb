@@ -3,12 +3,14 @@ require 'spec_helper'
 describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
 
-  let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20',
-    :kernel                => 'linux',
-    :hardwaremodel         => 'x86',
-    :osfamily              => 'Ubuntu',
-  }}
+  before(:each) {
+     Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
+         |args| 'v0.10.20'
+     }
+     Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
+         |args| 'v0.10.21'
+     }
+   }
 
   describe 'with default parameters' do
     it { should contain_nodejs__install('nodejs-stable') \
@@ -23,14 +25,24 @@ describe 'nodejs', :type => :class do
       .with_target('/usr/local/node/node-v0.10.20')
     }
 
-    it { should contain_file('/usr/local/bin/node') \
-      .with_ensure('link') \
-      .with_target('/usr/local/node/node-default/bin/node')
+    it { should contain_file('/etc/profile.d/nodejs.sh') }
+  end
+
+  describe 'with latest version' do
+    let(:params) {{
+      :version  => 'latest',
+    }}
+
+    it { should contain_nodejs__install('nodejs-latest') \
+      .with_version('latest') \
+      .with_target_dir('/usr/local/bin') \
+      .with_with_npm('true') \
+      .with_make_install('true')
     }
 
-    it { should contain_file('/usr/local/bin/npm') \
+    it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-default/bin/npm')
+      .with_target('/usr/local/node/node-v0.10.21')
     }
 
     it { should contain_file('/etc/profile.d/nodejs.sh') }
