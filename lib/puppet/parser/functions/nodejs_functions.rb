@@ -16,7 +16,6 @@ end
 class NodeJSListStore
   @@list = nil
   def self.set_list(list)
-    puts 'foo'
     @@list = list
   end
   def self.is_cached

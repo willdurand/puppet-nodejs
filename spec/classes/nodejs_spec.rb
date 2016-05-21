@@ -21,7 +21,7 @@ describe 'nodejs', :type => :class do
 
   describe 'with default parameters' do
     it { should contain_nodejs__install('nodejs-stable') \
-      .with_version('stable') \
+      .with_version('v0.10.20') \
       .with_target_dir('/usr/local/bin') \
       .with_with_npm('true') \
       .with_make_install('true')
@@ -41,7 +41,7 @@ describe 'nodejs', :type => :class do
     }}
 
     it { should contain_nodejs__install('nodejs-latest') \
-      .with_version('latest') \
+      .with_version('v0.10.21') \
       .with_target_dir('/usr/local/bin') \
       .with_with_npm('true') \
       .with_make_install('true')
