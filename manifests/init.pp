@@ -8,9 +8,6 @@
 # [*target_dir*]
 #   Where to install the executables.
 #
-# [*with_npm*]
-#   Whether to install NPM.
-#
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
@@ -31,7 +28,6 @@
 class nodejs(
   $version        = 'stable',
   $target_dir     = '/usr/local/bin',
-  $with_npm       = true,
   $make_install   = true,
   $node_path      = '/usr/local/node/node-default/lib/node_modules',
   $python_package = 'python',
@@ -48,7 +44,6 @@ class nodejs(
   nodejs::install { "nodejs-${version}":
     version        => $node_version,
     target_dir     => $target_dir,
-    with_npm       => $with_npm,
     make_install   => $make_install,
     python_package => $python_package,
   }

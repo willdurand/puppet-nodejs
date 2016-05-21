@@ -11,9 +11,6 @@
 # [*target_dir*]
 #   Where to install the executables.
 #
-# [*with_npm*]
-#   Whether to install NPM.
-#
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
@@ -34,7 +31,6 @@ define nodejs::install (
   $ensure         = present,
   $version        = undef,
   $target_dir     = undef,
-  $with_npm       = true,
   $make_install   = true,
   $python_package = 'python',
 ) {
@@ -47,6 +43,8 @@ define nodejs::install (
     'latest' => nodejs_latest_version(),
     default  => $version
   }
+
+  validate_nodejs_version($node_version)
 
   $node_target_dir = $target_dir ? {
     undef   => $::nodejs::params::target_dir,
@@ -97,10 +95,6 @@ define nodejs::install (
     $node_arch = $::hardwaremodel ? {
       /.*64.*/ => 'x64',
       default  => 'x86',
-    }
-
-    if (!$make_install and !is_binary_download_available($node_version)) {
-      fail("No binary download available for nodejs ${node_version}! Please run with make_install => true")
     }
 
     if $make_install {
@@ -197,30 +191,6 @@ define nodejs::install (
       ensure => 'link',
       path   => $node_symlink,
       target => $node_symlink_target,
-    }
-
-    # automatic installation of npm is introduced since nodejs v0.6.3
-    # so we just install npm for nodejs below v0.6.3
-    if ($with_npm and !is_npm_provided($node_version)) {
-
-      ::nodejs::install::download { "npm-download-${node_version}":
-        source      => 'https://npmjs.org/install.sh',
-        destination => "${node_unpack_folder}/install-npm.sh",
-        require     => File["nodejs-symlink-bin-with-version-${node_version}"]
-      }
-
-      exec { "npm-install-${node_version}":
-        command     => 'sh install-npm.sh',
-        path        => ["${node_unpack_folder}/bin", '/bin', '/usr/bin'],
-        cwd         => $node_unpack_folder,
-        user        => 'root',
-        environment => ['clean=yes', "npm_config_prefix=${node_unpack_folder}"],
-        unless      => "test -f ${node_unpack_folder}/bin/npm",
-        require     => [
-          ::Nodejs::Install::Download["npm-download-${node_version}"],
-          Package['curl'],
-        ],
-      }
     }
   }
   else {

@@ -16,6 +16,8 @@ describe 'nodejs::install', :type => :define do
     Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
         |args| 'v0.10.21'
     }
+    Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
+    }
   }
 
   describe 'with default parameters' do
@@ -114,35 +116,6 @@ describe 'nodejs::install', :type => :define do
     it { should_not contain_exec('npm-install-v0.10.19') }
   end
 
-  describe 'with specific version v0.6.2' do
-
-    let(:params) {{
-      :version  => 'v0.6.2',
-      :with_npm => true,
-    }}
-
-    it { should contain_file('/usr/local/node/node-v0.6.2') \
-      .with_ensure('directory')
-    }
-
-    it { should contain_nodejs__install__download('npm-download-v0.6.2') \
-      .with_source('https://npmjs.org/install.sh') \
-      .with_destination('/usr/local/node/node-v0.6.2/install-npm.sh')
-    }
-
-    it { should contain_exec('npm-install-v0.6.2') \
-      .with_command('sh install-npm.sh') \
-      .with_path(['/usr/local/node/node-v0.6.2/bin', '/bin', '/usr/bin']) \
-      .with_cwd('/usr/local/node/node-v0.6.2') \
-      .with_environment(['clean=yes', 'npm_config_prefix=/usr/local/node/node-v0.6.2'])
-    }
-
-    it { should_not contain_file('/usr/local/bin/node') }
-    it { should_not contain_file('/usr/local/bin/npm') }
-
-  end
-
-
   describe 'with a given target_dir' do
     let(:params) {{
       :target_dir => '/bin'
@@ -153,15 +126,6 @@ describe 'nodejs::install', :type => :define do
       .with_path('/bin/node-v0.10.20') \
       .with_target('/usr/local/node/node-v0.10.20/bin/node')
     }
-  end
-
-  describe 'without NPM' do
-    let(:params) {{
-      :with_npm => false
-    }}
-
-    it { should_not contain_exec('npm-download-v0.10.20') }
-    it { should_not contain_exec('npm-install-v0.10.20') }
   end
 
   describe 'with make_install = false' do
