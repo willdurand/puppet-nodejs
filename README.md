@@ -8,12 +8,11 @@ This module allows you to install [Node.js](http://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
 [willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
 
-Important announcements
------------------------
+Version 1.9
+-----------
 
-__NOTE:__ the master branch is used for puppet-nodejs 2.x which will be rewritten completly in the next time. When creating PRs then please open them for the ``1.9`` branch.
-
-__NOTE:__ the ``puppet-wget`` package is required until ``1.9.1``. In ``1.9.2`` the dependency has been removed in order to provide proper ``strict_vars`` support.
+The 1.x branch will be EOLed two months after ``2.0`` is released.
+If you need the docs for 1.x, see [1.9](https://github.com/willdurand/puppet-nodejs/tree/1.9).
 
 Installation
 ------------
@@ -50,10 +49,10 @@ There are a few ways to use this puppet module. The easiest one is just using th
 
 ```puppet
 class { 'nodejs':
-  version => 'v0.10.25',
+  version => '6.0.0',
 }
 ```
-This will compile and install Node.js version `v0.10.25` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
+This will compile and install Node.js version `v6.0.0` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
 
 Shortcuts are provided to easily install the `latest` or `stable` release by setting the `version` parameter to `latest` or `stable`. It will automatically look for the last release available on http://nodejs.org.
 
@@ -94,32 +93,26 @@ class { '::nodejs':
 If you need more than one installed version of Node.js on your machine, you can just do it using the `nodejs::install` puppet define.
 
 ```puppet
-nodejs::install { 'v0.10.17':
-  version => 'v0.10.17',
+nodejs::install { 'v6.0.0':
+  version => 'v6.0.0',
 }
-nodejs::install { 'v0.10.25':
-  version => 'v0.10.25',
+nodejs::install { 'v5.0.0':
+  version => 'v5.0.0',
 }
 ```
 
-This snippet will install version `v0.10.17` and `v0.10.25` on your machine. Keep in mind that a Node.js version installed via `nodejs::install` will provide only versioned binaries inside `/usr/local/bin`!
+This snippet will install version `v6.0.0` and `v5.0.0` on your machine. Keep in mind that a Node.js version installed via `nodejs::install` will provide only versioned binaries inside `/usr/local/bin`!
 
 ```
-/usr/local/bin/node-v0.10.17
-/usr/local/bin/node-v0.10.25
+/usr/local/bin/node-v6.0.0
+/usr/local/bin/npm-v6.0.0
+
+/usr/local/bin/node-v5.0.0
+/usr/local/bin/npm-v5.0.0
 ```
 
-By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v0.10.17`.
+By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v5.0.0`.
 All parameters available in the `class` definition are also available for `nodejs::install`.
-
-NPM symlinks cannot be created since every npm instance would use the default node interpreter which may cause errors.
-If you'd like to use another npm interpreter, please do something like this:
-
-```
-/usr/local/node/node-vx.x/bin/node /usr/local/node/node-vx.x/bin/npm run your_command
-```
-
-For 2.x it is planned to use NVM and refactor the whole nodejs installer (See [#119](https://github.com/willdurand/puppet-nodejs/issues/119)
 
 It is also possible to remove those versions again:
 
@@ -164,8 +157,7 @@ class { 'nodejs':
 
 ### NPM
 
-Also, this module installs [NPM](https://npmjs.org/) by default. Since versions `v0.6.3` of Node.js `npm` is included in every installation! For older versions, you can set parameter `with_npm => false` to not install `npm`.
-
+Also, this module installs [NPM](https://npmjs.org/) by default.
 
 ### NPM Provider
 
@@ -248,6 +240,7 @@ Authors
 
 * William Durand <william.durand1@gmail.com>
 * Johannes Graf ([@grafjo](https://github.com/grafjo))
+* Maximilian Bosch ([@_Ma27_](https://twitter.com/_Ma27_))
 
 
 License
