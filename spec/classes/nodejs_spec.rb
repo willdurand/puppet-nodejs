@@ -18,6 +18,7 @@ describe 'nodejs', :type => :class do
          |args| 'v0.10.21'
      }
      Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
+         |args| 'v6.2.0'
      }
    }
 
