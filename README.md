@@ -49,7 +49,7 @@ There are a few ways to use this puppet module. The easiest one is just using th
 
 ```puppet
 class { 'nodejs':
-  version => '6.0.0',
+  version => 'v6.0.0',
 }
 ```
 This will compile and install Node.js version `v6.0.0` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
