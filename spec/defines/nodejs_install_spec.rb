@@ -60,6 +60,13 @@ describe 'nodejs::install', :type => :define do
       .with_target('/usr/local/node/node-v6.0.0/bin/node')
     }
 
+    it { should contain_file('npm-symlink-bin-with-version-v6.0.0') \
+      .with_ensure('file') \
+      .with_mode('0755') \
+      .with_path('/usr/local/bin/npm-v6.0.0') \
+      .with_content(/(.*)\/usr\/local\/bin\/node-v6.0.0 \/usr\/local\/node\/node-v6.0.0\/bin\/npm "\$@"/)
+    }
+
     it { should_not contain_file('/usr/local/bin/node') }
     it { should_not contain_file('/usr/local/bin/npm') }
 
@@ -109,6 +116,13 @@ describe 'nodejs::install', :type => :define do
       .with_target('/usr/local/node/node-v6.0.0/bin/node')
     }
 
+    it { should contain_file('npm-symlink-bin-with-version-v6.0.0') \
+      .with_ensure('file') \
+      .with_mode('0755') \
+      .with_path('/usr/local/bin/npm-v6.0.0') \
+      .with_content(/(.*)\/usr\/local\/bin\/node-v6.0.0 \/usr\/local\/node\/node-v6.0.0\/bin\/npm "\$@"/)
+    }
+
     it { should_not contain_file('/usr/local/bin/node') }
     it { should_not contain_file('/usr/local/bin/npm') }
 
@@ -143,7 +157,7 @@ describe 'nodejs::install', :type => :define do
       :hardwaremodel => 'x86',
     }}
     let(:params) {{
-      :version => '0.10.20'
+      :version => 'v6.0.0'
     }}
 
     it { should contain_package('gcc-c++').with( 
@@ -158,7 +172,7 @@ describe 'nodejs::install', :type => :define do
       :hardwaremodel => 'x86',
     }}
     let(:params) {{
-      :version => '0.10.20'
+      :version => 'v6.0.0'
     }}
 
     it { should contain_package('gcc-c++').with(
@@ -173,7 +187,7 @@ describe 'nodejs::install', :type => :define do
       :hardwaremodel => 'x86',
     }}
     let(:params) {{
-      :version => '0.10.20'
+      :version => 'v6.0.0'
     }}
 
     it { should contain_package('g++').with(
