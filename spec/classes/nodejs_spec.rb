@@ -4,32 +4,33 @@ describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
 
   let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20',
-    :kernel                => 'linux',
-    :hardwaremodel         => 'x86',
-    :osfamily              => 'Ubuntu',
+    :kernel        => 'linux',
+    :hardwaremodel => 'x86',
+    :osfamily      => 'Ubuntu',
   }}
 
   before(:each) {
      Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
-         |args| 'v0.10.20'
+         |args| 'v6.0.0'
      }
      Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
-         |args| 'v0.10.21'
+         |args| 'v6.0.1'
+     }
+     Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
+         |args| 'v6.2.0'
      }
    }
 
   describe 'with default parameters' do
     it { should contain_nodejs__install('nodejs-stable') \
-      .with_version('v0.10.20') \
+      .with_version('v6.0.0') \
       .with_target_dir('/usr/local/bin') \
-      .with_with_npm('true') \
       .with_make_install('true')
     }
 
     it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.20')
+      .with_target('/usr/local/node/node-v6.0.0')
     }
 
     it { should contain_file('/etc/profile.d/nodejs.sh') }
@@ -41,15 +42,14 @@ describe 'nodejs', :type => :class do
     }}
 
     it { should contain_nodejs__install('nodejs-latest') \
-      .with_version('v0.10.21') \
+      .with_version('v6.0.1') \
       .with_target_dir('/usr/local/bin') \
-      .with_with_npm('true') \
       .with_make_install('true')
     }
 
     it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.21')
+      .with_target('/usr/local/node/node-v6.0.1')
     }
 
     it { should contain_file('/etc/profile.d/nodejs.sh') }
@@ -57,16 +57,16 @@ describe 'nodejs', :type => :class do
 
   describe 'with a given version' do
     let(:params) {{
-      :version  => 'v0.10.0',
+      :version  => 'v5.0.0',
     }}
 
-    it { should contain_nodejs__install('nodejs-v0.10.0') \
-      .with_version('v0.10.0')
+    it { should contain_nodejs__install('nodejs-v5.0.0') \
+      .with_version('v5.0.0')
     }
 
     it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v0.10.0')
+      .with_target('/usr/local/node/node-v5.0.0')
     }
   end
 
@@ -77,16 +77,6 @@ describe 'nodejs', :type => :class do
 
     it { should contain_nodejs__install('nodejs-stable') \
       .with_target_dir('/bin') \
-    }
-  end
-
-  describe 'without NPM' do
-    let(:params) {{
-      :with_npm => false
-    }}
-
-    it { should contain_nodejs__install('nodejs-stable') \
-      .with_with_npm('false')
     }
   end
 
@@ -106,7 +96,7 @@ describe 'nodejs', :type => :class do
     }}
 
     it { should contain_file('/etc/profile.d/nodejs.sh') \
-        .with_content(/(.*)NODE_PATH=\/usr\/local\/node\/node-v5.4.1\/lib\/node_modules/)
+      .with_content(/(.*)NODE_PATH=\/usr\/local\/node\/node-v5.4.1\/lib\/node_modules/)
     }
   end
 end
