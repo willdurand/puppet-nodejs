@@ -4,10 +4,9 @@ describe 'nodejs', :type => :class do
   let(:title) { 'nodejs' }
 
   let(:facts) {{
-    :nodejs_stable_version => 'v6.0.0',
-    :kernel                => 'linux',
-    :hardwaremodel         => 'x86',
-    :osfamily              => 'Ubuntu',
+    :kernel        => 'linux',
+    :hardwaremodel => 'x86',
+    :osfamily      => 'Ubuntu',
   }}
 
   before(:each) {

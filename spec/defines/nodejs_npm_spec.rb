@@ -3,11 +3,10 @@ require 'spec_helper'
 describe 'nodejs::npm', :type => :define do
   let(:title) { 'nodejs::npm' }
   let(:facts) {{
-    :nodejs_stable_version => 'v0.10.20',
-    :kernel                => 'linux',
-    :hardwaremodel         => 'x86',
-    :osfamily              => 'Ubuntu',
-    :path                  => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin'
+    :kernel        => 'linux',
+    :hardwaremodel => 'x86',
+    :osfamily      => 'Ubuntu',
+    :path          => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin'
   }}
 
   describe 'install npm package' do
@@ -61,12 +60,11 @@ describe 'nodejs::npm', :type => :define do
         :directory => '/foo'
       }}
       let(:facts) {{
-        :operatingsystem       => os,
-        :nodejs_stable_version => 'v0.10.20',
-        :osfamily              => os,
-        :hardwaremodel         => 'x86',
-        :kernel                => 'linux',
-        :path                  => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin'
+        :operatingsystem => os,
+        :osfamily        => os,
+        :hardwaremodel   => 'x86',
+        :kernel          => 'linux',
+        :path            => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin'
       }}
 
       it { should contain_exec('npm_install_yo_/foo') \
