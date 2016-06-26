@@ -240,7 +240,7 @@ Authors
 
 * William Durand <william.durand1@gmail.com>
 * Johannes Graf ([@grafjo](https://github.com/grafjo))
-* Maximilian Bosch ([@_Ma27_](https://twitter.com/_Ma27_))
+* Maximilian Bosch ([@Ma27](https://github.com/Ma27))
 
 
 License
