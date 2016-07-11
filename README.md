@@ -131,6 +131,17 @@ __Note:__ It is not possible to install and uninstall an instance in the same ru
 When attempting to remove the default instance this can be only done when having the ``::nodejs`` class __NOT__ defined as otherwise ``duplicate resource`` errors would occur. 
 After that no new default instance will be configured.
 
+### Setup using custom amount of cpu cores
+
+By default, all available cpu cores are being used to compile nodejs. Set `cpu_cores` to any number of cores you want to use.
+
+```puppet
+class { 'nodejs':
+  version   => 'stable',
+  cpu_cores => 2,
+}
+```
+
 ### Configuring $NODE_PATH
 
 The environment variable $NODE_PATH can be configured using the `init` manifest:

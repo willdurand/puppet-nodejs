@@ -3,9 +3,10 @@ require 'spec_helper'
 describe 'nodejs::install', :type => :define do
   let(:title) { 'nodejs::install' }
   let(:facts) {{
-    :kernel        => 'linux',
-    :hardwaremodel => 'x86',
-    :osfamily      => 'Ubuntu',
+    :kernel         => 'linux',
+    :hardwaremodel  => 'x86',
+    :osfamily       => 'Ubuntu',
+    :processorcount => 2,
   }}
 
   before(:each) {
@@ -49,7 +50,7 @@ describe 'nodejs::install', :type => :define do
     }
 
     it { should contain_exec('nodejs-make-install-v6.0.0') \
-      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make && make install') \
+      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make -j 2 && make -j 2 install') \
       .with_cwd('/usr/local/node/node-v6.0.0') \
       .with_unless('test -f /usr/local/node/node-v6.0.0/bin/node')
     }
@@ -72,6 +73,19 @@ describe 'nodejs::install', :type => :define do
 
     it { should_not contain_nodejs__install__download('npm-download-v6.0.0') }
     it { should_not contain_exec('npm-install-v6.0.0') }
+  end
+
+  describe 'default parameters with cpu_cores set manually to 1' do
+
+    let(:params) {{
+      :cpu_cores => 1
+    }}
+
+    it { should contain_exec('nodejs-make-install-v6.0.0') \
+      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make -j 1 && make -j 1 install') \
+      .with_cwd('/usr/local/node/node-v6.0.0') \
+      .with_unless('test -f /usr/local/node/node-v6.0.0/bin/node')
+    }
   end
 
   describe 'with specific version v6.0.0' do
@@ -105,7 +119,7 @@ describe 'nodejs::install', :type => :define do
     }
 
     it { should contain_exec('nodejs-make-install-v6.0.0') \
-      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make && make install') \
+      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make -j 2 && make -j 2 install') \
       .with_cwd('/usr/local/node/node-v6.0.0') \
       .with_unless('test -f /usr/local/node/node-v6.0.0/bin/node')
     }
@@ -130,6 +144,20 @@ describe 'nodejs::install', :type => :define do
     it { should_not contain_exec('npm-install-v6.0.0') }
   end
 
+  describe 'specific version v6.0.0 and cpu_cores manually set to 1' do
+
+    let(:params) {{
+      :version   => 'v6.0.0',
+      :cpu_cores => 1,
+    }}
+
+    it { should contain_exec('nodejs-make-install-v6.0.0') \
+      .with_command('./configure --prefix=/usr/local/node/node-v6.0.0 && make -j 1 && make -j 1 install') \
+      .with_cwd('/usr/local/node/node-v6.0.0') \
+      .with_unless('test -f /usr/local/node/node-v6.0.0/bin/node')
+    }
+  end
+
   describe 'with a given target_dir' do
     let(:params) {{
       :target_dir => '/bin'
@@ -152,9 +180,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a RedHat based OS (osfamily = RedHat)' do
     let(:facts) {{
-      :osfamily      => 'RedHat',
-      :kernel        => 'linux',
-      :hardwaremodel => 'x86',
+      :osfamily       => 'RedHat',
+      :kernel         => 'linux',
+      :hardwaremodel  => 'x86',
+      :processorcount => 2,
     }}
     let(:params) {{
       :version => 'v6.0.0'
@@ -167,9 +196,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a OpenSuse based OS (osfamily = Suse)' do
     let(:facts) {{
-      :osfamily      => 'Suse',
-      :kernel        => 'linux',
-      :hardwaremodel => 'x86',
+      :osfamily       => 'Suse',
+      :kernel         => 'linux',
+      :hardwaremodel  => 'x86',
+      :processorcount => 2,
     }}
     let(:params) {{
       :version => 'v6.0.0'
@@ -182,9 +212,10 @@ describe 'nodejs::install', :type => :define do
 
   describe 'on a Non-RedHat based OS (osfamily != RedHat)' do
     let(:facts) {{
-      :osfamily      => 'Debian',
-      :kernel        => 'linux',
-      :hardwaremodel => 'x86',
+      :osfamily       => 'Debian',
+      :kernel         => 'linux',
+      :hardwaremodel  => 'x86',
+      :processorcount => 2,
     }}
     let(:params) {{
       :version => 'v6.0.0'
@@ -202,7 +233,8 @@ describe 'nodejs::install', :type => :define do
         :ensure  => 'absent',
       }}
       let(:facts) {{
-        :nodejs_installed_version => 'v0.12'
+        :nodejs_installed_version => 'v0.12',
+        :processorcount           => 2,
       }}
 
       it { should contain_file('/usr/local/node/node-v0.12') \
@@ -216,7 +248,8 @@ describe 'nodejs::install', :type => :define do
 
     describe 'default instance' do
       let(:facts) {{
-        :nodejs_installed_version => 'v5.6.0'
+        :nodejs_installed_version => 'v5.6.0',
+        :processorcount           => 2,
       }}
       let(:params) {{
         :version => 'v5.6.0',
