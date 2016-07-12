@@ -239,11 +239,11 @@ Running the tests
 
 Install the dependencies using [Bundler](http://gembundler.com):
 
-    BUNDLE_GEMFILE=.gemfile bundle install
+    bundle install
 
 Run the following command:
 
-    BUNDLE_GEMFILE=.gemfile bundle exec rake test
+    bundle exec rake test
 
 
 Authors
