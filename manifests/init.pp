@@ -17,6 +17,9 @@
 # [*python_package*]
 #   Python package name, defaults to python
 #
+# [*cpu_cores*]
+#   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
+#
 # == Example:
 #
 #  include nodejs
@@ -31,8 +34,10 @@ class nodejs(
   $make_install   = true,
   $node_path      = '/usr/local/node/node-default/lib/node_modules',
   $python_package = 'python',
+  $cpu_cores      = $::processorcount,
 ) {
   validate_string($node_path)
+  validate_integer($cpu_cores)
 
   $node_version = $version ? {
     undef    => nodejs_stable_version(),
@@ -46,6 +51,7 @@ class nodejs(
     target_dir     => $target_dir,
     make_install   => $make_install,
     python_package => $python_package,
+    cpu_cores      => $cpu_cores,
   }
 
   $nodejs_version_path = "/usr/local/node/node-${$node_version}"
@@ -61,13 +67,13 @@ class nodejs(
   $node_default_symlink_target = "${nodejs_default_path}/bin/node"
   $npm_default_symlink = "${target_dir}/npm"
   $npm_default_symlink_target = "${nodejs_default_path}/bin/npm"
-  
+
   file { $node_default_symlink:
     ensure  => link,
     target  => $node_default_symlink_target,
     require => File[$nodejs_default_path]
   }
-  
+
   file { $npm_default_symlink:
     ensure  => link,
     target  => $npm_default_symlink_target,

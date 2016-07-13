@@ -17,6 +17,9 @@
 # [*python_package*]
 #   Python package name, defaults to python
 #
+# [*cpu_cores*]
+#   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
+#
 # == Example:
 #
 #  class { 'nodejs':
@@ -33,7 +36,9 @@ define nodejs::install (
   $target_dir     = undef,
   $make_install   = true,
   $python_package = 'python',
+  $cpu_cores      = $::processorcount,
 ) {
+  validate_integer($cpu_cores)
 
   include nodejs::params
 
@@ -173,7 +178,7 @@ define nodejs::install (
       ensure_packages([ $python_package, $gplusplus_package, 'make' ])
 
       exec { "nodejs-make-install-${node_version}":
-        command => "./configure --prefix=${node_unpack_folder} && make && make install",
+        command => "./configure --prefix=${node_unpack_folder} && make -j ${cpu_cores} && make -j ${cpu_cores} install",
         path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
         cwd     => $node_unpack_folder,
         user    => 'root',
