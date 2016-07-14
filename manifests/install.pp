@@ -126,7 +126,7 @@ define nodejs::install (
     })
 
     ::nodejs::install::download { "nodejs-download-${node_version}":
-      source      => "http://nodejs.org/dist/${node_version}/${node_filename}",
+      source      => "https://nodejs.org/dist/${node_version}/${node_filename}",
       destination => "${::nodejs::params::install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
     }

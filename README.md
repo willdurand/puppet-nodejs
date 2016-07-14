@@ -4,9 +4,9 @@ puppet-nodejs
 [![Build
 Status](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
 
-This module allows you to install [Node.js](http://nodejs.org/) and
+This module allows you to install [Node.js](https://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
-[willdurand/nodejs](http://forge.puppetlabs.com/willdurand/nodejs).
+[willdurand/nodejs](https://forge.puppetlabs.com/willdurand/nodejs).
 
 Version 1.9
 -----------
@@ -54,7 +54,7 @@ class { 'nodejs':
 ```
 This will compile and install Node.js version `v6.0.0` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
 
-Shortcuts are provided to easily install the `latest` or `stable` release by setting the `version` parameter to `latest` or `stable`. It will automatically look for the last release available on http://nodejs.org.
+Shortcuts are provided to easily install the `latest` or `stable` release by setting the `version` parameter to `latest` or `stable`. It will automatically look for the last release available on https://nodejs.org.
 
 ```puppet
 class { 'nodejs':
@@ -64,7 +64,7 @@ class { 'nodejs':
 
 ### Setup using the pre-built installer
 
-To use the pre-built installer version provided via http://nodejs.org/download you have to set `make_install` to `false`
+To use the pre-built installer version provided via https://nodejs.org/download you have to set `make_install` to `false`
 
 ```puppet
 class { 'nodejs':
@@ -237,7 +237,7 @@ export http_proxy=http://myHttpProxy:8888
 Running the tests
 -----------------
 
-Install the dependencies using [Bundler](http://gembundler.com):
+Install the dependencies using [Bundler](https://bundler.io):
 
     bundle install
 

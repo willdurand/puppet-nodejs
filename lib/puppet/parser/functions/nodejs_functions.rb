@@ -32,7 +32,7 @@ def get_version_list
     return NodeJSListStore::get_list
   end
 
-  uri = URI('http://nodejs.org/dist/')
+  uri = URI('https://nodejs.org/dist/')
 
   http_proxy = ENV["http_proxy"]
   if http_proxy.to_s != ''
