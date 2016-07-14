@@ -30,7 +30,7 @@ describe 'nodejs::install', :type => :define do
     }
 
     it { should contain_nodejs__install__download('nodejs-download-v6.0.0') \
-      .with_source('http://nodejs.org/dist/v6.0.0/node-v6.0.0.tar.gz') \
+      .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0.tar.gz') \
       .with_destination('/usr/local/node/node-v6.0.0.tar.gz')
     }
 
@@ -99,7 +99,7 @@ describe 'nodejs::install', :type => :define do
     }
 
     it { should contain_nodejs__install__download('nodejs-download-v6.0.0') \
-      .with_source('http://nodejs.org/dist/v6.0.0/node-v6.0.0.tar.gz') \
+      .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0.tar.gz') \
       .with_destination('/usr/local/node/node-v6.0.0.tar.gz')
     }
 
