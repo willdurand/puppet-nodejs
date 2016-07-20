@@ -45,6 +45,7 @@ def get_version_list
   else
     request = Net::HTTP.new(uri.host, uri.port)
   end
+  request.use_ssl = (uri.scheme == 'https')
   request.open_timeout = 2
   request.read_timeout = 2
 
