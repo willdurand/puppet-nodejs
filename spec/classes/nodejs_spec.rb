@@ -10,10 +10,7 @@ describe 'nodejs', :type => :class do
     :processorcount => 2,
   }}
 
-  before(:each) {
-     Puppet::Parser::Functions.newfunction(:nodejs_stable_version, :type => :rvalue) {
-         |args| 'v6.0.0'
-     }
+  before(:each) { 
      Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
          |args| 'v6.0.1'
      }
@@ -23,25 +20,6 @@ describe 'nodejs', :type => :class do
    }
 
   describe 'with default parameters' do
-    it { should contain_nodejs__install('nodejs-stable') \
-      .with_version('v6.0.0') \
-      .with_target_dir('/usr/local/bin') \
-      .with_make_install('true')
-    }
-
-    it { should contain_file('/usr/local/node/node-default') \
-      .with_ensure('link') \
-      .with_target('/usr/local/node/node-v6.0.0')
-    }
-
-    it { should contain_file('/etc/profile.d/nodejs.sh') }
-  end
-
-  describe 'with latest version' do
-    let(:params) {{
-      :version  => 'latest',
-    }}
-
     it { should contain_nodejs__install('nodejs-latest') \
       .with_version('v6.0.1') \
       .with_target_dir('/usr/local/bin') \
@@ -76,7 +54,7 @@ describe 'nodejs', :type => :class do
       :target_dir  => '/bin',
     }}
 
-    it { should contain_nodejs__install('nodejs-stable') \
+    it { should contain_nodejs__install('nodejs-latest') \
       .with_target_dir('/bin') \
     }
   end
@@ -86,7 +64,7 @@ describe 'nodejs', :type => :class do
       :make_install => false
     }}
 
-    it { should contain_nodejs__install('nodejs-stable') \
+    it { should contain_nodejs__install('nodejs-latest') \
       .with_make_install('false')
     }
   end

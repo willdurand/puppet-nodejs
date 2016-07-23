@@ -43,10 +43,9 @@ define nodejs::install (
   include nodejs::params
 
   $node_version = $version ? {
-    undef    => nodejs_stable_version(),
-    'stable' => nodejs_stable_version(),
+    undef    => nodejs_latest_version(),
     'latest' => nodejs_latest_version(),
-    default  => $version
+    default  => $version,
   }
 
   validate_nodejs_version($node_version)
