@@ -63,3 +63,24 @@ def get_latest_version
   'v' + version_data.last
 end
 
+def get_lts_version
+  # in this case it needs to be checked whether NOT false as the `lts` value can either be `false`
+  # or the name of the LTS (e.g. Argon)
+  version_data = get_version_list.select { |o| o['lts'] != false }
+  version_data.first['version']
+end
+
+def get_version_from_branch(version)
+  if version =~ /^[0-9]+\.x$/
+    version.gsub!(/\.x$/, '')
+    regex = /^v#{version}\.[0-9]+\.[0-9]+$/
+  else
+    regex = /^v#{version}\.([0-9]+)$/ 
+  end
+
+  version_data = get_version_list
+    .map { |o| o['version'] }
+    .select { |v| v =~ regex }
+
+  version_data.first
+end

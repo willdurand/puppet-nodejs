@@ -2,4 +2,6 @@ fixtures:
   symlinks:
     nodejs: "#{source_dir}"
   repositories:
-    stdlib: git://github.com/puppetlabs/puppetlabs-stdlib.git
+    stdlib:
+      repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+      ref: "4.12.0"

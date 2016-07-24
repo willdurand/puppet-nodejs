@@ -10,11 +10,13 @@ describe 'nodejs::install', :type => :define do
   }}
 
   before(:each) { 
-    Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
-        |args| 'v6.2.0'
-    }
+    Puppet::Parser::Functions.newfunction(:evaluate_version, :type => :rvalue) do |args|
+        return 'v6.2.0' if args[0] == 'latest'
+        return 'v4.4.7' if args[0] == 'lts'
+        return args[0]
+    end
     Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
-        |args| 'v6.2.0'
+      |args| 'v6.2.0'
     }
   }
 
@@ -70,6 +72,28 @@ describe 'nodejs::install', :type => :define do
 
     it { should_not contain_nodejs__install__download('npm-download-v6.2.0') }
     it { should_not contain_exec('npm-install-v6.2.0') }
+  end
+
+  describe 'with latest lts release' do
+    let(:params) {{
+      :version => 'lts',
+    }}
+
+    it { should contain_nodejs__install__download('nodejs-download-v4.4.7') \
+      .with_source('https://nodejs.org/dist/v4.4.7/node-v4.4.7.tar.gz') \
+      .with_destination('/usr/local/node/node-v4.4.7.tar.gz')
+    }
+
+    it { should contain_file('nodejs-check-tar-v4.4.7') \
+      .with_ensure('file') \
+      .with_path('/usr/local/node/node-v4.4.7.tar.gz')
+    }
+
+    it { should contain_exec('nodejs-unpack-v4.4.7') \
+      .with_command('tar -xzvf node-v4.4.7.tar.gz -C /usr/local/node/node-v4.4.7 --strip-components=1') \
+      .with_cwd('/usr/local/node') \
+      .with_unless('test -f /usr/local/node/node-v4.4.7/bin/node')
+    }
   end
 
   describe 'default parameters with cpu_cores set manually to 1' do
@@ -226,19 +250,19 @@ describe 'nodejs::install', :type => :define do
   describe 'uninstall' do
     describe 'any instance' do
       let(:params) {{
-        :version => 'v0.12',
+        :version => 'v0.12.0',
         :ensure  => 'absent',
       }}
       let(:facts) {{
-        :nodejs_installed_version => 'v0.12',
+        :nodejs_installed_version => 'v0.12/0',
         :processorcount           => 2,
       }}
 
-      it { should contain_file('/usr/local/node/node-v0.12') \
+      it { should contain_file('/usr/local/node/node-v0.12.0') \
         .with(:ensure => 'absent', :force => true, :recurse => true) \
       }
 
-      it { should contain_file('/usr/local/bin/node-v0.12') \
+      it { should contain_file('/usr/local/bin/node-v0.12.0') \
         .with_ensure('absent') \
       }
     end

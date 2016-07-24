@@ -42,12 +42,14 @@ define nodejs::install (
 
   include nodejs::params
 
-  $node_version = $version ? {
-    undef    => nodejs_latest_version(),
-    'latest' => nodejs_latest_version(),
-    default  => $version,
+  # TODO remove this. In #159 it's planned to make this private
+  # and control the whole process in the `nodejs` class to simplify the logic here.
+  $version_string = $version ? {
+    undef   => 'latest', # install `latest` by default
+    default => $version,
   }
 
+  $node_version = evaluate_version($version_string)
   validate_nodejs_version($node_version)
 
   $node_target_dir = $target_dir ? {

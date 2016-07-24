@@ -11,24 +11,28 @@ describe 'nodejs', :type => :class do
   }}
 
   before(:each) { 
-     Puppet::Parser::Functions.newfunction(:nodejs_latest_version, :type => :rvalue) {
-         |args| 'v6.0.1'
-     }
+     Puppet::Parser::Functions.newfunction(:evaluate_version, :type => :rvalue) do |args|
+       return 'v6.0.1' if args[0] == 'latest'
+       return 'v4.4.7' if args[0] == 'lts'
+       return 'v5.11.1' if args[0] == '5.11' || args[0] == '5.x'
+       return args[0] # simply return default
+     end
+
      Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
-         |args| 'v6.2.0'
+       |args| 'v6.0.1'
      }
    }
 
   describe 'with default parameters' do
-    it { should contain_nodejs__install('nodejs-latest') \
-      .with_version('v6.0.1') \
+    it { should contain_nodejs__install('nodejs-lts') \
+      .with_version('v4.4.7') \
       .with_target_dir('/usr/local/bin') \
       .with_make_install('true')
     }
 
     it { should contain_file('/usr/local/node/node-default') \
       .with_ensure('link') \
-      .with_target('/usr/local/node/node-v6.0.1')
+      .with_target('/usr/local/node/node-v4.4.7')
     }
 
     it { should contain_file('/etc/profile.d/nodejs.sh') }
@@ -49,12 +53,45 @@ describe 'nodejs', :type => :class do
     }
   end
 
+  describe 'with generic version' do
+    let(:params) {{
+      :version => '5.11',
+    }}
+
+    it { should contain_nodejs__install('nodejs-5.11') \
+      .with_version('v5.11.1') \
+      .with_make_install('true') \
+    }
+  end
+
+  describe 'with latest from major release' do
+    let(:params) {{
+      :version => '5.x',
+    }}
+
+    it { should contain_nodejs__install('nodejs-5.x') \
+      .with_version('v5.11.1') \
+      .with_make_install('true') \
+    }
+  end
+
+  describe 'with latest lts' do
+    let(:params) {{
+      :version => 'lts',
+    }}
+
+    it { should contain_nodejs__install('nodejs-lts') \
+      .with_version('v4.4.7') \
+      .with_make_install('true') \
+    }
+  end
+
   describe 'with a given target_dir' do
     let(:params) {{
       :target_dir  => '/bin',
     }}
 
-    it { should contain_nodejs__install('nodejs-latest') \
+    it { should contain_nodejs__install('nodejs-lts') \
       .with_target_dir('/bin') \
     }
   end
@@ -64,7 +101,7 @@ describe 'nodejs', :type => :class do
       :make_install => false
     }}
 
-    it { should contain_nodejs__install('nodejs-latest') \
+    it { should contain_nodejs__install('nodejs-lts') \
       .with_make_install('false')
     }
   end
