@@ -40,7 +40,7 @@ git clone git://github.com/treydock/puppet-gpg_key.git modules/gpg_key
 
 ### Librarian-puppet:
 
-    mod 'willdurand/nodejs', '1.x.x'
+    mod 'willdurand/nodejs', '2.x.x'
 
 Usage
 -----
@@ -54,24 +54,51 @@ class { 'nodejs':
 ```
 This will compile and install Node.js version `v6.0.0` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
 
-Shortcuts are provided to easily install the `latest` or `stable` release by setting the `version` parameter to `latest` or `stable`. It will automatically look for the last release available on https://nodejs.org.
+Shortcuts are provided to easily install the `latest` release or the latest LTS release (`lts`) by setting the `version` parameter to `latest` or `lts`. It will automatically look for the last release available on https://nodejs.org.
 
 ```puppet
+# installs the latest nodejs version
 class { 'nodejs':
-  version => 'stable',
+  version => 'latest',
+}
+
+# installs the latest nodejs LTS version
+class { 'nodejs':
+  version => 'lts',
 }
 ```
 
 ### Setup using the pre-built installer
 
-To use the pre-built installer version provided via https://nodejs.org/download you have to set `make_install` to `false`
+To use the pre-built installer version provided via https://nodejs.org/download you have to set `make_install` to `false`.
 
 ```puppet
 class { 'nodejs':
-  version      => 'stable',
+  version      => 'lts',
   make_install => false,
 }
 ```
+
+### Setup using a generic version
+
+Instead of fixing one specific nodejs version it's also possible to tell this module whether to use the latest of a certain minor release:
+
+``` puppet
+class { '::nodejs':
+  version => '6.3',
+}
+```
+This will install the latest patch release of `6.3.x`.
+
+The same is possible with major releases:
+
+``` puppet
+class { '::nodejs':
+  version => '6.x',
+}
+```
+
+This will install the latest `6.x` release.
 
 ### Setup with a given download timeout
 
@@ -83,9 +110,7 @@ configurable:
   timeout => 300
 }
 
-class { '::nodejs':
-  make_install => false,
-}
+class { '::nodejs': }
 ```
 
 ### Setup multiple versions of Node.js
@@ -133,11 +158,11 @@ After that no new default instance will be configured.
 
 ### Setup using custom amount of cpu cores
 
-By default, all available cpu cores are being used to compile nodejs. Set `cpu_cores` to any number of cores you want to use.
+By default, all available cpu (that are detected using the `::processorcount` fact)  cores are being used to compile nodejs. Set `cpu_cores` to any number of cores you want to use.
 
 ```puppet
 class { 'nodejs':
-  version   => 'stable',
+  version   => 'lts',
   cpu_cores => 2,
 }
 ```
@@ -148,7 +173,7 @@ The environment variable $NODE_PATH can be configured using the `init` manifest:
 
 ```puppet
 class { '::nodejs':
-  version   => 'latest',
+  version   => 'lts',
   node_path => '/your/custom/node/path',
 }
 ```
@@ -161,7 +186,7 @@ It is not possible to adjust a $NODE_PATH through ``::nodejs::install``.
 
 ```puppet
 class { 'nodejs':
-  version    => 'stable',
+  version    => 'lts',
   target_dir => '/bin',
 }
 ```
@@ -184,7 +209,7 @@ Note: When deploying a new machine without nodejs already installed, your npm pa
 
 ```puppet
 class { 'nodejs':
-  version => 'stable'
+  version => 'lts'
 }
 
 package { 'express':

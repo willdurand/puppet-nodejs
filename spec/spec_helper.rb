@@ -5,39 +5,26 @@ require 'rspec'
 
 WebMock.disable_net_connect!()
 
-nodejs_response = <<HTML
-<html>
-<head><title>Index of /dist/</title></head>
-<body bgcolor="white">
-<h1>Index of /dist/</h1><hr><pre><a href="../">../</a>
-<a href="v5.0.0/">v5.0.0/</a>                                            29-Oct-2015 21:04                   -
-<a href="v5.1.0/">v5.1.0/</a>                                            18-Nov-2015 14:35                   -
-<a href="v5.1.1/">v5.1.1/</a>                                            04-Dec-2015 02:38                   -
-<a href="v5.10.0/">v5.10.0/</a>                                           01-Apr-2016 03:24                   -
-<a href="v5.10.1/">v5.10.1/</a>                                           05-Apr-2016 23:31                   -
-<a href="v5.11.0/">v5.11.0/</a>                                           21-Apr-2016 20:35                   -
-<a href="v5.11.1/">v5.11.1/</a>                                           05-May-2016 22:56                   -
-<a href="v5.2.0/">v5.2.0/</a>                                            09-Dec-2015 05:24                   -
-<a href="v5.3.0/">v5.3.0/</a>                                            16-Dec-2015 20:05                   -
-<a href="v5.4.0/">v5.4.0/</a>                                            06-Jan-2016 22:39                   -
-<a href="v5.4.1/">v5.4.1/</a>                                            12-Jan-2016 23:45                   -
-<a href="v5.5.0/">v5.5.0/</a>                                            21-Jan-2016 02:25                   -
-<a href="v5.6.0/">v5.6.0/</a>                                            10-Feb-2016 14:20                   -
-<a href="v5.7.0/">v5.7.0/</a>                                            23-Feb-2016 05:36                   -
-<a href="v5.7.1/">v5.7.1/</a>                                            02-Mar-2016 23:22                   -
-<a href="v5.8.0/">v5.8.0/</a>                                            09-Mar-2016 15:38                   -
-<a href="v5.9.0/">v5.9.0/</a>                                            16-Mar-2016 21:33                   -
-<a href="v5.9.1/">v5.9.1/</a>                                            23-Mar-2016 17:36                   -
-<a href="v6.0.0/">v6.0.0/</a>                                            27-Apr-2016 05:14                   -
-<a href="v6.1.0/">v6.1.0/</a>                                            06-May-2016 15:01                   -
-</pre><hr></body>
-</html>
-HTML
-
+nodejs_response = <<JSON
+[
+{"version":"v6.3.1","date":"2016-07-21","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.10.3","v8":"5.0.71.57","uv":"1.9.1","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.3.0","date":"2016-07-06","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.10.3","v8":"5.0.71.52","uv":"1.9.1","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.2.2","date":"2016-06-16","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.9.5","v8":"5.0.71.52","uv":"1.9.1","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.2.1","date":"2016-06-02","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.9.3","v8":"5.0.71.52","uv":"1.9.1","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.2.0","date":"2016-05-17","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.9","v8":"5.0.71.47","uv":"1.9.1","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.1.0","date":"2016-05-05","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.6","v8":"5.0.71.35","uv":"1.9.0","zlib":"1.2.8","openssl":"1.0.2h","modules":"48","lts":false},
+{"version":"v6.0.0","date":"2016-04-26","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.6","v8":"5.0.71.35","uv":"1.9.0","zlib":"1.2.8","openssl":"1.0.2g","modules":"48","lts":false},
+{"version":"v5.12.0","date":"2016-06-23","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.6","v8":"4.6.85.32","uv":"1.8.0","zlib":"1.2.8","openssl":"1.0.2h","modules":"47","lts":false},
+{"version":"v5.11.1","date":"2016-05-05","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.6","v8":"4.6.85.31","uv":"1.8.0","zlib":"1.2.8","openssl":"1.0.2h","modules":"47","lts":false},
+{"version":"v5.11.0","date":"2016-04-21","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.6","v8":"4.6.85.31","uv":"1.8.0","zlib":"1.2.8","openssl":"1.0.2g","modules":"47","lts":false},
+{"version":"v5.10.1","date":"2016-04-05","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"3.8.3","v8":"4.6.85.31","uv":"1.8.0","zlib":"1.2.8","openssl":"1.0.2g","modules":"47","lts":false},
+{"version":"v4.4.7","date":"2016-06-28","files":["headers","linux-arm64","linux-armv6l","linux-armv7l","linux-ppc64le","linux-x64","linux-x86","osx-x64-pkg","osx-x64-tar","src","sunos-x64","sunos-x86","win-x64-msi","win-x86-msi"],"npm":"2.15.8","v8":"4.5.103.36","uv":"1.8.0","zlib":"1.2.8","openssl":"1.0.2h","modules":"46","lts":"Argon"}
+]
+JSON
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, "https://nodejs.org/dist/")
+    stub_request(:get, "https://nodejs.org/dist/index.json")
       .to_return(:status => 200, :body => nodejs_response, :headers => {})
   end
 end

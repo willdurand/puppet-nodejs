@@ -1,3 +1,5 @@
+require 'json'
+
 class NodeVersion < Array
   def initialize s
     super(s.split('.').map { |e| e.to_i })
@@ -32,7 +34,7 @@ def get_version_list
     return NodeJSListStore::get_list
   end
 
-  uri = URI('https://nodejs.org/dist/')
+  uri = URI('https://nodejs.org/dist/index.json')
 
   http_proxy = ENV["http_proxy"]
   if http_proxy.to_s != ''
@@ -49,23 +51,36 @@ def get_version_list
   request.open_timeout = 2
   request.read_timeout = 2
 
-  result = request.get(uri.request_uri).body
+  result = JSON.parse(request.get(uri.request_uri).body)
   NodeJSListStore::set_list(result)
 
   return result
 end
 
-get_version_list
-get_version_list
-
 def get_latest_version
-  match = get_version_list.scan(/[0-9]+\.[0-9]+\.[0-9]+/);
-  match.sort! { |a,b| NodeVersion.new(a) <=> NodeVersion.new(b) };
-  'v' + match.last
+  version_data = get_version_list.map { |o| o['version'].gsub(/^v/, '') }
+  version_data.sort! { |a,b| NodeVersion.new(a) <=> NodeVersion.new(b) };
+  'v' + version_data.last
 end
 
-def get_stable_version
-  match = get_version_list.scan(/[0-9]+\.[0-9]*[02468]\.[0-9]+/);
-  match.sort! { |a,b| NodeVersion.new(a) <=> NodeVersion.new(b) };
-  'v' + match.last
+def get_lts_version
+  # in this case it needs to be checked whether NOT false as the `lts` value can either be `false`
+  # or the name of the LTS (e.g. Argon)
+  version_data = get_version_list.select { |o| o['lts'] != false }
+  version_data.first['version']
+end
+
+def get_version_from_branch(version)
+  if version =~ /^[0-9]+\.x$/
+    version.gsub!(/\.x$/, '')
+    regex = /^v#{version}\.[0-9]+\.[0-9]+$/
+  else
+    regex = /^v#{version}\.([0-9]+)$/ 
+  end
+
+  version_data = get_version_list
+    .map { |o| o['version'] }
+    .select { |v| v =~ regex }
+
+  version_data.first
 end

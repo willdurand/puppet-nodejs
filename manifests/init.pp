@@ -29,7 +29,7 @@
 #  }
 #
 class nodejs(
-  $version        = 'stable',
+  $version        = 'lts',
   $target_dir     = '/usr/local/bin',
   $make_install   = true,
   $node_path      = '/usr/local/node/node-default/lib/node_modules',
@@ -39,12 +39,7 @@ class nodejs(
   validate_string($node_path)
   validate_integer($cpu_cores)
 
-  $node_version = $version ? {
-    undef    => nodejs_stable_version(),
-    'stable' => nodejs_stable_version(),
-    'latest' => nodejs_latest_version(),
-    default  => $version
-  }
+  $node_version = evaluate_version($version)
 
   nodejs::install { "nodejs-${version}":
     version        => $node_version,
