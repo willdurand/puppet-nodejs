@@ -27,65 +27,19 @@
 #    version => 'v0.10.17'
 #  }
 #
-define nodejs::install (
-  $ensure       = present,
-  $version      = undef,
-  $target_dir   = undef,
-  $make_install = true,
-  $cpu_cores    = $::processorcount,
-) {
+define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores) {
+  if $caller_module_name != $module_name {
+    warning('nodejs::install is private!')
+  }
+
   validate_integer($cpu_cores)
+  validate_string($version)
+  validate_string($target_dir)
+  validate_bool($make_install)
 
-  include nodejs::params
+  include ::nodejs::params
 
-  # TODO remove this. In #159 it's planned to make this private
-  # and control the whole process in the `nodejs` class to simplify the logic here.
-  $version_string = $version ? {
-    undef   => 'latest', # install `latest` by default
-    default => $version,
-  }
-
-  $node_version = evaluate_version($version_string)
-  validate_nodejs_version($node_version)
-
-  $node_target_dir = $target_dir ? {
-    undef   => $::nodejs::params::target_dir,
-    default => $target_dir
-  }
-
-  if !defined(Package['curl']) {
-    package {'curl':
-      ensure => installed
-    }
-  }
-
-  if !defined(Package['tar']) {
-    package {'tar':
-      ensure => installed
-    }
-  }
-  if !defined(Package['git']) {
-    package {'git':
-      ensure => installed
-    }
-  }
-
-  if !defined(Package['ruby']){
-    package { 'ruby':
-      ensure => installed,
-      before => Package['semver'],
-    }
-  }
-
-  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
-
-  if !defined(Package['semver']){
-    package { 'semver':
-      ensure   => installed,
-      provider => gem,
-      before   => File[$node_unpack_folder],
-    }
-  }
+  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${version}"
 
   if $ensure == present {
     $node_os = $::kernel ? {
@@ -99,20 +53,15 @@ define nodejs::install (
       default  => 'x86',
     }
 
-    if $make_install {
-      $node_filename = "node-${node_version}.tar.gz"
-      $node_fqv      = $node_version # TODO remove not used
-      $message       = "Installing Node.js ${node_version}"
-    } else {
-      $node_filename = "node-${node_version}-${node_os}-${node_arch}.tar.gz"
-      $node_fqv      = "${node_version}-${node_os}-${node_arch}" # TODO remove not used
-      $message       = "Installing Node.js ${node_version} built for ${node_os} ${node_arch}"
+    $node_filename = $make_install ? {
+      true    => "node-${version}.tar.gz",
+      default => "node-${version}-${node_os}-${node_arch}.tar.gz"
     }
 
     $node_symlink_target = "${node_unpack_folder}/bin/node"
-    $node_symlink        = "${node_target_dir}/node-${node_version}"
+    $node_symlink        = "${target_dir}/node-${version}"
     $npm_instance        = "${node_unpack_folder}/bin/npm"
-    $npm_symlink         = "${node_target_dir}/npm-${node_version}"
+    $npm_symlink         = "${target_dir}/npm-${version}"
 
     ensure_resource('file', 'nodejs-install-dir', {
       ensure => 'directory',
@@ -122,19 +71,19 @@ define nodejs::install (
       mode   => '0644',
     })
 
-    ::nodejs::install::download { "nodejs-download-${node_version}":
-      source      => "https://nodejs.org/dist/${node_version}/${node_filename}",
+    ::nodejs::instance::download { "nodejs-download-${version}":
+      source      => "https://nodejs.org/dist/${version}/${node_filename}",
       destination => "${::nodejs::params::install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
     }
 
-    file { "nodejs-check-tar-${node_version}":
+    file { "nodejs-check-tar-${version}":
       ensure  => 'file',
       path    => "${::nodejs::params::install_dir}/${node_filename}",
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      require => ::Nodejs::Install::Download["nodejs-download-${node_version}"],
+      require => ::Nodejs::Instance::Download["nodejs-download-${version}"],
     }
 
     file { $node_unpack_folder:
@@ -145,14 +94,14 @@ define nodejs::install (
       require => File['nodejs-install-dir'],
     }
 
-    exec { "nodejs-unpack-${node_version}":
+    exec { "nodejs-unpack-${version}":
       command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
       path    => '/usr/bin:/bin:/usr/sbin:/sbin',
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
       require => [
-        File["nodejs-check-tar-${node_version}"],
+        File["nodejs-check-tar-${version}"],
         File[$node_unpack_folder],
         Package['tar'],
       ],
@@ -162,12 +111,12 @@ define nodejs::install (
       include ::gcc
       ensure_packages(['make'])
 
-      notify { "Starting to compile NodeJS version ${node_version}":
-        before  => Exec["nodejs-make-install-${node_version}"],
-        require => Exec["nodejs-unpack-${node_version}"],
+      notify { "Starting to compile NodeJS version ${version}":
+        before  => Exec["nodejs-make-install-${version}"],
+        require => Exec["nodejs-unpack-${version}"],
       }
 
-      exec { "nodejs-make-install-${node_version}":
+      exec { "nodejs-make-install-${version}":
         command => "./configure --prefix=${node_unpack_folder} && make -j ${cpu_cores} && make -j ${cpu_cores} install",
         path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
         cwd     => $node_unpack_folder,
@@ -175,30 +124,29 @@ define nodejs::install (
         unless  => "test -f ${node_symlink_target}",
         timeout => 0,
         require => [
-          Exec["nodejs-unpack-${node_version}"],
+          Exec["nodejs-unpack-${version}"],
           Class['::gcc'],
           Package['make'],
         ],
-        before  => File["nodejs-symlink-bin-with-version-${node_version}"],
+        before  => File["nodejs-symlink-bin-with-version-${version}"],
       }
     }
 
-    file { "nodejs-symlink-bin-with-version-${node_version}":
+    file { "nodejs-symlink-bin-with-version-${version}":
       ensure => 'link',
       path   => $node_symlink,
       target => $node_symlink_target,
     }
 
-    file { "npm-symlink-bin-with-version-${node_version}":
+    file { "npm-symlink-bin-with-version-${version}":
       ensure  => file,
       mode    => '0755',
       path    => $npm_symlink,
       content => template("${module_name}/npm.sh.erb"),
-      require => [File["nodejs-symlink-bin-with-version-${node_version}"]],
+      require => [File["nodejs-symlink-bin-with-version-${version}"]],
     }
-  }
-  else {
-    if $::nodejs_installed_version == $node_version {
+  } else {
+    if $::nodejs_installed_version == $version {
       file { "${::nodejs::params::install_dir}/node-default":
         ensure => absent,
       }
@@ -210,7 +158,7 @@ define nodejs::install (
       recurse => true,
     }
 
-    file { "${node_target_dir}/node-${node_version}":
+    file { "${target_dir}/node-${version}":
       ensure => absent,
     }
   }

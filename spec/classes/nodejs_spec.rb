@@ -24,7 +24,7 @@ describe 'nodejs', :type => :class do
    }
 
   describe 'with default parameters' do
-    it { should contain_nodejs__install('nodejs-lts') \
+    it { should contain_nodejs__instance('nodejs-lts') \
       .with_version('v4.4.7') \
       .with_target_dir('/usr/local/bin') \
       .with_make_install('true')
@@ -43,7 +43,7 @@ describe 'nodejs', :type => :class do
       :version  => 'v5.0.0',
     }}
 
-    it { should contain_nodejs__install('nodejs-v5.0.0') \
+    it { should contain_nodejs__instance('nodejs-v5.0.0') \
       .with_version('v5.0.0')
     }
 
@@ -58,7 +58,7 @@ describe 'nodejs', :type => :class do
       :version => '5.11',
     }}
 
-    it { should contain_nodejs__install('nodejs-5.11') \
+    it { should contain_nodejs__instance('nodejs-5.11') \
       .with_version('v5.11.1') \
       .with_make_install('true') \
     }
@@ -69,7 +69,7 @@ describe 'nodejs', :type => :class do
       :version => '5.x',
     }}
 
-    it { should contain_nodejs__install('nodejs-5.x') \
+    it { should contain_nodejs__instance('nodejs-5.x') \
       .with_version('v5.11.1') \
       .with_make_install('true') \
     }
@@ -80,7 +80,7 @@ describe 'nodejs', :type => :class do
       :version => 'lts',
     }}
 
-    it { should contain_nodejs__install('nodejs-lts') \
+    it { should contain_nodejs__instance('nodejs-lts') \
       .with_version('v4.4.7') \
       .with_make_install('true') \
     }
@@ -91,7 +91,7 @@ describe 'nodejs', :type => :class do
       :target_dir  => '/bin',
     }}
 
-    it { should contain_nodejs__install('nodejs-lts') \
+    it { should contain_nodejs__instance('nodejs-lts') \
       .with_target_dir('/bin') \
     }
   end
@@ -101,7 +101,7 @@ describe 'nodejs', :type => :class do
       :make_install => false
     }}
 
-    it { should contain_nodejs__install('nodejs-lts') \
+    it { should contain_nodejs__instance('nodejs-lts') \
       .with_make_install('false')
     }
   end

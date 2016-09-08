@@ -14,7 +14,7 @@
 # [*timeout*]
 #   Timeout for the download command.
 #
-define nodejs::install::download(
+define nodejs::instance::download(
   $source,
   $destination,
   $unless_test = true,

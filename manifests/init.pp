@@ -37,7 +37,9 @@ class nodejs(
 
   $node_version = evaluate_version($version)
 
-  nodejs::install { "nodejs-${version}":
+  class { '::nodejs::instance::pkgs': } ->
+  nodejs::instance { "nodejs-${version}":
+    ensure       => present,
     version      => $node_version,
     target_dir   => $target_dir,
     make_install => $make_install,
@@ -50,7 +52,7 @@ class nodejs(
   file { $nodejs_default_path:
     ensure  => link,
     target  => $nodejs_version_path,
-    require => Nodejs::Install["nodejs-${version}"],
+    require => Nodejs::Instance["nodejs-${version}"],
   }
 
   $node_default_symlink = "${target_dir}/node"
