@@ -162,13 +162,12 @@ define nodejs::install (
       ],
     }
 
-    $gplusplus_package = $::osfamily ? {
-      'RedHat' => 'gcc-c++',
-      'Suse'   => 'gcc-c++',
-      default  => 'g++',
-    }
-
     if $make_install {
+      $gplusplus_package = $::osfamily ? {
+        'RedHat' => 'gcc-c++',
+        'Suse'   => 'gcc-c++',
+        default  => 'g++',
+      }
 
       if $::osfamily == 'Suse'{
         package { 'patterns-openSUSE-minimal_base-conflicts-12.3-7.10.1.x86_64':
@@ -177,6 +176,11 @@ define nodejs::install (
       }
 
       ensure_packages([ $python_package, $gplusplus_package, 'make' ])
+
+      notify { "Starting to compile NodeJS version ${node_version}":
+        before  => Exec["nodejs-make-install-${node_version}"],
+        require => Exec["nodejs-unpack-${node_version}"],
+      }
 
       exec { "nodejs-make-install-${node_version}":
         command => "./configure --prefix=${node_unpack_folder} && make -j ${cpu_cores} && make -j ${cpu_cores} install",
