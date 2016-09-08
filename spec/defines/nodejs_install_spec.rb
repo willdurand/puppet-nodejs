@@ -5,7 +5,7 @@ describe 'nodejs::install', :type => :define do
   let(:facts) {{
     :kernel         => 'linux',
     :hardwaremodel  => 'x86',
-    :osfamily       => 'Ubuntu',
+    :osfamily       => 'Debian',
     :processorcount => 2,
   }}
 
@@ -197,54 +197,6 @@ describe 'nodejs::install', :type => :define do
     }}
 
     it { should_not contain_exec('nodejs-make-install-v6.2.0') }
-  end
-
-  describe 'on a RedHat based OS (osfamily = RedHat)' do
-    let(:facts) {{
-      :osfamily       => 'RedHat',
-      :kernel         => 'linux',
-      :hardwaremodel  => 'x86',
-      :processorcount => 2,
-    }}
-    let(:params) {{
-      :version => 'v6.0.0'
-    }}
-
-    it { should contain_package('gcc-c++').with( 
-      :ensure => 'present'
-    )} 
-  end
-
-  describe 'on a OpenSuse based OS (osfamily = Suse)' do
-    let(:facts) {{
-      :osfamily       => 'Suse',
-      :kernel         => 'linux',
-      :hardwaremodel  => 'x86',
-      :processorcount => 2,
-    }}
-    let(:params) {{
-      :version => 'v6.0.0'
-    }}
-
-    it { should contain_package('gcc-c++').with(
-      :ensure => 'present'
-    )}
-  end
-
-  describe 'on a Non-RedHat based OS (osfamily != RedHat)' do
-    let(:facts) {{
-      :osfamily       => 'Debian',
-      :kernel         => 'linux',
-      :hardwaremodel  => 'x86',
-      :processorcount => 2,
-    }}
-    let(:params) {{
-      :version => 'v6.0.0'
-    }}
-
-    it { should contain_package('g++').with(
-      :ensure => 'present'
-    )}
   end
 
   describe 'uninstall' do

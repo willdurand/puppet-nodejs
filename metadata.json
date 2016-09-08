@@ -46,6 +46,10 @@
     {
       "name": "puppetlabs/stdlib",
       "version_requirement": ">=3.2.1"
+    },
+    {
+      "name": "puppetlabs/gcc",
+      "version_requirement": ">=0.3.0"
     }
   ],
   "requirements": [

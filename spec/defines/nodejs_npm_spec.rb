@@ -5,7 +5,7 @@ describe 'nodejs::npm', :type => :define do
   let(:facts) {{
     :kernel         => 'linux',
     :hardwaremodel  => 'x86',
-    :osfamily       => 'Ubuntu',
+    :osfamily       => 'Debian',
     :path           => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
     :processorcount => 2,
   }}
@@ -52,7 +52,8 @@ describe 'nodejs::npm', :type => :define do
   end
 
   describe 'home path for unix systems' do
-    operating_systems = ['Debian', 'Ubuntu', 'RedHat', 'CentOS']
+    # just assert against OS families
+    operating_systems = ['Debian', 'RedHat']
     operating_systems.each do |os|
       let (:params) {{
         :name         => 'foo-yo',

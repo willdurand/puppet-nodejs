@@ -6,7 +6,7 @@ describe 'nodejs', :type => :class do
   let(:facts) {{
     :kernel         => 'linux',
     :hardwaremodel  => 'x86',
-    :osfamily       => 'Ubuntu',
+    :osfamily       => 'Debian',
     :processorcount => 2,
   }}
 

@@ -14,9 +14,6 @@
 # [*make_install*]
 #   If false, will install from nodejs.org binary distributions.
 #
-# [*python_package*]
-#   Python package name, defaults to python
-#
 # [*cpu_cores*]
 #   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
 #
@@ -31,12 +28,11 @@
 #  }
 #
 define nodejs::install (
-  $ensure         = present,
-  $version        = undef,
-  $target_dir     = undef,
-  $make_install   = true,
-  $python_package = 'python',
-  $cpu_cores      = $::processorcount,
+  $ensure       = present,
+  $version      = undef,
+  $target_dir   = undef,
+  $make_install = true,
+  $cpu_cores    = $::processorcount,
 ) {
   validate_integer($cpu_cores)
 
@@ -163,19 +159,8 @@ define nodejs::install (
     }
 
     if $make_install {
-      $gplusplus_package = $::osfamily ? {
-        'RedHat' => 'gcc-c++',
-        'Suse'   => 'gcc-c++',
-        default  => 'g++',
-      }
-
-      if $::osfamily == 'Suse'{
-        package { 'patterns-openSUSE-minimal_base-conflicts-12.3-7.10.1.x86_64':
-          ensure => 'absent'
-        }
-      }
-
-      ensure_packages([ $python_package, $gplusplus_package, 'make' ])
+      include ::gcc
+      ensure_packages(['make'])
 
       notify { "Starting to compile NodeJS version ${node_version}":
         before  => Exec["nodejs-make-install-${node_version}"],
@@ -191,9 +176,8 @@ define nodejs::install (
         timeout => 0,
         require => [
           Exec["nodejs-unpack-${node_version}"],
-          Package[$python_package],
-          Package[$gplusplus_package],
-          Package['make']
+          Class['::gcc'],
+          Package['make'],
         ],
         before  => File["nodejs-symlink-bin-with-version-${node_version}"],
       }
