@@ -157,6 +157,7 @@ describe 'nodejs::instance', :type => :define do
     it { should_not contain_exec('nodejs-make-install-v6.2.0') }
   end
 
+  # TODO refactor, all params should not be added here
   describe 'uninstall' do
     describe 'any instance' do
       let(:params) {{

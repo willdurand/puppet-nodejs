@@ -27,7 +27,7 @@ describe 'nodejs', :type => :class do
     it { should contain_nodejs__instance('nodejs-lts') \
       .with_version('v4.4.7') \
       .with_target_dir('/usr/local/bin') \
-      .with_make_install('true')
+      .with_make_install('false')
     }
 
     it { should contain_file('/usr/local/node/node-default') \
@@ -60,7 +60,7 @@ describe 'nodejs', :type => :class do
 
     it { should contain_nodejs__instance('nodejs-5.11') \
       .with_version('v5.11.1') \
-      .with_make_install('true') \
+      .with_make_install('false') \
     }
   end
 
@@ -71,7 +71,7 @@ describe 'nodejs', :type => :class do
 
     it { should contain_nodejs__instance('nodejs-5.x') \
       .with_version('v5.11.1') \
-      .with_make_install('true') \
+      .with_make_install('false') \
     }
   end
 
@@ -82,7 +82,7 @@ describe 'nodejs', :type => :class do
 
     it { should contain_nodejs__instance('nodejs-lts') \
       .with_version('v4.4.7') \
-      .with_make_install('true') \
+      .with_make_install('false') \
     }
   end
 
@@ -96,13 +96,13 @@ describe 'nodejs', :type => :class do
     }
   end
 
-  describe 'with make_install = false' do
+  describe 'with make_install = true' do
     let(:params) {{
-      :make_install => false
+      :make_install => true
     }}
 
     it { should contain_nodejs__instance('nodejs-lts') \
-      .with_make_install('false')
+      .with_make_install('true')
     }
   end
 

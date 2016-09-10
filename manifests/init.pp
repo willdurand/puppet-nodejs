@@ -26,14 +26,17 @@
 #  }
 #
 class nodejs(
-  $version      = 'lts',
-  $target_dir   = '/usr/local/bin',
-  $make_install = true,
-  $node_path    = '/usr/local/node/node-default/lib/node_modules',
-  $cpu_cores    = $::processorcount,
-) {
+  $version      = $::nodejs::params::version,
+  $target_dir   = $::nodejs::params::target_dir,
+  $make_install = $::nodejs::params::make_install,
+  $node_path    = $::nodejs::params::node_path,
+  $cpu_cores    = $::nodejs::params::cpu_cores,
+) inherits ::nodejs::params  {
   validate_string($node_path)
   validate_integer($cpu_cores)
+  validate_string($version)
+  validate_string($target_dir)
+  validate_bool($make_install)
 
   $node_version = evaluate_version($version)
 

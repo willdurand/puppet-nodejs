@@ -29,9 +29,10 @@
 #
 define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores) {
   if $caller_module_name != $module_name {
-    warning('nodejs::install is private!')
+    warning('nodejs::instance is private!')
   }
 
+  validate_string($ensure)
   validate_integer($cpu_cores)
   validate_string($version)
   validate_string($target_dir)
@@ -54,8 +55,8 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
     }
 
     $node_filename = $make_install ? {
-      true    => "node-${version}.tar.gz",
-      default => "node-${version}-${node_os}-${node_arch}.tar.gz"
+      true  => "node-${version}.tar.gz",
+      false => "node-${version}-${node_os}-${node_arch}.tar.gz"
     }
 
     $node_symlink_target = "${node_unpack_folder}/bin/node"
