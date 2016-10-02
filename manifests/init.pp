@@ -17,6 +17,9 @@
 # [*cpu_cores*]
 #   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
 #
+# [*contain_ruby*]
+#   Bool flag whether or not to install ruby.
+#
 # == Example:
 #
 #  include nodejs
@@ -31,16 +34,20 @@ class nodejs(
   $make_install = $::nodejs::params::make_install,
   $node_path    = $::nodejs::params::node_path,
   $cpu_cores    = $::nodejs::params::cpu_cores,
+  $contain_ruby = $::nodejs::params::contain_ruby,
 ) inherits ::nodejs::params  {
   validate_string($node_path)
   validate_integer($cpu_cores)
   validate_string($version)
   validate_string($target_dir)
   validate_bool($make_install)
+  validate_bool($contain_ruby)
 
   $node_version = evaluate_version($version)
 
-  class { '::nodejs::instance::pkgs': } ->
+  class { '::nodejs::instance::pkgs':
+    contain_ruby => $contain_ruby,
+  } ->
   nodejs::instance { "nodejs-${version}":
     ensure       => present,
     version      => $node_version,

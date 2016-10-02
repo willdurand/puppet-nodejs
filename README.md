@@ -259,6 +259,19 @@ When your puppet agent is behind a web proxy, export the `http_proxy` environmen
 export http_proxy=http://myHttpProxy:8888
 ```
 
+### Vagrant environment
+
+If you're using a vagrant environment, you should set the `contain_ruby` parameter in the `::nodejs` class to `true`:
+
+``` puppet
+class { '::nodejs':
+  contain_ruby => true,
+}
+```
+
+By default no ruby is installed on the target machine since everything that needs ruby (e.g. the version detection) lives now in functions being evaluated on the puppet master.
+As vagrant doesn't contain a "real" puppet master, everything's evaluated on the machine, so ruby must be installed there, too.
+
 Running the tests
 -----------------
 
