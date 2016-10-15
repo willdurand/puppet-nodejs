@@ -24,8 +24,6 @@ define nodejs::instance::download(
   validate_string($destination)
   validate_string($source)
 
-  ensure_packages(['wget'])
-
   if $caller_module_name != $module_name {
     warning('::nodejs::install::download is not meant for public use!')
   }

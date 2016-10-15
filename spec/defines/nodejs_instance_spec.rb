@@ -11,11 +11,12 @@ describe 'nodejs::instance', :type => :define do
 
   describe 'with latest lts release' do
     let(:params) {{
-      :ensure       => 'present',
-      :version      => 'v4.4.7',
-      :target_dir   => '/usr/local/bin',
-      :make_install => true,
-      :cpu_cores    => 2,
+      :ensure               => 'present',
+      :version              => 'v4.4.7',
+      :target_dir           => '/usr/local/bin',
+      :make_install         => true,
+      :cpu_cores            => 2,
+      :default_node_version => nil,
     }}
 
     it { should contain_nodejs__instance__download('nodejs-download-v4.4.7') \
@@ -38,11 +39,12 @@ describe 'nodejs::instance', :type => :define do
   describe 'default parameters with cpu_cores set manually to 1' do
 
     let(:params) {{
-      :make_install => true,
-      :ensure       => 'present',
-      :target_dir   => '/usr/local/bin',
-      :version      => 'v6.2.0',
-      :cpu_cores    => 1
+      :make_install         => true,
+      :ensure               => 'present',
+      :target_dir           => '/usr/local/bin',
+      :version              => 'v6.2.0',
+      :cpu_cores            => 1,
+      :default_node_version => nil,
     }}
 
     it { should contain_exec('nodejs-make-install-v6.2.0') \
@@ -55,11 +57,12 @@ describe 'nodejs::instance', :type => :define do
   describe 'with specific version v6.0.0' do
 
     let(:params) {{
-      :version      => 'v6.0.0',
-      :ensure       => 'present',
-      :target_dir   => '/usr/local/bin',
-      :make_install => true,
-      :cpu_cores    => 2,
+      :version              => 'v6.0.0',
+      :ensure               => 'present',
+      :target_dir           => '/usr/local/bin',
+      :make_install         => true,
+      :cpu_cores            => 2,
+      :default_node_version => nil,
     }}
 
     it { should contain_file('nodejs-install-dir') \
@@ -115,11 +118,12 @@ describe 'nodejs::instance', :type => :define do
   describe 'specific version v6.0.0 and cpu_cores manually set to 1' do
 
     let(:params) {{
-      :ensure       => 'present',
-      :target_dir   => '/usr/local/bin',
-      :make_install => true,
-      :version      => 'v6.0.0',
-      :cpu_cores    => 1,
+      :ensure               => 'present',
+      :target_dir           => '/usr/local/bin',
+      :make_install         => true,
+      :version              => 'v6.0.0',
+      :cpu_cores            => 1,
+      :default_node_version => nil,
     }}
 
     it { should contain_exec('nodejs-make-install-v6.0.0') \
@@ -131,11 +135,12 @@ describe 'nodejs::instance', :type => :define do
 
   describe 'with a given target_dir' do
     let(:params) {{
-      :ensure       => 'present',
-      :version      => 'v6.2.0',
-      :make_install => true,
-      :target_dir   => '/bin',
-      :cpu_cores    => 1,
+      :ensure               => 'present',
+      :version              => 'v6.2.0',
+      :make_install         => true,
+      :target_dir           => '/bin',
+      :cpu_cores            => 1,
+      :default_node_version => nil,
     }}
 
     it { should contain_file('nodejs-symlink-bin-with-version-v6.2.0') \
@@ -147,25 +152,26 @@ describe 'nodejs::instance', :type => :define do
 
   describe 'with make_install = false' do
     let(:params) {{
-      :version      => 'v6.2.0',
-      :ensure       => 'present',
-      :target_dir   => '/usr/local/bin',
-      :cpu_cores    => 2,
-      :make_install => false
+      :version              => 'v6.2.0',
+      :ensure               => 'present',
+      :target_dir           => '/usr/local/bin',
+      :cpu_cores            => 2,
+      :make_install         => false,
+      :default_node_version => nil,
     }}
 
     it { should_not contain_exec('nodejs-make-install-v6.2.0') }
   end
 
-  # TODO refactor, all params should not be added here
   describe 'uninstall' do
     describe 'any instance' do
       let(:params) {{
-        :version      => 'v0.12.0',
-        :ensure       => 'absent',
-        :make_install => true,
-        :target_dir   => '/usr/local/bin',
-        :cpu_cores    => 1,
+        :version              => 'v0.12.0',
+        :ensure               => 'absent',
+        :make_install         => true,
+        :target_dir           => '/usr/local/bin',
+        :cpu_cores            => 1,
+        :default_node_version => 'v4.6.0',
       }}
       let(:facts) {{
         :nodejs_installed_version => 'v0.12/0',
@@ -181,28 +187,16 @@ describe 'nodejs::instance', :type => :define do
     end
 
     describe 'default instance' do
-      let(:facts) {{
-        :nodejs_installed_version => 'v5.6.0',
-      }}
       let(:params) {{
-        :version      => 'v5.6.0',
-        :ensure       => 'absent',
-        :target_dir   => '/usr/local/bin',
-        :make_install => false,
-        :cpu_cores    => 1,
+        :version              => 'v5.6.0',
+        :ensure               => 'absent',
+        :target_dir           => '/usr/local/bin',
+        :make_install         => false,
+        :cpu_cores            => 1,
+        :default_node_version => 'v5.6.0'
       }}
 
-      it { should contain_file('/usr/local/node/node-v5.6.0') \
-        .with_ensure('absent') \
-      }
-
-      it { should contain_file('/usr/local/node/node-default') \
-        .with_ensure('absent') \
-      }
-
-      it { should contain_file('/usr/local/bin/node-v5.6.0') \
-        .with_ensure('absent') \
-      }
+      it { should compile.and_raise_error(/Can't remove the instance/) }
     end
   end
 end

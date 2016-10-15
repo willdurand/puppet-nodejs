@@ -15,6 +15,8 @@ describe 'nodejs', :type => :class do
        return 'v6.0.1' if args[0] == 'latest'
        return 'v4.4.7' if args[0] == 'lts'
        return 'v5.11.1' if args[0] == '5.11' || args[0] == '5.x'
+       return 'v6.7.0' if args[0] == 'v6.7.0'
+       return 'v6.4.0' if args[0] == 'v6.4.0'
        return args[0] # simply return default
      end
 
@@ -113,6 +115,97 @@ describe 'nodejs', :type => :class do
 
     it { should contain_file('/etc/profile.d/nodejs.sh') \
       .with_content(/(.*)NODE_PATH=\/usr\/local\/node\/node-v5.4.1\/lib\/node_modules/)
+    }
+  end
+
+  describe 'adds multiple instances from a hash and completes the hash with default values' do
+    let(:params) {{
+      :instances => {
+        "v6.7" => {
+          "version" => 'v6.7.0',
+        },
+        "v6.4" => {
+          "version" => 'v6.4.0',
+          "make_install" => true,
+        }
+      }
+    }}
+
+    it { should contain_nodejs__instance("nodejs-custom-instance-v6.7.0") \
+      .with_version('v6.7.0') \
+      .with_ensure('present') \
+      .with_target_dir('/usr/local/bin') \
+      .with_make_install(false) \
+      .with_cpu_cores(2)
+    }
+
+    it { should contain_nodejs__instance("nodejs-custom-instance-v6.4.0") \
+      .with_version('v6.4.0') \
+      .with_ensure('present') \
+      .with_target_dir('/usr/local/bin') \
+      .with_make_install(true) \
+      .with_cpu_cores(2)
+    }
+  end
+
+  describe 'manages instances to be removed' do
+    let(:params) {{
+      :instances_to_remove => ['v6.4.0']
+    }}
+
+    it { should contain_nodejs__instance("nodejs-uninstall-custom-v6.4.0") \
+      .with_ensure("absent") \
+      .with_target_dir("/usr/local/bin") \
+      .with_make_install(false) \
+      .with_cpu_cores(0) \
+      .with_version("v6.4.0") \
+      .with_target_dir("/usr/local/bin") \
+    }
+  end
+
+  describe 'it adds multiple instances and declares a default one' do
+    let(:params) {{
+      :version   => "lts",
+      :instances => {
+        "node-lts" => {
+          "version" => "lts"
+        }
+      }
+    }}
+
+    it { should contain_nodejs__instance("nodejs-custom-instance-v4.4.7") \
+      .with_version('v4.4.7') \
+      .with_ensure('present') \
+      .with_target_dir('/usr/local/bin') \
+      .with_make_install(false) \
+      .with_cpu_cores(2)
+    }
+
+    it { should contain_file("/usr/local/node/node-default") \
+      .with_ensure("link") \
+      .with_target("/usr/local/node/node-v4.4.7") \
+    }
+
+    it { should contain_file("/usr/local/bin/node") \
+      .with_ensure("link") \
+      .with_target("/usr/local/node/node-default/bin/node")
+    }
+
+    it { should contain_file("/usr/local/bin/npm") \
+      .with_ensure("link") \
+      .with_target("/usr/local/node/node-default/bin/npm")
+    }
+  end
+
+  describe 'it includes ruby as dependency' do
+    let(:params) {{
+      :contain_ruby => true,
+      :make_install => true,
+    }}
+
+    it { should contain_class('nodejs::instance::pkgs') \
+      .with_contain_ruby(true) \
+      .with_make_install(true) \
     }
   end
 end

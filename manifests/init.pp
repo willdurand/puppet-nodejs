@@ -3,7 +3,7 @@
 # == Parameters:
 #
 # [*version*]
-#   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
+#   The NodeJS version ('vX.Y.Z', 'latest', 'lts' or 'v6.x' (latest release from the NodeJS 6 branch)).
 #
 # [*target_dir*]
 #   Where to install the executables.
@@ -20,6 +20,12 @@
 # [*contain_ruby*]
 #   Bool flag whether or not to install ruby.
 #
+# [*instances*]
+#   List of instances to install.
+#
+# [*instances_to_remove*]
+#   Instances to be removed.
+#
 # == Example:
 #
 #  include nodejs
@@ -29,12 +35,14 @@
 #  }
 #
 class nodejs(
-  $version      = $::nodejs::params::version,
-  $target_dir   = $::nodejs::params::target_dir,
-  $make_install = $::nodejs::params::make_install,
-  $node_path    = $::nodejs::params::node_path,
-  $cpu_cores    = $::nodejs::params::cpu_cores,
-  $contain_ruby = $::nodejs::params::contain_ruby,
+  $version             = $::nodejs::params::version,
+  $target_dir          = $::nodejs::params::target_dir,
+  $make_install        = $::nodejs::params::make_install,
+  $node_path           = $::nodejs::params::node_path,
+  $cpu_cores           = $::nodejs::params::cpu_cores,
+  $contain_ruby        = $::nodejs::params::contain_ruby,
+  $instances           = $::nodejs::params::instances,
+  $instances_to_remove = $::nodejs::params::instances_to_remove,
 ) inherits ::nodejs::params  {
   validate_string($node_path)
   validate_integer($cpu_cores)
@@ -42,18 +50,42 @@ class nodejs(
   validate_string($target_dir)
   validate_bool($make_install)
   validate_bool($contain_ruby)
+  validate_hash($instances)
+  validate_array($instances_to_remove)
 
   $node_version = evaluate_version($version)
 
   class { '::nodejs::instance::pkgs':
     contain_ruby => $contain_ruby,
-  } ->
-  nodejs::instance { "nodejs-${version}":
-    ensure       => present,
-    version      => $node_version,
-    target_dir   => $target_dir,
     make_install => $make_install,
-    cpu_cores    => $cpu_cores,
+  }
+  if count($instances) == 0 {
+    nodejs::instance { "nodejs-${version}":
+      ensure               => present,
+      version              => $node_version,
+      target_dir           => $target_dir,
+      make_install         => $make_install,
+      cpu_cores            => $cpu_cores,
+      default_node_version => undef,
+    }
+  } else {
+    create_resources('::nodejs::instance', node_instances($instances), {
+      ensure               => present,
+      target_dir           => $target_dir,
+      make_install         => $make_install,
+      cpu_cores            => $cpu_cores,
+      default_node_version => undef,
+    })
+  }
+
+  if count($instances_to_remove) > 0 {
+    create_resources('::nodejs::instance', ensure_uninstall($instances_to_remove), {
+      ensure               => absent,
+      make_install         => false,
+      cpu_cores            => 0,
+      target_dir           => $target_dir,
+      default_node_version => $node_version,
+    })
   }
 
   $nodejs_version_path = "/usr/local/node/node-${$node_version}"
@@ -62,13 +94,14 @@ class nodejs(
   file { $nodejs_default_path:
     ensure  => link,
     target  => $nodejs_version_path,
-    require => Nodejs::Instance["nodejs-${version}"],
+    require => Nodejs::Instance["nodejs-custom-instance-${$node_version}"],
   }
 
-  $node_default_symlink = "${target_dir}/node"
+  # TODO move this into its own class (`::nodejs::symlink` for instance)
+  $node_default_symlink        = "${target_dir}/node"
   $node_default_symlink_target = "${nodejs_default_path}/bin/node"
-  $npm_default_symlink = "${target_dir}/npm"
-  $npm_default_symlink_target = "${nodejs_default_path}/bin/npm"
+  $npm_default_symlink         = "${target_dir}/npm"
+  $npm_default_symlink_target  = "${nodejs_default_path}/bin/npm"
 
   file { $node_default_symlink:
     ensure  => link,
@@ -82,6 +115,7 @@ class nodejs(
     require => File[$nodejs_default_path]
   }
 
+  # TODO remove!
   file { '/etc/profile.d/nodejs.sh':
     ensure  => file,
     owner   => 'root',

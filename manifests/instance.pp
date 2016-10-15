@@ -17,17 +17,10 @@
 # [*cpu_cores*]
 #   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
 #
-# == Example:
+# [*default_node_version*]
+#   The default nodejs version. Required to ensure that the default version won't be uninstalled if $ensure = absent.
 #
-#  class { 'nodejs':
-#    version => 'v0.10.17',
-#  }
-#
-#  nodejs::install { 'v0.10.17':
-#    version => 'v0.10.17'
-#  }
-#
-define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores) {
+define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores, $default_node_version) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
   }
@@ -109,9 +102,6 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
     }
 
     if $make_install {
-      include ::gcc
-      ensure_packages(['make'])
-
       notify { "Starting to compile NodeJS version ${version}":
         before  => Exec["nodejs-make-install-${version}"],
         require => Exec["nodejs-unpack-${version}"],
@@ -147,19 +137,19 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
       require => [File["nodejs-symlink-bin-with-version-${version}"]],
     }
   } else {
-    if $::nodejs_installed_version == $version {
-      file { "${::nodejs::params::install_dir}/node-default":
-        ensure => absent,
-      }
+    if $default_node_version == $version {
+      fail('Can\'t remove the instance which is the default instance defined in the ::nodejs class!')
     }
 
     file { $node_unpack_folder:
       ensure  => absent,
       force   => true,
       recurse => true,
-    }
-
+    } ->
     file { "${target_dir}/node-${version}":
+      ensure => absent,
+    } ->
+    file { "${target_dir}/npm-${version}":
       ensure => absent,
     }
   }
