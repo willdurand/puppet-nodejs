@@ -20,7 +20,10 @@
 # [*instances_to_remove*]
 #   The list of instances to remove.
 #
-class nodejs::instances($instances, $node_version, $target_dir, $make_install, $cpu_cores, $instances_to_remove) {
+# [*nodejs_default_path*]
+#   The path of the default installation.
+#
+class nodejs::instances($instances, $node_version, $target_dir, $make_install, $cpu_cores, $instances_to_remove, $nodejs_default_path) {
   if $caller_module_name != $module_name {
     warning('nodejs::instances is private!')
   }
@@ -55,7 +58,6 @@ class nodejs::instances($instances, $node_version, $target_dir, $make_install, $
   }
 
   $nodejs_version_path = "/usr/local/node/node-${$node_version}"
-  $nodejs_default_path = '/usr/local/node/node-default'
 
   file { $nodejs_default_path:
     ensure  => link,

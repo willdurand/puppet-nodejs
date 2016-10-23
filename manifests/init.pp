@@ -53,7 +53,8 @@ class nodejs(
   validate_hash($instances)
   validate_array($instances_to_remove)
 
-  $node_version = evaluate_version($version)
+  $node_version        = evaluate_version($version)
+  $nodejs_default_path = '/usr/local/node/node-default'
 
   class { '::nodejs::instance::pkgs':
     contain_ruby => $contain_ruby,
@@ -66,6 +67,7 @@ class nodejs(
     make_install        => $make_install,
     cpu_cores           => $cpu_cores,
     instances_to_remove => $instances_to_remove,
+    nodejs_default_path => $nodejs_default_path,
   } ->
   # TODO remove!
   file { '/etc/profile.d/nodejs.sh':

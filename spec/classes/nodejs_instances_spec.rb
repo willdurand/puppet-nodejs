@@ -2,6 +2,12 @@ require 'spec_helper'
 
 describe 'nodejs::instances', :type => :class do
   let(:title) { 'nodejs::instances' }
+  let(:facts) {{
+    :kernel         => 'linux',
+    :hardwaremodel  => 'x86',
+    :osfamily       => 'Debian',
+    :processorcount => 2,
+  }}
   before(:each) {
     Puppet::Parser::Functions.newfunction(:evaluate_version, :type => :rvalue) do |args|
       return 'v4.4.7' if args[0] == 'lts'
@@ -16,7 +22,8 @@ describe 'nodejs::instances', :type => :class do
       :instances_to_remove => [],
       :target_dir          => '/usr/local/bin',
       :make_install        => false,
-      :cpu_cores           => 2
+      :cpu_cores           => 2,
+      :nodejs_default_path => '/usr/local/node/node-default',
     }}
 
     it { should contain_nodejs__instance('nodejs-custom-instance-v5.0.0') \
@@ -41,6 +48,7 @@ describe 'nodejs::instances', :type => :class do
       :make_install        => false,
       :target_dir          => '/usr/local/bin',
       :cpu_cores           => 2,
+      :nodejs_default_path => '/usr/local/node/node-default'
     }}
 
     it { should contain_nodejs__instance("nodejs-custom-instance-v4.4.7") \
@@ -83,6 +91,7 @@ describe 'nodejs::instances', :type => :class do
       :target_dir          => '/usr/local/bin',
       :cpu_cores           => 2,
       :instances_to_remove => [],
+      :nodejs_default_path => '/usr/local/node/node-default',
     }}
 
     it { should contain_nodejs__instance("nodejs-custom-instance-v6.7.0") \
@@ -109,7 +118,8 @@ describe 'nodejs::instances', :type => :class do
       :target_dir          => '/usr/local/bin',
       :cpu_cores           => 2,
       :instances           => {},
-      :instances_to_remove => ['v6.4.0']
+      :instances_to_remove => ['v6.4.0'],
+      :nodejs_default_path => '/usr/local/node/node-default',
     }}
 
     it { should contain_nodejs__instance("nodejs-uninstall-custom-v6.4.0") \
