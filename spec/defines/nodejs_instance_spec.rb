@@ -173,9 +173,6 @@ describe 'nodejs::instance', :type => :define do
         :cpu_cores            => 1,
         :default_node_version => 'v4.6.0',
       }}
-      let(:facts) {{
-        :nodejs_installed_version => 'v0.12/0',
-      }}
 
       it { should contain_file('/usr/local/node/node-v0.12.0') \
         .with(:ensure => 'absent', :force => true, :recurse => true) \
