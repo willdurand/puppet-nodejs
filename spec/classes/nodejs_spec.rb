@@ -33,12 +33,12 @@ describe 'nodejs', :type => :class do
 
   describe 'it includes ruby as dependency' do
     let(:params) {{
-      :contain_ruby => true,
+      :install_ruby => true,
       :make_install => true,
     }}
 
     it { should contain_class('nodejs::instance::pkgs') \
-      .with_contain_ruby(true) \
+      .with_install_ruby(true) \
       .with_make_install(true) \
     }
   end

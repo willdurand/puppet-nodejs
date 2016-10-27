@@ -4,7 +4,7 @@
 #
 # == Parameters:
 #
-# [*contain_ruby*]
+# [*install_ruby*]
 #   Whether or not to load all the ruby dependencies.
 #
 # [*make_install*]
@@ -14,7 +14,7 @@
 #
 # class { '::nodejs::instance::pkgs': }
 #
-class nodejs::instance::pkgs($contain_ruby = false, $make_install = false) {
+class nodejs::instance::pkgs($install_ruby = false, $make_install = false) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance::pkgs is private!')
   }
@@ -23,7 +23,7 @@ class nodejs::instance::pkgs($contain_ruby = false, $make_install = false) {
     ensure => installed,
   })
 
-  if $contain_ruby {
+  if $install_ruby {
     ensure_packages(['ruby'], { ensure =>  installed })
     ensure_packages(['semver'], {
       ensure   => installed,

@@ -11,7 +11,7 @@ describe 'nodejs::instance::pkgs', :type => :class do
 
   describe 'includes ruby dependency' do
     let(:params) {{
-      :contain_ruby => true
+      :install_ruby => true
     }}
 
     it { should contain_package('wget') }

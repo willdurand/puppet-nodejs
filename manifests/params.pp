@@ -19,7 +19,7 @@ class nodejs::params {
   $make_install        = false
   $node_path           = '/usr/local/node/node-default/lib/node_modules'
   $cpu_cores           = $::processorcount
-  $contain_ruby        = false
+  $install_ruby        = false
   $instances           = {}
   $instances_to_remove = []
 }

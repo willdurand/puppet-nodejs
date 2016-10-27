@@ -38,17 +38,21 @@ class nodejs::instances($instances, $node_version, $target_dir, $make_install, $
       default_node_version => undef,
     }
   } else {
-    create_resources('::nodejs::instance', node_instances($instances), {
+    create_resources('::nodejs::instance', node_instances($instances, true), {
       ensure               => present,
       target_dir           => $target_dir,
       make_install         => $make_install,
       cpu_cores            => $cpu_cores,
       default_node_version => undef,
     })
+
+    if !defined(Nodejs::Instance["nodejs-custom-instance-${$node_version}"]) {
+      fail("Cannot create a default instance with version `${$node_version}` if this version is not defined in the `instances` list!")
+    }
   }
 
   if count($instances_to_remove) > 0 {
-    create_resources('::nodejs::instance', ensure_uninstall($instances_to_remove), {
+    create_resources('::nodejs::instance', node_instances($instances_to_remove, false), {
       ensure               => absent,
       make_install         => false,
       cpu_cores            => 0,

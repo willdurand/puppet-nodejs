@@ -131,4 +131,22 @@ describe 'nodejs::instances', :type => :class do
       .with_target_dir("/usr/local/bin") \
     }
   end
+
+  describe 'with an invalid nodejs instance' do
+    let(:params) {{
+      :node_version => 'v7.0.0',
+      :make_install => false,
+      :target_dir   => '/usr/local/bin',
+      :cpu_cores    => 2,
+      :instances    => {
+        "node-lts"  => {
+          "version" => 'v6.9.1'
+        }
+      },
+      :instances_to_remove => [],
+      :nodejs_default_path => '/usr/local/node/node-default'
+    }}
+
+    it { should compile.and_raise_error(/Cannot create a default instance with version/) }
+  end
 end
