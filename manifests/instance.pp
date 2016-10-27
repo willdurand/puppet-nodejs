@@ -26,7 +26,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
   }
 
   validate_string($ensure)
-  validate_re("^(present|absent)$", $ensure)
+  validate_re($ensure, '^(present|absent)$')
   validate_integer($cpu_cores)
   validate_string($version)
   validate_string($target_dir)
