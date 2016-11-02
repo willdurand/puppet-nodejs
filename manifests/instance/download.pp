@@ -14,7 +14,7 @@
 # [*timeout*]
 #   Timeout for the download command.
 #
-define nodejs::install::download(
+define nodejs::instance::download(
   $source,
   $destination,
   $unless_test = true,
@@ -23,8 +23,6 @@ define nodejs::install::download(
   validate_bool($unless_test)
   validate_string($destination)
   validate_string($source)
-
-  ensure_packages(['wget'])
 
   if $caller_module_name != $module_name {
     warning('::nodejs::install::download is not meant for public use!')

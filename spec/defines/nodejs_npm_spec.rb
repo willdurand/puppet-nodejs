@@ -5,7 +5,7 @@ describe 'nodejs::npm', :type => :define do
   let(:facts) {{
     :kernel         => 'linux',
     :hardwaremodel  => 'x86',
-    :osfamily       => 'Ubuntu',
+    :osfamily       => 'Debian',
     :path           => '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin',
     :processorcount => 2,
   }}
@@ -52,11 +52,12 @@ describe 'nodejs::npm', :type => :define do
   end
 
   describe 'home path for unix systems' do
-    operating_systems = ['Debian', 'Ubuntu', 'RedHat', 'CentOS']
+    # just assert against OS families
+    operating_systems = ['Debian', 'RedHat']
     operating_systems.each do |os|
       let (:params) {{
         :name         => 'foo-yo',
-        :exec_as_user => 'Ma27',
+        :exec_as_user => 'ma27',
         :pkg_name  => 'yo',
         :directory => '/foo'
       }}
@@ -72,7 +73,7 @@ describe 'nodejs::npm', :type => :define do
       it { should contain_exec('npm_install_yo_/foo') \
         .with_command('npm install  yo') \
         .with_unless("npm list -p -l | grep '/foo/node_modules/yo:yo'") \
-        .with_environment('HOME=/home/Ma27')
+        .with_environment('HOME=/home/ma27')
       }
     end
   end

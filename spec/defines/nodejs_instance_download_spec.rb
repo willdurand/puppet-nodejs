@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'nodejs::install::download', :type => :define do
-  let(:title) { 'nodejs::install::download' }
+describe 'nodejs::instance::download', :type => :define do
+  let(:title) { 'nodejs::instance::download' }
 
   describe 'wget download' do
     let(:params) {{

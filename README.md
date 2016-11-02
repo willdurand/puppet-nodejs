@@ -20,12 +20,14 @@ Installation
 ### Manual installation
 
 This modules depends on
-[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib).
+[puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) and
+[puppetlabs/gcc](https://github.com/puppetlabs/puppetlabs-gcc).
 So all repositories have to be checked out:
 
 ```bash
 git clone git://github.com/willdurand/puppet-nodejs.git modules/nodejs
 git clone git://github.com/puppetlabs/puppetlabs-stdlib.git modules/stdlib
+git clone git://github.com/puppetlabs/puppetlabs-gcc.git modules/gcc
 ```
 
 For Redhat based OS, the following are (typical) additional requirements:
@@ -52,7 +54,7 @@ class { 'nodejs':
   version => 'v6.0.0',
 }
 ```
-This will compile and install Node.js version `v6.0.0` to your machine. `node` and `npm` will be available in your `$PATH` via `/usr/local/node/node-default/bin` so you can just start using `node`.
+This install the precompiled Node.js version `v6.0.0` on your machine. `node` and `npm` will be available in your `$PATH` at `/usr/local/bin` so you can just start using `node`.
 
 Shortcuts are provided to easily install the `latest` release or the latest LTS release (`lts`) by setting the `version` parameter to `latest` or `lts`. It will automatically look for the last release available on https://nodejs.org.
 
@@ -61,21 +63,23 @@ Shortcuts are provided to easily install the `latest` release or the latest LTS 
 class { 'nodejs':
   version => 'latest',
 }
+```
 
+```puppet
 # installs the latest nodejs LTS version
 class { 'nodejs':
   version => 'lts',
 }
 ```
 
-### Setup using the pre-built installer
+### Compiling from source
 
-To use the pre-built installer version provided via https://nodejs.org/download you have to set `make_install` to `false`.
+In order to compile from source with `gcc`, the `make_install` must be `true`.
 
 ```puppet
 class { 'nodejs':
   version      => 'lts',
-  make_install => false,
+  make_install => true,
 }
 ```
 
@@ -115,46 +119,47 @@ class { '::nodejs': }
 
 ### Setup multiple versions of Node.js
 
-If you need more than one installed version of Node.js on your machine, you can just do it using the `nodejs::install` puppet define.
+If you need more than one installed version of Node.js on your machine, you can just configure them using the `instances` list.
 
 ```puppet
-nodejs::install { 'v6.0.0':
+class { '::nodejs':
   version => 'v6.0.0',
-}
-nodejs::install { 'v5.0.0':
-  version => 'v5.0.0',
+  instances => {
+    "node-v6" => {
+      version => 'v6.0.0'
+    },
+    "node-v5" => {
+      version => 'v5.0.0'
+    }
+  },
 }
 ```
 
-This snippet will install version `v6.0.0` and `v5.0.0` on your machine. Keep in mind that a Node.js version installed via `nodejs::install` will provide only versioned binaries inside `/usr/local/bin`!
+This will install the node version `v5.0.0` and `v6.0.0` on your machine with `v6.0.0` as default and `v5.0.0` as versioned binary in `/usr/local/bin`:
 
 ```
+/usr/local/bin/node # v6.0.0
 /usr/local/bin/node-v6.0.0
 /usr/local/bin/npm-v6.0.0
 
-/usr/local/bin/node-v5.0.0
+/usr/local/bin/npm # NPM shipped with v6.0.0
+/usr/local/bin/npm-v5.0.0
 /usr/local/bin/npm-v5.0.0
 ```
-
-By default, this module creates a symlink for the node binary (and npm) with Node.js version appended into `/usr/local/bin` e.g. `/usr/local/bin/node-v5.0.0`.
-All parameters available in the `class` definition are also available for `nodejs::install`.
 
 It is also possible to remove those versions again:
 
 ```puppet
-::nodejs::install { 'node-v5.4':
-  ensure  => absent,
-  version => 'v5.4.1',
+class { '::nodejs':
+  # ...
+  instances_to_remove => ['5.4'],
 }
 ```
 
 After the run the directory __/usr/local/node/node-v5.4.1__ has been purged.
 The link __/usr/local/bin/node-v5.4.1__ is also purged.
 
-__Note:__ It is not possible to install and uninstall an instance in the same run.
-
-When attempting to remove the default instance this can be only done when having the ``::nodejs`` class __NOT__ defined as otherwise ``duplicate resource`` errors would occur. 
-After that no new default instance will be configured.
+__Note:__ It is not possible to install and uninstall an instance in the same run. The version defined in the `version` parameter of the `nodejs` class can't be removed in the same run. If a version should be removed, it must not be present in the `instances` list.
 
 ### Setup using custom amount of cpu cores
 
@@ -258,6 +263,19 @@ When your puppet agent is behind a web proxy, export the `http_proxy` environmen
 ```bash
 export http_proxy=http://myHttpProxy:8888
 ```
+
+### Vagrant environment
+
+If you're using a vagrant environment, you should set the `contain_ruby` parameter in the `::nodejs` class to `true`:
+
+``` puppet
+class { '::nodejs':
+  install_ruby => true,
+}
+```
+
+By default no ruby is installed on the target machine since everything that needs ruby (e.g. the version detection) lives now in functions being evaluated on the puppet master.
+As vagrant doesn't contain a "real" puppet master, everything's evaluated on the machine, so ruby must be installed there, too.
 
 Running the tests
 -----------------

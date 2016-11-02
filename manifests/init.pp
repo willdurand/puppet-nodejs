@@ -3,7 +3,7 @@
 # == Parameters:
 #
 # [*version*]
-#   The NodeJS version ('vX.Y.Z', 'latest' or 'stable').
+#   The NodeJS version ('vX.Y.Z', 'latest', 'lts' or 'v6.x' (latest release from the NodeJS 6 branch)).
 #
 # [*target_dir*]
 #   Where to install the executables.
@@ -14,11 +14,17 @@
 # [*node_path*]
 #   Value of the system environment variable (default: "/usr/local/node/node-default/lib/node_modules").
 #
-# [*python_package*]
-#   Python package name, defaults to python
-#
 # [*cpu_cores*]
 #   Number of CPU cores to use for compiling nodejs. Will be used for parallel 'make' jobs.
+#
+# [*install_ruby*]
+#   Bool flag whether or not to install ruby.
+#
+# [*instances*]
+#   List of instances to install.
+#
+# [*instances_to_remove*]
+#   Instances to be removed.
 #
 # == Example:
 #
@@ -29,52 +35,41 @@
 #  }
 #
 class nodejs(
-  $version        = 'lts',
-  $target_dir     = '/usr/local/bin',
-  $make_install   = true,
-  $node_path      = '/usr/local/node/node-default/lib/node_modules',
-  $python_package = 'python',
-  $cpu_cores      = $::processorcount,
-) {
+  $version             = $::nodejs::params::version,
+  $target_dir          = $::nodejs::params::target_dir,
+  $make_install        = $::nodejs::params::make_install,
+  $node_path           = $::nodejs::params::node_path,
+  $cpu_cores           = $::nodejs::params::cpu_cores,
+  $install_ruby        = $::nodejs::params::install_ruby,
+  $instances           = $::nodejs::params::instances,
+  $instances_to_remove = $::nodejs::params::instances_to_remove,
+) inherits ::nodejs::params  {
   validate_string($node_path)
   validate_integer($cpu_cores)
+  validate_string($version)
+  validate_string($target_dir)
+  validate_bool($make_install)
+  validate_bool($install_ruby)
+  validate_hash($instances)
+  validate_array($instances_to_remove)
 
-  $node_version = evaluate_version($version)
-
-  nodejs::install { "nodejs-${version}":
-    version        => $node_version,
-    target_dir     => $target_dir,
-    make_install   => $make_install,
-    python_package => $python_package,
-    cpu_cores      => $cpu_cores,
-  }
-
-  $nodejs_version_path = "/usr/local/node/node-${$node_version}"
+  $node_version        = evaluate_version($version)
   $nodejs_default_path = '/usr/local/node/node-default'
 
-  file { $nodejs_default_path:
-    ensure  => link,
-    target  => $nodejs_version_path,
-    require => Nodejs::Install["nodejs-${version}"],
-  }
-
-  $node_default_symlink = "${target_dir}/node"
-  $node_default_symlink_target = "${nodejs_default_path}/bin/node"
-  $npm_default_symlink = "${target_dir}/npm"
-  $npm_default_symlink_target = "${nodejs_default_path}/bin/npm"
-
-  file { $node_default_symlink:
-    ensure  => link,
-    target  => $node_default_symlink_target,
-    require => File[$nodejs_default_path]
-  }
-
-  file { $npm_default_symlink:
-    ensure  => link,
-    target  => $npm_default_symlink_target,
-    require => File[$nodejs_default_path]
-  }
-
+  class { '::nodejs::instance::pkgs':
+    install_ruby => $install_ruby,
+    make_install => $make_install,
+  } ->
+  class { '::nodejs::instances':
+    instances           => $instances,
+    node_version        => $node_version,
+    target_dir          => $target_dir,
+    make_install        => $make_install,
+    cpu_cores           => $cpu_cores,
+    instances_to_remove => $instances_to_remove,
+    nodejs_default_path => $nodejs_default_path,
+  } ->
+  # TODO remove!
   file { '/etc/profile.d/nodejs.sh':
     ensure  => file,
     owner   => 'root',
