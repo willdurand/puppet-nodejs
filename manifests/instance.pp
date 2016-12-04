@@ -45,6 +45,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
 
     $node_arch = $::hardwaremodel ? {
       /.*64.*/ => 'x64',
+      /(armv6l|armv7l)/ => $1,
       default  => 'x86',
     }
 
