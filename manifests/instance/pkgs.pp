@@ -19,7 +19,7 @@ class nodejs::instance::pkgs($install_ruby = false, $make_install = false) {
     warning('nodejs::instance::pkgs is private!')
   }
 
-  ensure_packages(['tar', 'git', 'wget'], {
+  ensure_packages(['tar', 'wget'], {
     ensure => installed,
   })
 
