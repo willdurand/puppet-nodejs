@@ -196,4 +196,86 @@ describe 'nodejs::instance', :type => :define do
       it { should compile.and_raise_error(/Can't remove the instance/) }
     end
   end
+
+  describe 'nodejs download url' do
+    let(:params) {{
+      :version              => 'v6.0.0',
+      :ensure               => 'present',
+      :make_install         => false,
+      :target_dir           => '/usr/local/bin',
+      :cpu_cores            => 1,
+      :default_node_version => 'v5.6.0',
+    }}
+
+    describe 'os' do
+     describe 'darwin' do
+      let(:facts) {{
+        :hardwaremodel => '2.6.32-504.12.2.el6.x86_64',
+        :kernel        => 'darwin',
+      }}
+
+      it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+        .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-darwin-x64.tar.gz') \
+      }
+     end
+
+     describe 'linux' do
+      let(:facts) {{
+        :hardwaremodel => '2.6.32-504.12.2.el6.x86_64',
+        :kernel        => 'linux',
+      }}
+
+      it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+        .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-linux-x64.tar.gz') \
+      }
+     end
+    end
+
+    describe 'arch' do
+      describe 'x64' do
+        let(:facts) {{
+          :hardwaremodel => '2.6.32-504.12.2.el6.x86_64',
+          :kernel        => 'linux',
+        }}
+
+        it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+          .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-linux-x64.tar.gz') \
+        }
+      end
+
+      describe 'ARM' do
+        describe 'armv6l' do
+          let(:facts) {{
+            :hardwaremodel => 'armv6l',
+            :kernel        => 'linux',
+          }}
+
+          it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+            .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-linux-armv6l.tar.gz') \
+          }
+        end
+        describe 'armv7l' do
+          let(:facts) {{
+            :hardwaremodel => 'armv7l',
+            :kernel        => 'linux',
+          }}
+
+          it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+            .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-linux-armv7l.tar.gz') \
+          }
+        end
+      end
+
+      describe 'default' do
+        let(:facts) {{
+          :hardwaremodel => '2.6.32-504.12.2.el6.x86',
+          :kernel        => 'linux',
+        }}
+
+        it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+          .with_source('https://nodejs.org/dist/v6.0.0/node-v6.0.0-linux-x86.tar.gz') \
+        }
+      end
+    end
+  end
 end
