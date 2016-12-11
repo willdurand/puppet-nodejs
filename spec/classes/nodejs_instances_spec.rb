@@ -24,6 +24,7 @@ describe 'nodejs::instances', :type => :class do
       :make_install        => false,
       :cpu_cores           => 2,
       :nodejs_default_path => '/usr/local/node/node-default',
+      :download_timeout    => 0,
     }}
 
     it { should contain_nodejs__instance('nodejs-custom-instance-v5.0.0') \
@@ -48,7 +49,8 @@ describe 'nodejs::instances', :type => :class do
       :make_install        => false,
       :target_dir          => '/usr/local/bin',
       :cpu_cores           => 2,
-      :nodejs_default_path => '/usr/local/node/node-default'
+      :nodejs_default_path => '/usr/local/node/node-default',
+      :download_timeout    => 0,
     }}
 
     it { should contain_nodejs__instance("nodejs-custom-instance-v4.4.7") \
@@ -92,6 +94,7 @@ describe 'nodejs::instances', :type => :class do
       :cpu_cores           => 2,
       :instances_to_remove => [],
       :nodejs_default_path => '/usr/local/node/node-default',
+      :download_timeout    => 0,
     }}
 
     it { should contain_nodejs__instance("nodejs-custom-instance-v6.7.0") \
@@ -120,6 +123,7 @@ describe 'nodejs::instances', :type => :class do
       :instances           => {},
       :instances_to_remove => ['v6.4.0'],
       :nodejs_default_path => '/usr/local/node/node-default',
+      :download_timeout    => 0,
     }}
 
     it { should contain_nodejs__instance("nodejs-uninstall-custom-v6.4.0") \
@@ -144,7 +148,8 @@ describe 'nodejs::instances', :type => :class do
         }
       },
       :instances_to_remove => [],
-      :nodejs_default_path => '/usr/local/node/node-default'
+      :nodejs_default_path => '/usr/local/node/node-default',
+      :download_timeout    => 0,
     }}
 
     it { should compile.and_raise_error(/Cannot create a default instance with version/) }

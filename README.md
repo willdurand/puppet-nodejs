@@ -110,11 +110,9 @@ Due to infrastructures with slower connections the download of the nodejs binari
 configurable:
 
 ``` puppet
-::Nodejs::Install::Download {
-  timeout => 300
+class { '::nodejs':
+  download_timeout => 0,
 }
-
-class { '::nodejs': }
 ```
 
 ### Setup multiple versions of Node.js

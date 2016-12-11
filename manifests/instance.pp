@@ -20,7 +20,10 @@
 # [*default_node_version*]
 #   The default nodejs version. Required to ensure that the default version won't be uninstalled if $ensure = absent.
 #
-define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores, $default_node_version) {
+# [*timeout*]
+#   Maximum download timeout.
+#
+define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores, $default_node_version, $timeout) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
   }
@@ -31,6 +34,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
   validate_string($version)
   validate_string($target_dir)
   validate_bool($make_install)
+  validate_integer($timeout)
 
   include ::nodejs::params
 
@@ -71,6 +75,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
       source      => "https://nodejs.org/dist/${version}/${node_filename}",
       destination => "${::nodejs::params::install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
+      timeout     => $timeout,
     }
 
     file { "nodejs-check-tar-${version}":

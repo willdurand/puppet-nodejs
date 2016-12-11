@@ -26,6 +26,10 @@
 # [*instances_to_remove*]
 #   Instances to be removed.
 #
+# [*download_timeout*]
+#   Maximum download timeout.
+#
+#
 # == Example:
 #
 #  include nodejs
@@ -43,6 +47,7 @@ class nodejs(
   $install_ruby        = $::nodejs::params::install_ruby,
   $instances           = $::nodejs::params::instances,
   $instances_to_remove = $::nodejs::params::instances_to_remove,
+  $download_timeout    = $::nodejs::params::download_timeout,
 ) inherits ::nodejs::params  {
   validate_string($node_path)
   validate_integer($cpu_cores)
@@ -52,6 +57,7 @@ class nodejs(
   validate_bool($install_ruby)
   validate_hash($instances)
   validate_array($instances_to_remove)
+  validate_integer($download_timeout)
 
   $node_version        = evaluate_version($version)
   $nodejs_default_path = '/usr/local/node/node-default'
@@ -68,6 +74,7 @@ class nodejs(
     cpu_cores           => $cpu_cores,
     instances_to_remove => $instances_to_remove,
     nodejs_default_path => $nodejs_default_path,
+    download_timeout    => $download_timeout,
   } ->
   # TODO remove!
   file { '/etc/profile.d/nodejs.sh':

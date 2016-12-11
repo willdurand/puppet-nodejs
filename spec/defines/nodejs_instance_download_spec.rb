@@ -11,7 +11,8 @@ describe 'nodejs::instance::download', :type => :define do
 
     it { should contain_exec('nodejs-wget-download-https://test.dev/foo-/usr/local/bin/foo') \
       .with_command('/usr/bin/wget --output-document /usr/local/bin/foo https://test.dev/foo') \
-      .with_creates('/usr/local/bin/foo')
+      .with_creates('/usr/local/bin/foo') \
+      .with_timeout(0)
     }
   end
 

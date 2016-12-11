@@ -22,4 +22,5 @@ class nodejs::params {
   $install_ruby        = false
   $instances           = {}
   $instances_to_remove = []
+  $download_timeout    = 0
 }
