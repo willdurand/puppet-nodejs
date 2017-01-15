@@ -87,6 +87,6 @@ class nodejs(
       mode    => '0644',
       content => template("${module_name}/nodejs.sh.erb"),
       require => File[$nodejs_default_path],
-    }
+    } ->
   anchor { 'nodejs::end': }
 }
