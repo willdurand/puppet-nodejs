@@ -20,6 +20,12 @@
 
 - changed all downloads from `http` to `https`
 
+- remove installation of `git` package.
+
+- added support for ARM architecture (`armv6l` and `armv7l`).
+
+- added `download_timeout` parameter to simplify configuration of package download timeouts.
+
 ### Installer Refactoring
 
 - added `puppetlabs-gcc` for package handling of the compiler (and removed custom implementation)
