@@ -23,4 +23,5 @@ class nodejs::params {
   $instances           = {}
   $instances_to_remove = []
   $download_timeout    = 0
+  $build_deps          = true
 }

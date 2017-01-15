@@ -25,7 +25,7 @@
 - added `puppetlabs-gcc` for package handling of the compiler (and removed custom implementation)
 - killed the `python_package` option (not needed anymore)
 - `nodejs::install` has been replaced by an internal API. to use multiple instances, use the `instances` and `instances_to_remove` option of the `nodejs` class (see the docs for more details)
-- the installation of `ruby` and the `semver` gem is optional (needed when being in an environment like vagrant)
+- Introduced a new `build_deps` parameter which makes the entire package setup optional (see `willdurand/composer#44`).
 
 ### Version refactoring
 

@@ -31,18 +31,6 @@ describe 'nodejs', :type => :class do
     }
   end
 
-  describe 'it includes ruby as dependency' do
-    let(:params) {{
-      :install_ruby => true,
-      :make_install => true,
-    }}
-
-    it { should contain_class('nodejs::instance::pkgs') \
-      .with_install_ruby(true) \
-      .with_make_install(true) \
-    }
-  end
-
   describe 'manages nodejs instances' do
     let(:params) {{
       :instances        => {
@@ -60,5 +48,19 @@ describe 'nodejs', :type => :class do
       .with_cpu_cores(2) \
       .with_instances_to_remove(["v0.12.2"])
     }
+  end
+
+  describe 'package setup is included by default' do
+    it { should contain_class('nodejs::instance::pkgs') \
+      .with_make_install(false) \
+    }
+  end
+
+  describe 'package setup can be excluded' do
+    let(:params) {{
+      :build_deps => false,
+    }}
+
+    it { should_not contain_class('::nodejs::instance::pkgs') }
   end
 end
