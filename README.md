@@ -223,6 +223,31 @@ This would install the package ``webpack`` into ``/target/directory`` with versi
 }
 ```
 
+### Omitting package build
+
+As discussed in [willdurand/composer#44](https://github.com/willdurand/puppet-composer/issues/44) each module should get a `build_deps` parameter which can be used in edge cases in order to turn the package setup of this module off:
+
+``` puppet
+class { '::nodejs':
+  build_deps => false,
+}
+
+::nodejs::install { 'nodejs-foo':
+  build_deps => false,
+}
+```
+
+In this case you'll need to take care of the following packages:
+
+- `tar`
+- `ruby`
+- `wget`
+- `semver` (GEM used by ruby)
+- `make`
+- `gcc`
+- `git`
+- `curl`
+
 ### Proxy
 
 When your puppet agent is behind a web proxy, export the `http_proxy` environment variable:

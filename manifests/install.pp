@@ -20,6 +20,9 @@
 # [*python_package*]
 #   Python package name, defaults to python
 #
+# [*build_deps*]
+#   Whether or not to build deps.
+#
 # == Example:
 #
 #  class { 'nodejs':
@@ -37,6 +40,7 @@ define nodejs::install (
   $with_npm       = true,
   $make_install   = true,
   $python_package = 'python',
+  $build_deps     = true,
 ) {
 
   include nodejs::params
@@ -53,33 +57,36 @@ define nodejs::install (
     default => $target_dir
   }
 
-  if !defined(Package['curl']) {
-    package {'curl':
-      ensure => installed
+  if $build_deps {
+    ensure_packages(['wget'])
+    if !defined(Package['curl']) {
+      package {'curl':
+        ensure => installed
+      }
     }
-  }
 
-  if !defined(Package['tar']) {
-    package {'tar':
-      ensure => installed
+    if !defined(Package['tar']) {
+      package {'tar':
+        ensure => installed
+      }
     }
-  }
-  if !defined(Package['git']) {
-    package {'git':
-      ensure => installed
+    if !defined(Package['git']) {
+      package {'git':
+        ensure => installed
+      }
     }
-  }
 
-  if !defined(Package['ruby']){
-    package { 'ruby':
-      ensure => installed,
-      before => Package['semver'],
+    if !defined(Package['ruby']){
+      package { 'ruby':
+        ensure => installed,
+        before => Package['semver'],
+      }
     }
   }
 
   $node_unpack_folder = "${::nodejs::params::install_dir}/node-${node_version}"
 
-  if !defined(Package['semver']){
+  if ($build_deps and !defined(Package['semver'])) {
     package { 'semver':
       ensure   => installed,
       provider => gem,
@@ -168,13 +175,15 @@ define nodejs::install (
 
     if $make_install {
 
-      if $::osfamily == 'Suse'{
-        package { 'patterns-openSUSE-minimal_base-conflicts-12.3-7.10.1.x86_64':
-          ensure => 'absent'
+      if $build_deps {
+        if $::osfamily == 'Suse'{
+          package { 'patterns-openSUSE-minimal_base-conflicts-12.3-7.10.1.x86_64':
+            ensure => 'absent'
+          }
         }
-      }
 
-      ensure_packages([ $python_package, $gplusplus_package, 'make' ])
+        ensure_packages([ $python_package, $gplusplus_package, 'make' ])
+      }
 
       exec { "nodejs-make-install-${node_version}":
         command => "./configure --prefix=${node_unpack_folder} && make && make install",

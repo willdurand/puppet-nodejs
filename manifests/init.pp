@@ -20,6 +20,9 @@
 # [*python_package*]
 #   Python package name, defaults to python
 #
+# [*build_deps*]
+#   Whether or not to build packages.
+#
 # == Example:
 #
 #  include nodejs
@@ -35,8 +38,10 @@ class nodejs (
   $make_install   = true,
   $node_path      = '/usr/local/node/node-default/lib/node_modules',
   $python_package = 'python',
+  $build_deps     = true,
 ) {
   validate_string($node_path)
+  validate_bool($build_deps)
 
   nodejs::install { "nodejs-${version}":
     version        => $version,
@@ -44,6 +49,7 @@ class nodejs (
     with_npm       => $with_npm,
     make_install   => $make_install,
     python_package => $python_package,
+    build_deps     => true,
   }
 
   $node_version = $version ? {

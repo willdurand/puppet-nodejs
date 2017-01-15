@@ -211,6 +211,19 @@ describe 'nodejs::install', :type => :define do
     )}
   end
 
+  describe 'omit package build' do
+    let(:params) {{
+      :build_deps => false,
+    }}
+
+    it { should_not contain_package('semver') }
+    it { should_not contain_package('ruby') }
+    it { should_not contain_package('git') }
+    it { should_not contain_package('tar') }
+    it { should_not contain_pacakge('wget') }
+    it { should_not contain_package('make') }
+  end
+
   describe 'uninstall' do
     describe 'any instance' do
       let(:params) {{
