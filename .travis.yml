@@ -36,7 +36,7 @@ before_install:
   - gem update --system 2.1.11
   - gem --version
 
-script: "rake test"
+script: "bundle exec rake spec"
 
 gemfile: .gemfile
 
