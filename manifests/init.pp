@@ -65,8 +65,8 @@ class nodejs(
     Anchor['nodejs::start'] ->
     class { '::nodejs::instance::pkgs':
       make_install => $make_install,
-      before       => Class['::nodejs::instances'],
-    }
+    } ->
+    Class['::nodejs::instances']
   }
   anchor { 'nodejs::start': } ->
     class { '::nodejs::instances':
