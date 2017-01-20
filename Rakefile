@@ -6,7 +6,7 @@ if RUBY_VERSION !~ /^1.8/
   require 'puppet_blacksmith/rake_tasks'
 end
 
-PuppetLint.configuration.log_format       = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
+PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
 PuppetLint.configuration.send("disable_80chars")
 
