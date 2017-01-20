@@ -11,11 +11,8 @@
 # [*version*]
 #   The specific version of the package to install (optional).
 #
-# [*install_opt*]
-#   Options to adjust for the npm commands (optional).
-#
-# [*remove_opt*]
-#   Options to adjust for npm removal commands (optional).
+# [*options*]
+#   Options for the NPM commands.
 #
 # [*exec_user*]
 #   User which should execute the command (optional).
@@ -34,8 +31,7 @@ define nodejs::npm::package(
   $npm_pkg,
   $ensure      = present,
   $version     = undef,
-  $install_opt = undef,
-  $remove_opt  = undef,
+  $options     = undef,
   $exec_user   = undef,
   $exec_env    = undef,
 ) {
@@ -52,7 +48,7 @@ define nodejs::npm::package(
 
   if $ensure == present {
     exec { "npm_install_${npm_pkg}_${npm_dir}":
-      command     => "npm install ${install_opt} ${install_pkg}",
+      command     => "npm install ${options} ${install_pkg}",
       unless      => "npm list -p -l | grep '${validate}'",
       cwd         => $npm_dir,
       path        => $::path,
@@ -63,10 +59,9 @@ define nodejs::npm::package(
 
     # Conditionally require npm_proxy only if resource exists.
     Exec<| title=='npm_proxy' |> -> Exec["npm_install_${npm_pkg}_${npm_dir}"]
-  }
-  else {
+  } else {
     exec { "npm_remove_${npm_pkg}_${npm_dir}":
-      command     => "npm remove ${npm_pkg}",
+      command     => "npm remove ${options} ${npm_pkg}",
       onlyif      => "npm list -p -l | grep '${validate}'",
       cwd         => $npm_dir,
       path        => $::path,

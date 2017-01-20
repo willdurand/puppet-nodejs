@@ -32,7 +32,7 @@ describe 'nodejs::npm', :type => :define do
     }}
 
     it { should contain_exec('npm_remove_yo_/foo') \
-      .with_command('npm remove yo') \
+      .with_command('npm remove  yo') \
       .with_onlyif("npm list -p -l | grep '/foo/node_modules/yo:yo'")
     }
   end
@@ -56,10 +56,11 @@ describe 'nodejs::npm', :type => :define do
     operating_systems = ['Debian', 'RedHat']
     operating_systems.each do |os|
       let (:params) {{
-        :name         => 'foo-yo',
-        :exec_as_user => 'ma27',
+        :name      => 'foo-yo',
+        :exec_user => 'ma27',
         :pkg_name  => 'yo',
-        :directory => '/foo'
+        :directory => '/foo',
+        :home_dir  => '/home/ma27',
       }}
       let(:facts) {{
         :operatingsystem => os,
@@ -80,9 +81,9 @@ describe 'nodejs::npm', :type => :define do
 
   describe 'installation from a package.json file' do
     let (:params) {{
-      :list        => true,
-      :directory   => '/foo',
-      :install_opt => '-x -z'
+      :list      => true,
+      :directory => '/foo',
+      :options   => '-x -z'
     }}
 
     it { should contain_exec('npm_install_dir_/foo') \

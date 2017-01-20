@@ -231,13 +231,13 @@ There are two approaches how to use this feature:
 
 ```puppet
 ::nodejs::npm { 'npm-webpack':
-  ensure       => present, # absent would uninstall this package
-  pkg_name     => 'webpack',
-  version      => 'x.x', # optional
-  install_opt  => '-x -y -z', # options passed to the "npm install" cmd, optional
-  remove_opt   => '-x -y -z', # options passed to the "npm remove" cmd (in case of ensure => absent), optional
-  exec_as_user => 'vagrant',  # exec user, optional
-  directory    => '/target/directory', # target directory
+  ensure    => present, # absent would uninstall this package
+  pkg_name  => 'webpack',
+  version   => 'x.x',               # optional
+  options   => '-x -y -z',          # CLI options passed to the "npm install" cmd, optional
+  exec_user => 'vagrant',           # exec user, optional
+  directory => '/target/directory', # target directory
+  home_dir  => '/home/vagrant',     # home directory of the user which runs the installation (vagrant in this case)
 }
 ```
 
@@ -247,10 +247,10 @@ This would install the package ``webpack`` into ``/target/directory`` with versi
 
 ```puppet
 ::nodejs::npm { 'npm-install-dir':
-  list         => true, # flag to tell puppet to execute the package.json file
-  directory    => '/target',
-  exec_as_user => 'vagrant',
-  install_opt  => '-x -y -z',
+  list      => true,       # flag to tell puppet to execute the package.json file
+  directory => '/target',
+  exec_user => 'vagrant',
+  options   => '-x -y -z',
 }
 ```
 

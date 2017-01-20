@@ -42,3 +42,15 @@ The whole version detection logic was quite outdated and needed a refactoring:
 - generic versions:
   - `7.x` to fetch the latest release of the Node.js v7 branch.
   - `7.0` to fetch the latest `7.0.x` release.
+
+### `nodejs::npm` refactoring
+
+The `nodejs::npm` resource has been refactored in order to keep the logic inside maintainable.
+
+The following breaking changes were made:
+
+- Removed `install_opt` and `remove_opt` and replaced it with a single `options` parameter.
+- Renamed `exec_as_user` to `exec_user` as it's describes the intent of the parameter in a better way.
+- Dropped automatic generation of a home directory for the `npm` calls and added a `home_dir` parameter which does the job.
+- Removed the ability to write `dir:pkg` as resource title.
+- The `pkg_name` has now `$title` as default parameter.
