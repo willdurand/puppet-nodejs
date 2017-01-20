@@ -75,7 +75,7 @@ define nodejs::npm (
       options   => $options,
     }
   } else {
-    ::nodejs::npm::package { "npm-install-${npm_pkg}-${npm_dir}":
+    ::nodejs::npm::package { "npm-install-${pkg_name}-${directory}":
       ensure    => $ensure,
       exec_user => $exec_user,
       npm_dir   => $directory,
