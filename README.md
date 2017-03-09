@@ -281,6 +281,11 @@ In this case you'll need to take care of the following packages:
 - `make` (if `make_install` = `true`)
 - `gcc` compiler (if `make_install` = `true`)
 
+Development with `nix`
+----------------------
+
+If you're using `nix` as dependency manager, you can create a custom shell which contains all dependencies declared in `Gemfile.lock` by running `nix-shell` in the root directory.
+
 Running the tests
 -----------------
 
