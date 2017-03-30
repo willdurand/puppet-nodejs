@@ -22,7 +22,7 @@ define nodejs::npm (
   $npm_dir = $npm[0]
   $npm_pkg = $npm[1]
 
-  if $source {
+  if $source and $source != '' {
     $install_pkg = $source
   } elsif $version {
     $install_pkg = "${npm_pkg}@${version}"
