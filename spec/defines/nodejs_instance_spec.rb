@@ -112,6 +112,15 @@ describe 'nodejs::instance', :type => :define do
       .with_content(/(.*)\/usr\/local\/bin\/node-v6.0.0 \/usr\/local\/node\/node-v6.0.0\/bin\/npm "\$@"/)
     }
 
+    it { should contain_file('nodejs-npmrc-etc-dir-v6.0.0') \
+      .with_ensure('directory') \
+      .with_path('/usr/local/node/node-v6.0.0/etc')
+    }
+
+    it { should contain_file('nodejs-npmrc-v6.0.0') \
+      .with_path('/usr/local/node/node-v6.0.0/etc/npmrc')
+    }
+
     it { should_not contain_file('/usr/local/bin/node') }
     it { should_not contain_file('/usr/local/bin/npm') }
 

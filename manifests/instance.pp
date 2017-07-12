@@ -130,7 +130,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
       }
     }
 
-    $node_prefix = "${target_dir}"
+    $node_prefix = $target_dir
     file { "nodejs-npmrc-etc-dir-${version}":
       ensure => directory,
       path   =>  "${node_unpack_folder}/etc",

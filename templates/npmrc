@@ -1,1 +1,1 @@
-prefix=<%= @node_prefix.sub! '/bin', '' %>
+prefix=<%= @node_prefix.sub '/bin', '' %>
