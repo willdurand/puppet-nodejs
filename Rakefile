@@ -6,6 +6,7 @@ require 'puppet_blacksmith/rake_tasks'
 PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
 PuppetLint.configuration.send("disable_80chars")
+PuppetLint.configuration.send("disable_arrow_on_right_operand_line")
 
 exclude_paths = [
   "pkg/**/*",
