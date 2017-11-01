@@ -26,6 +26,9 @@
 
 - added `download_timeout` parameter to simplify configuration of package download timeouts.
 
+- dropped `profile.d` script to patch NodeJS paths. Target directory will be set with `nodejs::$target_dir` which should be in `$PATH`.
+  See [bcfdda3341aa8b0d885b40e9a6ab7f90859f9f3e](https://github.com/willdurand/puppet-nodejs/commit/bcfdda3341aa8b0d885b40e9a6ab7f90859f9f3e) and [#177](https://github.com/willdurand/puppet-nodejs/issues/177) for further reference.
+
 ### Installer Refactoring
 
 - added `puppetlabs-gcc` for package handling of the compiler (and removed custom implementation)
