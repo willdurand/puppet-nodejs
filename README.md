@@ -11,7 +11,7 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 Version 1.9
 -----------
 
-The 1.x branch will be EOLed two months after ``2.0`` is released.
+The `1.9` branch accepts patches to fix issues due to the BC breaks from `2.0`, however **NO** active development will be done in `1.9` anymore.
 If you need the docs for 1.x, see [1.9](https://github.com/willdurand/puppet-nodejs/tree/1.9).
 
 Installation
