@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe 'nodejs::instance::download', :type => :define do
   let(:title) { 'nodejs::instance::download' }
+  let(:facts) {{
+    :osfamily => 'Debian'
+  }}
+
+  let(:pre_condition) { 'class { "::nodejs::instance::pkgs": make_install => true }' }
 
   describe 'wget download' do
     let(:params) {{

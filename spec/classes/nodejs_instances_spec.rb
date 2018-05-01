@@ -8,6 +8,9 @@ describe 'nodejs::instances', :type => :class do
     :osfamily       => 'Debian',
     :processorcount => 2,
   }}
+
+  let(:pre_condition) { 'class { "::nodejs::instance::pkgs": make_install => true }' }
+
   before(:each) {
     Puppet::Parser::Functions.newfunction(:evaluate_version, :type => :rvalue) do |args|
       return 'v4.4.7' if args[0] == 'lts'

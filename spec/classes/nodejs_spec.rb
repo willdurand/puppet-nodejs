@@ -60,6 +60,7 @@ describe 'nodejs', :type => :class do
     let(:params) {{
       :build_deps => false,
     }}
+    let(:pre_condition) { 'package { ["wget", "tar"]: }' }
 
     it { should_not contain_class('::nodejs::instance::pkgs') }
   end

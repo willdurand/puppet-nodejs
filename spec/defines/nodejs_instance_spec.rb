@@ -9,6 +9,8 @@ describe 'nodejs::instance', :type => :define do
     :processorcount => 2,
   }}
 
+  let(:pre_condition) { 'class { "::nodejs::instance::pkgs": make_install => true }' }
+
   describe 'with latest lts release' do
     let(:params) {{
       :ensure               => 'present',
@@ -232,6 +234,7 @@ describe 'nodejs::instance', :type => :define do
           :hardwaremodel  => '2.6.32-504.12.2.el6.x86_64',
           :kernel         => 'darwin',
           :processorcount => 1,
+          :osfamily       => 'Debian',
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -244,6 +247,7 @@ describe 'nodejs::instance', :type => :define do
           :hardwaremodel  => '2.6.32-504.12.2.el6.x86_64',
           :kernel         => 'linux',
           :processorcount => 1,
+          :osfamily       => 'Debian',
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -258,6 +262,7 @@ describe 'nodejs::instance', :type => :define do
           :hardwaremodel  => '2.6.32-504.12.2.el6.x86_64',
           :kernel         => 'linux',
           :processorcount => 1,
+          :osfamily       => 'Debian',
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -271,6 +276,7 @@ describe 'nodejs::instance', :type => :define do
             :hardwaremodel  => 'armv6l',
             :kernel         => 'linux',
             :processorcount => 1,
+            :osfamily       => 'Debian',
           }}
 
           it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -283,6 +289,7 @@ describe 'nodejs::instance', :type => :define do
             :hardwaremodel  => 'armv7l',
             :kernel         => 'linux',
             :processorcount => 1,
+            :osfamily       => 'Debian',
           }}
 
           it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -296,6 +303,7 @@ describe 'nodejs::instance', :type => :define do
           :hardwaremodel  => '2.6.32-504.12.2.el6.x86',
           :kernel         => 'linux',
           :processorcount => 1,
+          :osfamily       => 'Debian',
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \

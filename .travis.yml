@@ -1,13 +1,13 @@
 language: ruby
 
-rvm:
-  - 2.1.0
+rvm: $RUBY_VERSION
 
 env:
-  - PUPPET_VERSION="~> 3.6.0"
-  - PUPPET_VERSION="~> 3.7.0"
-  - PUPPET_VERSION="~> 4.3.0"
-  - PUPPET_VERSION="~> 4.3.0" STRICT_VARIABLES=yes
+  - PUPPET_VERSION="~> 3.6.0" RUBY_VERSION="2.1.0"
+  - PUPPET_VERSION="~> 3.7.0" RUBY_VERSION="2.1.0"
+  - PUPPET_VERSION="~> 4.3.0" RUBY_VERSION="2.4.0"
+  - PUPPET_VERSION="~> 4.3.0" STRICT_VARIABLES=yes RUBY_VERSION="2.4.0"
+  - PUPPET_VERSION="~> 5.5.0" RUBY_VERSION="2.4.0"
 
 before_install:
   - gem update bundler
