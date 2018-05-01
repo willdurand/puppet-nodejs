@@ -1,3 +1,10 @@
+# 2.0.1
+
+## Version/Requirement changes
+
+* added support for [Puppet 5](https://puppet.com/blog/puppet-5-platform-released)
+* install `rubygems` when allowing `puppet-nodejs` to build packages
+
 # 2.0.0
 
 ## Version/Requirement changes
