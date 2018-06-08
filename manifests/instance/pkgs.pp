@@ -16,7 +16,12 @@ class nodejs::instance::pkgs($make_install = false) {
     warning('nodejs::instance::pkgs is private!')
   }
 
-  ensure_packages(['tar', 'wget', 'ruby', 'rubygems'])
+  $rubygems = $::osfamily ? {
+    'Debian' => 'rubygems-integration',
+    default  => 'rubygems'
+  }
+
+  ensure_packages(['tar', 'wget', 'ruby', $rubygems])
   ensure_packages(['semver'], {
     provider => gem,
     require  => Package['ruby'],
