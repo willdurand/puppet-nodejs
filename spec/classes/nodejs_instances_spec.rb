@@ -7,6 +7,7 @@ describe 'nodejs::instances', :type => :class do
     :hardwaremodel  => 'x86',
     :osfamily       => 'Debian',
     :processorcount => 2,
+    :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
   }}
 
   let(:pre_condition) { 'class { "::nodejs::instance::pkgs": make_install => true }' }

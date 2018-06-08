@@ -8,6 +8,7 @@ describe 'nodejs', :type => :class do
     :hardwaremodel  => 'x86',
     :osfamily       => 'Debian',
     :processorcount => 2,
+    :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
   }}
 
   before(:each) { 

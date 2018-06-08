@@ -97,7 +97,7 @@ define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_core
 
     exec { "nodejs-unpack-${version}":
       command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
-      path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+      path    => $::path,
       cwd     => $::nodejs::params::install_dir,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",

@@ -7,6 +7,7 @@ describe 'nodejs::instance', :type => :define do
     :hardwaremodel  => 'x86',
     :osfamily       => 'Debian',
     :processorcount => 2,
+    :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
   }}
 
   let(:pre_condition) { 'class { "::nodejs::instance::pkgs": make_install => true }' }
@@ -235,6 +236,7 @@ describe 'nodejs::instance', :type => :define do
           :kernel         => 'darwin',
           :processorcount => 1,
           :osfamily       => 'Debian',
+          :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -248,6 +250,7 @@ describe 'nodejs::instance', :type => :define do
           :kernel         => 'linux',
           :processorcount => 1,
           :osfamily       => 'Debian',
+          :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -263,6 +266,7 @@ describe 'nodejs::instance', :type => :define do
           :kernel         => 'linux',
           :processorcount => 1,
           :osfamily       => 'Debian',
+          :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -277,6 +281,7 @@ describe 'nodejs::instance', :type => :define do
             :kernel         => 'linux',
             :processorcount => 1,
             :osfamily       => 'Debian',
+            :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
           }}
 
           it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -290,6 +295,7 @@ describe 'nodejs::instance', :type => :define do
             :kernel         => 'linux',
             :processorcount => 1,
             :osfamily       => 'Debian',
+            :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
           }}
 
           it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
@@ -304,6 +310,7 @@ describe 'nodejs::instance', :type => :define do
           :kernel         => 'linux',
           :processorcount => 1,
           :osfamily       => 'Debian',
+          :path           => '/usr/bin:/bin:/usr/sbin:/sbin'
         }}
 
         it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
