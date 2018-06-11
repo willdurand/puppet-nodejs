@@ -1,3 +1,10 @@
+# 2.0.2
+
+* fixed bug [#181](https://github.com/willdurand/puppet-nodejs/issues/181):
+  Instaling `rubygems` (when `build_deps => true`) was broken on Ubuntu 14.04.
+  See patch [b59c504](https://github.com/willdurand/puppet-nodejs/commit/b59c504218ff3e4064706b3959672983067a680f)
+  for further reference.
+
 # 2.0.1
 
 ## Version/Requirement changes
