@@ -5,7 +5,8 @@ require 'puppet/provider/package'
 Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package do
   desc "npm is a package management for node.js. This provider only handles global packages."
 
-  has_feature :versionable
+  # https://puppet.com/docs/puppet/5.3/types/package.html#package-attributes
+  has_feature :versionable, :install_options, :uninstall_options
 
   has_command(:npm, 'npm') do
     is_optional
@@ -67,14 +68,23 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
       package = "#{resource[:name]}@#{resource[:ensure]}"
     end
 
+    options = ['--global']
+    if resource[:install_options]
+      options += join_options(resource[:install_options])
+    end
+
     if resource[:source]
-      npm('install', '--global', resource[:source])
+      npm('install', *options, resource[:source])
     else
-      npm('install', '--global', package)
+      npm('install', *options, package)
     end
   end
 
   def uninstall
-    npm('uninstall', '--global', resource[:name])
+    options = ['--global']
+    if resource[:uninstall_options]
+      options += join_options(resource[:uninstall_options])
+    end
+    npm('uninstall', *options, resource[:name])
   end
 end
