@@ -5,7 +5,7 @@ This document lists the changes of all recent versions since `2.0.0`.
 ## 2.0.2
 
 * ([#181](https://github.com/willdurand/puppet-nodejs/issues/181)) Instaling `rubygems`
-* (when `build_deps => true`) was broken on Ubuntu 14.04.
+  (when `build_deps => true`) was broken on Ubuntu 14.04.
   See patch [b59c504](https://github.com/willdurand/puppet-nodejs/commit/b59c504218ff3e4064706b3959672983067a680f)
   for further reference.
 
@@ -31,7 +31,7 @@ This document lists the changes of all recent versions since `2.0.0`.
 * `nodejs::install` has been replaced by an internal API.
   To use multiple instances, use the `instances` and `instances_to_remove` option of
   the `nodejs` class (see the docs for more details).
-* ([`willdurand/puppet-composer#44`](https://github.com/willdurand/puppet-composer/issues/44)) Introduced a
+* ([willdurand/puppet-composer#44](https://github.com/willdurand/puppet-composer/issues/44)) Introduced a
   new `build_deps` parameter which makes the entire package setup optional.
 
 #### `nodejs::npm` refactoring
@@ -60,11 +60,11 @@ The whole version detection logic was quite outdated and needed a refactoring:
 #### Other notable changes
 
 * Removed the `::nodejs_latest_version` and `::nodejs_stable_version` fact and replaced them with a
-  puppet function to avoid evaluations on each node
-* Removed `with_npm` parameter (only used for Node.js 0.6 and below)
-* Fixed bug [#94](https://github.com/willdurand/puppet-nodejs/issues/94)
-* Added `cpu_cores` option to speedup the compilation process
-* Changed all downloads from `http` to `https`
+  puppet function to avoid evaluations on each node.
+* Removed `with_npm` parameter (only used for Node.js 0.6 and below).
+* ([#94](https://github.com/willdurand/puppet-nodejs/issues/94)) Proper symlinks for versioned NPM executables.
+* Added `cpu_cores` option to speedup the compilation process.
+* Changed all downloads from `http` to `https`.
 * Remove installation of `git` package.
 * Added support for ARM architecture (`armv6l` and `armv7l`).
 * Added `download_timeout` parameter to simplify configuration of package download timeouts.
