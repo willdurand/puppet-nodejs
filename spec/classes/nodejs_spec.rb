@@ -12,11 +12,6 @@ describe 'nodejs', :type => :class do
   }}
 
   before(:each) { 
-    Puppet::Parser::Functions.newfunction(:evaluate_version, :type => :rvalue) do |args|
-      return 'v6.0.1' if args[0] == 'latest'
-      return args[0] # simply return default
-    end
-
     Puppet::Parser::Functions.newfunction(:validate_nodejs_version) {
        |args| 'v6.0.1'
     }
@@ -43,7 +38,7 @@ describe 'nodejs', :type => :class do
 
     it { should contain_class('nodejs::instances') \
       .with_instances({ "nodejs-latest" => { "version" => "latest" } }) \
-      .with_node_version("v6.0.1") \
+      .with_node_version("v6.3.1") \
       .with_target_dir("/usr/local/bin") \
       .with_make_install(false) \
       .with_cpu_cores(2) \
