@@ -27,6 +27,10 @@ RSpec.configure do |config|
     stub_request(:get, "https://nodejs.org/dist/index.json")
       .to_return(:status => 200, :body => nodejs_response, :headers => {})
   end
+
+  config.after(:suite) do
+    RSpec::Puppet::Coverage.report!
+  end
 end
 
 $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'modules', 'stdlib', 'lib')
