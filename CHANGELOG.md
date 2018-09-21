@@ -2,6 +2,13 @@
 
 This document lists the changes of all recent versions since `2.0.0`.
 
+## 2.0.3
+
+* ([#184](https://github.com/willdurand/puppet-nodejs/issues/184)) Added support
+  for [Puppet 6](https://puppet.com/blog/introducing-puppet-6).
+* ([#183](https://github.com/willdurand/puppet-nodejs/issues/183)) Added support for `install_options`
+  when installing a package using the `npm` provider.
+
 ## 2.0.2
 
 * ([#181](https://github.com/willdurand/puppet-nodejs/issues/181)) Instaling `rubygems`
