@@ -268,14 +268,6 @@ bundle install
 bundle exec rake test
 ```
 
-For a completely isolated shell which can be used for further devtools, [`nix`](https://nixos.org/nix/)
-can be used as well:
-
-```
-nix-shell
-rake test
-```
-
 ## Authors
 
 * William Durand (<william.durand1@gmail.com>)
