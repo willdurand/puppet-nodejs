@@ -11,9 +11,10 @@ This module allows you to install [Node.js](http://nodejs.org/) and
 Important announcements
 -----------------------
 
-__NOTE:__ the master branch is used for puppet-nodejs 2.x which will be rewritten completly in the next time. When creating PRs then please open them for the ``1.9`` branch.
+* Since 2018 it's recommended to use version `2.0` of this package, full `2.x` development
+  happens on master.
 
-__NOTE:__ the ``puppet-wget`` package is required until ``1.9.1``. In ``1.9.2`` the dependency has been removed in order to provide proper ``strict_vars`` support.
+* For setups based on `1.9` bug fixes are still accepted for this branch.
 
 Installation
 ------------
