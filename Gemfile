@@ -11,3 +11,4 @@ gem 'puppetlabs_spec_helper'
 gem 'iconv'
 gem 'webmock'
 gem 'puppet-blacksmith'
+gem 'coveralls', require: false

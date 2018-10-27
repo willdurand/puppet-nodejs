@@ -34,3 +34,6 @@ RSpec.configure do |config|
 end
 
 $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'modules', 'stdlib', 'lib')
+
+require 'coveralls'
+Coveralls.wear!
