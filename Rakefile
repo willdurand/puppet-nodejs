@@ -6,8 +6,6 @@ require 'rubocop/rake_task'
 
 RuboCop::RakeTask.new
 
-task :run => [:rubocop, :test]
-
 PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
 PuppetLint.configuration.send("disable_80chars")
@@ -24,6 +22,7 @@ PuppetSyntax.exclude_paths            = exclude_paths
 
 desc "Run syntax, lint, and spec tests."
 task :test => [
+  :rubocop,
   :syntax,
   :lint,
   :spec,
