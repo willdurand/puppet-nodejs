@@ -3,22 +3,22 @@ require 'puppet/provider/package'
 # Extracted from: https://github.com/puppetlabs/puppetlabs-nodejs
 # Improved to ensure 'npm' is installed before to install packages.
 Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package do
-  desc "npm is a package management for node.js. This provider only handles global packages."
+  desc 'npm is a package management for node.js. This provider only handles global packages.'
 
   # https://puppet.com/docs/puppet/5.3/types/package.html#package-attributes
   has_feature :versionable, :install_options, :uninstall_options
 
   has_command(:npm, 'npm') do
     is_optional
-    environment :HOME => "/root"
+    environment :HOME => '/root'
   end
 
   def self.npmlist
     begin
-      output = execute([command(:npm), 'list', '--json', '--global'], {:combine => false})
+      output = execute([command(:npm), 'list', '--json', '--global'], :combine => false)
       # ignore any npm output lines to be a bit more robust
       # set max_nesting to 100 so parsing will not fail if we have module with big dependencies tree
-      output = PSON.parse(output.lines.select{ |l| l =~ /^((?!^npm).*)$/}.join("\n"), {:max_nesting => 100})
+      output = PSON.parse(output.lines.select { |l| l =~ /^((?!^npm).*)$/ }.join("\n"), :max_nesting => 100)
       @npmlist = output['dependencies'] || {}
     rescue Exception => e
       Puppet.debug("Error: npm list --json command error #{e.message}")
@@ -32,15 +32,15 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   def self.instances
     @npmlist ||= npmlist
-    @npmlist.collect do |k,v|
-      new({:name=>k, :ensure=>v['version'], :provider=>'npm'})
+    @npmlist.collect do |k, v|
+      new(:name => k, :ensure => v['version'], :provider => 'npm')
     end
   end
 
   def query
     list = npmlist
 
-    if list.has_key?(resource[:name]) and list[resource[:name]].has_key?('version')
+    if list.key?(resource[:name]) && list[resource[:name]].key?('version')
       version = list[resource[:name]]['version']
       { :ensure => version, :name => resource[:name] }
     else
@@ -48,9 +48,9 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
     end
   end
 
-  def latest
-    if /#{resource[:name]}@([\d\.]+)/ =~ npm('outdated', '--global',  resource[:name])
-      @latest = $1
+  def latest(version)
+    if /#{resource[:name]}@([\d\.]+)/ =~ npm('outdated', '--global', resource[:name])
+      @latest = version
     else
       @property_hash[:ensure] unless @property_hash[:ensure].is_a? Symbol
     end
@@ -58,7 +58,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   def update
     resource[:ensure] = @latest
-    self.install
+    install
   end
 
   def install
@@ -69,9 +69,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
     end
 
     options = ['--global']
-    if resource[:install_options]
-      options += join_options(resource[:install_options])
-    end
+    options += join_options(resource[:install_options]) if resource[:install_options]
 
     if resource[:source]
       npm('install', *options, resource[:source])
@@ -82,9 +80,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   def uninstall
     options = ['--global']
-    if resource[:uninstall_options]
-      options += join_options(resource[:uninstall_options])
-    end
+    options += join_options(resource[:uninstall_options]) if resources[:uninstall_options]
     npm('uninstall', *options, resource[:name])
   end
 end

@@ -2,6 +2,11 @@ require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
 require 'puppet-syntax/tasks/puppet-syntax'
 require 'puppet_blacksmith/rake_tasks'
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
+
+task :run => [:rubocop, :test]
 
 PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false

@@ -1,0 +1,51 @@
+AllCops:
+  Include:
+    - lib/**/*.rb
+
+Style/HashSyntax:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 110
+
+Style/Documentation:
+  Enabled: False
+
+Style/ClassAndModuleChildren:
+  Enabled: False
+
+Metrics/AbcSize:
+  Enabled: False
+
+Metrics/MethodLength:
+  Enabled: False
+
+Style/ClassVars:
+  Enabled: False
+
+Style/ColonMethodCall:
+  Enabled: False
+
+Naming/BinaryOperatorParameterName:
+  Enabled: False
+
+Naming/AccessorMethodName:
+  Enabled: False
+
+Style/SymbolProc:
+  Enabled: False
+
+Style/ConditionalAssignment:
+  Enabled: False
+
+Metrics/BlockLength:
+  Enabled: False
+
+Lint/RescueException:
+  Enabled: False
+
+Style/RedundantBegin:
+  Enabled: False
+
+Style/InverseMethods:
+  Enabled: False

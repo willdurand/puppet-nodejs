@@ -3,12 +3,12 @@ language: ruby
 rvm: $RUBY_VERSION
 
 env:
-  - PUPPET_VERSION="~> 3.6.0" RUBY_VERSION="2.1.0"
-  - PUPPET_VERSION="~> 3.7.0" RUBY_VERSION="2.1.0"
-  - PUPPET_VERSION="~> 4.3.0" RUBY_VERSION="2.4.0"
-  - PUPPET_VERSION="~> 4.3.0" STRICT_VARIABLES=yes RUBY_VERSION="2.4.0"
-  - PUPPET_VERSION="~> 5.5.0" RUBY_VERSION="2.4.0"
-  - PUPPET_VERSION="~> 6.0.0" RUBY_VERSION="2.5.1"
+  - PUPPET_VERSION="~> 3.6.0" RUBY_VERSION="2.1.0" TARGET=run
+  - PUPPET_VERSION="~> 3.7.0" RUBY_VERSION="2.1.0" TARGET=run
+  - PUPPET_VERSION="~> 4.3.0" RUBY_VERSION="2.4.0" TARGET=run
+  - PUPPET_VERSION="~> 4.3.0" STRICT_VARIABLES=yes RUBY_VERSION="2.4.0" TARGET=run
+  - PUPPET_VERSION="~> 5.5.0" RUBY_VERSION="2.4.0" TARGET=run
+  - PUPPET_VERSION="~> 6.0.0" RUBY_VERSION="2.5.1" TARGET=run
 
 before_install:
   - gem update bundler
@@ -16,6 +16,6 @@ before_install:
   - gem update --system
   - gem --version
 
-script: "rake test"
+script: "rake $TARGET"
 
 sudo: false
