@@ -12,6 +12,10 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 
 ### Announcements
 
+* From now on `2.0` is maintenance-only and accepts bugfixes until `2.2` is released. On `master`
+  the active development on `2.1` is currently happening. The docs of `2.0` can be found
+  [here](https://github.com/willdurand/puppet-nodejs/tree/2.0#puppet-nodejs)
+
 * The `1.9` branch accepts patches to fix issues due to several compatibility breaks with `2.0`,
   however **NO** active development will occur on `1.9` anymore.
   The docs can be reviewed on the [1.9 branch](https://github.com/willdurand/puppet-nodejs/tree/1.9).
