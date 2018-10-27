@@ -4,6 +4,7 @@ puppet-nodejs
 [![BuildStatus](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/willdurand/nodejs.svg)](https://forge.puppetlabs.com/willdurand/nodejs)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/willdurand/nodejs.svg)](https://forge.puppetlabs.com/willdurand/nodejs)
+[![Coverage Status](https://coveralls.io/repos/github/willdurand/puppet-nodejs/badge.svg)](https://coveralls.io/github/willdurand/puppet-nodejs)
 
 This module allows you to install [Node.js](https://nodejs.org/) and
 [NPM](https://npmjs.org/). This module is published on the Puppet Forge as
