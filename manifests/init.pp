@@ -47,9 +47,9 @@ class nodejs(
   Array[String] $instances_to_remove = $::nodejs::params::instances_to_remove,
   Integer $download_timeout          = $::nodejs::params::download_timeout,
   Boolean $build_deps                = $::nodejs::params::build_deps,
+  String $nodejs_default_path        = $::nodejs::params::nodejs_default_path,
 ) inherits ::nodejs::params  {
   $node_version        = evaluate_version($version)
-  $nodejs_default_path = '/usr/local/node/node-default'
 
   if $build_deps {
     Anchor['nodejs::start'] ->
