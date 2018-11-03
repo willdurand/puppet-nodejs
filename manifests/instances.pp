@@ -34,7 +34,8 @@ class nodejs::instances(
   Integer $cpu_cores,
   Array[String] $instances_to_remove,
   String $nodejs_default_path,
-  Integer $download_timeout
+  Integer $download_timeout,
+  String $install_dir,
 ) {
   if $caller_module_name != $module_name {
     warning('nodejs::instances is private!')
@@ -49,6 +50,7 @@ class nodejs::instances(
       cpu_cores            => $cpu_cores,
       default_node_version => undef,
       timeout              => $download_timeout,
+      install_dir          => $install_dir,
     }
   } else {
     create_resources('::nodejs::instance', node_instances($instances, true), {
@@ -58,6 +60,7 @@ class nodejs::instances(
       cpu_cores            => $cpu_cores,
       default_node_version => undef,
       timeout              => $download_timeout,
+      install_dir          => $install_dir,
     })
 
     if !defined(Nodejs::Instance["nodejs-custom-instance-${$node_version}"]) {
@@ -73,6 +76,7 @@ class nodejs::instances(
       target_dir           => $target_dir,
       default_node_version => $node_version,
       timeout              => $download_timeout,
+      install_dir          => $install_dir,
     })
   }
 

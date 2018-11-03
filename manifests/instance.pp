@@ -30,15 +30,14 @@ define nodejs::instance(
   Boolean $make_install,
   Integer $cpu_cores,
   Optional[String] $default_node_version,
-  Integer $timeout
+  Integer $timeout,
+  String $install_dir
 ) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
   }
 
-  include ::nodejs::params
-
-  $node_unpack_folder = "${::nodejs::params::install_dir}/node-${version}"
+  $node_unpack_folder = "${install_dir}/node-${version}"
 
   if $ensure == present {
     $node_os = $::kernel ? {
@@ -65,7 +64,7 @@ define nodejs::instance(
 
     ensure_resource('file', 'nodejs-install-dir', {
       ensure => 'directory',
-      path   => $::nodejs::params::install_dir,
+      path   => $install_dir,
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
@@ -73,14 +72,14 @@ define nodejs::instance(
 
     ::nodejs::instance::download { "nodejs-download-${version}":
       source      => "https://nodejs.org/dist/${version}/${node_filename}",
-      destination => "${::nodejs::params::install_dir}/${node_filename}",
+      destination => "${install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
       timeout     => $timeout,
     }
 
     file { "nodejs-check-tar-${version}":
       ensure  => 'file',
-      path    => "${::nodejs::params::install_dir}/${node_filename}",
+      path    => "${install_dir}/${node_filename}",
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
@@ -98,7 +97,7 @@ define nodejs::instance(
     exec { "nodejs-unpack-${version}":
       command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
       path    => $::path,
-      cwd     => $::nodejs::params::install_dir,
+      cwd     => $install_dir,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
       require => [

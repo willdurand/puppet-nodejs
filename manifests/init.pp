@@ -29,6 +29,9 @@
 # [*build_deps*]
 #   Optional parameter whether or not to allow the module to installs its dependant packages.
 #
+# [*install_dir*]
+#   Installation directory for all node instances. By default `/usr/local/node`.
+#
 # == Example:
 #
 #  include nodejs
@@ -48,6 +51,7 @@ class nodejs(
   Integer $download_timeout          = $::nodejs::params::download_timeout,
   Boolean $build_deps                = $::nodejs::params::build_deps,
   String $nodejs_default_path        = $::nodejs::params::nodejs_default_path,
+  String $install_dir                = $::nodejs::params::install_dir,
 ) inherits ::nodejs::params  {
   $node_version        = evaluate_version($version)
 
@@ -68,6 +72,7 @@ class nodejs(
       instances_to_remove => $instances_to_remove,
       nodejs_default_path => $nodejs_default_path,
       download_timeout    => $download_timeout,
+      install_dir         => $install_dir,
     } ->
     # TODO remove!
     file { '/etc/profile.d/nodejs.sh':
