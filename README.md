@@ -37,6 +37,11 @@ mod 'puppetlabs/stdlib', '5.1.0'
 mod 'puppetlabs/gcc', '0.3.0'
 ```
 
+The Puppet Master which evaluates the catalogue before deploying each node requires
+the following modules to properly evaluate the functions bundled with this module:
+
+* [semver](https://rubygems.org/gems/semver/versions/1.0.1)
+
 ## Usage
 
 ### Deploying a precompiled package
@@ -258,9 +263,7 @@ class { '::nodejs':
 In this case you'll need to take care of the following packages:
 
 - `tar`
-- `ruby`
 - `wget`
-- `semver` (GEM used by ruby)
 - `make` (if `make_install` = `true`)
 - `gcc` compiler (if `make_install` = `true`)
 

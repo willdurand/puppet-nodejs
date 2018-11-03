@@ -11,21 +11,12 @@
 #
 # class { '::nodejs::instance::pkgs': }
 #
-class nodejs::instance::pkgs($make_install = false) {
+class nodejs::instance::pkgs(Boolean $make_install = false) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance::pkgs is private!')
   }
 
-  $rubygems = $::osfamily ? {
-    'Debian' => 'rubygems-integration',
-    default  => 'rubygems'
-  }
-
-  ensure_packages(['tar', 'wget', 'ruby', $rubygems])
-  ensure_packages(['semver'], {
-    provider => gem,
-    require  => Package['ruby'],
-  })
+  ensure_packages(['tar', 'wget'])
 
   if $make_install {
     include ::gcc

@@ -2,6 +2,14 @@
 
 This document lists the changes of all recent versions since `2.0.0`.
 
+## 2.1.0
+
+### Minor breaking changes
+
+* Dropped EOLed Puppet 3.x
+* Don't install dev dependencies (`ruby`) anymore with `build_deps => true`. It's only needed on
+  the Puppet Master and shouldn't be deployed onto each node.
+
 ## 2.0.3
 
 * ([#184](https://github.com/willdurand/puppet-nodejs/issues/184)) Added support
