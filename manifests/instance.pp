@@ -23,18 +23,18 @@
 # [*timeout*]
 #   Maximum download timeout.
 #
-define nodejs::instance($ensure, $version, $target_dir, $make_install, $cpu_cores, $default_node_version, $timeout) {
+define nodejs::instance(
+  Pattern[/^present|absent$/] $ensure,
+  String $version,
+  String $target_dir,
+  Boolean $make_install,
+  Integer $cpu_cores,
+  Optional[String] $default_node_version,
+  Integer $timeout
+) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
   }
-
-  validate_string($ensure)
-  validate_re($ensure, '^(present|absent)$')
-  validate_integer($cpu_cores)
-  validate_string($version)
-  validate_string($target_dir)
-  validate_bool($make_install)
-  validate_integer($timeout)
 
   include ::nodejs::params
 

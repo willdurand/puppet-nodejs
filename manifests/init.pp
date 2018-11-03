@@ -38,26 +38,16 @@
 #  }
 #
 class nodejs(
-  $version             = $::nodejs::params::version,
-  $target_dir          = $::nodejs::params::target_dir,
-  $make_install        = $::nodejs::params::make_install,
-  $node_path           = $::nodejs::params::node_path,
-  $cpu_cores           = $::nodejs::params::cpu_cores,
-  $instances           = $::nodejs::params::instances,
-  $instances_to_remove = $::nodejs::params::instances_to_remove,
-  $download_timeout    = $::nodejs::params::download_timeout,
-  $build_deps          = $::nodejs::params::build_deps,
+  String $version                    = $::nodejs::params::version,
+  String $target_dir                 = $::nodejs::params::target_dir,
+  Boolean $make_install              = $::nodejs::params::make_install,
+  String $node_path                  = $::nodejs::params::node_path,
+  Integer $cpu_cores                 = $::nodejs::params::cpu_cores,
+  Hash[String, Hash] $instances      = $::nodejs::params::instances,
+  Array[String] $instances_to_remove = $::nodejs::params::instances_to_remove,
+  Integer $download_timeout          = $::nodejs::params::download_timeout,
+  Boolean $build_deps                = $::nodejs::params::build_deps,
 ) inherits ::nodejs::params  {
-  validate_string($node_path)
-  validate_integer($cpu_cores)
-  validate_string($version)
-  validate_string($target_dir)
-  validate_bool($make_install)
-  validate_hash($instances)
-  validate_array($instances_to_remove)
-  validate_integer($download_timeout)
-  validate_bool($build_deps)
-
   $node_version        = evaluate_version($version)
   $nodejs_default_path = '/usr/local/node/node-default'
 

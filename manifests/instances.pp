@@ -26,7 +26,16 @@
 # [*download_timeout*]
 #   Maximum time for the download of the nodejs sources.
 #
-class nodejs::instances($instances, $node_version, $target_dir, $make_install, $cpu_cores, $instances_to_remove, $nodejs_default_path, $download_timeout) {
+class nodejs::instances(
+  Hash[String, Hash] $instances,
+  String $node_version,
+  String $target_dir,
+  Boolean $make_install,
+  Integer $cpu_cores,
+  Array[String] $instances_to_remove,
+  String $nodejs_default_path,
+  Integer $download_timeout
+) {
   if $caller_module_name != $module_name {
     warning('nodejs::instances is private!')
   }
