@@ -206,7 +206,15 @@ package { 'express':
 }
 ```
 
-### NPM installer
+### NPM installer (deprecated)
+
+Note: this API is deprecated and will be removed in `3.0`. It's recommended to either package your
+applications properly using `npm` and install them as package using the `npm` provider or to directly
+run `npm install` when deploying your application (e.g. with a custom Puppet module).
+
+This module is focused on setting up an environment with `nodejs`, application deployment should be handled
+in its own module. In the end this was just a wrapper on top of `npm` which runs an `exec` with
+`npm install` and a configurable user and lacks proper `ensure => absent` support.
 
 The `nodejs` installer can be used if a npm package should not be installed globally, but in a
 certain directory.

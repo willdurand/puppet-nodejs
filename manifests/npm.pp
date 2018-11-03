@@ -56,6 +56,8 @@ define nodejs::npm (
   $options   = undef,
   $home_dir  = '/root',
 ) {
+  warning("::nodejs::npm is deprecated and will thus be removed in 3.0! Instead, package your applications directly with npm and use the npm provider or directly implement this directly in your application's puppet module.")
+
   validate_string($version)
   validate_string($exec_user)
   validate_bool($list)

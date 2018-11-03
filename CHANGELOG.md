@@ -10,6 +10,12 @@ This document lists the changes of all recent versions since `2.0.0`.
 * Don't install dev dependencies (`ruby`) anymore with `build_deps => true`. It's only needed on
   the Puppet Master and shouldn't be deployed onto each node.
 
+### Further changes
+
+* Deprecated `::nodejs::npm`. The feature was always out of scope and introduced several hacks
+  to support several edge-cases. Instead it's recommended to write a custom module suited
+  for your application when deploying dependencies into a given directory.
+
 ## 2.0.3
 
 * ([#184](https://github.com/willdurand/puppet-nodejs/issues/184)) Added support
