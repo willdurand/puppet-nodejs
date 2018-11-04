@@ -11,7 +11,6 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 [willdurand/nodejs](https://forge.puppetlabs.com/willdurand/nodejs).
 
 ### Announcements
-
 * From now on `2.0` is maintenance-only and accepts bugfixes until `2.2` is released. On `master`
   the active development on `2.1` is currently happening. The docs of `2.0` can be found
   [here](https://github.com/willdurand/puppet-nodejs/tree/2.0#puppet-nodejs)
@@ -74,6 +73,28 @@ In order to compile from source with `gcc`, the `make_install` option must be `t
 ```puppet
 class { 'nodejs':
   version      => 'lts',
+  make_install => true,
+}
+```
+
+### Using a custom source
+
+It's also possible to deploy NodeJS instances to Puppet nodes from your own server.
+This can be helpful when e.g. distributing your own, patched version of NodeJS.
+
+The source can be specified like this:
+
+``` puppet
+class { '::nodejs':
+  source => 'https://example.org/dist-nodejs',
+}
+```
+
+It's also possible to compile the custom instance from source:
+
+``` puppet
+class { '::nodejs':
+  source       => 'https://example.org/src-nodejs',
   make_install => true,
 }
 ```

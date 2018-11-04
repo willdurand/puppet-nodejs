@@ -238,6 +238,24 @@ describe 'nodejs::instance', :type => :define do
       :install_dir          => '/usr/local/node',
     }}
 
+    describe 'custom source' do
+      let(:params) {{
+        :version              => 'v6.0.0',
+        :ensure               => 'present',
+        :make_install         => false,
+        :target_dir           => '/usr/local/bin',
+        :cpu_cores            => 1,
+        :default_node_version => 'v5.6.0',
+        :timeout              => 0,
+        :install_dir          => '/usr/local/node',
+        :source               => 'https://example.org/dist-nodejs'
+      }}
+
+      it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+        .with_source('https://example.org/dist-nodejs') \
+      }
+    end
+
     describe 'os' do
       describe 'darwin' do
         let(:facts) {{

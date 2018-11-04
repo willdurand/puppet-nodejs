@@ -26,6 +26,12 @@
 # [*download_timeout*]
 #   Maximum time for the download of the nodejs sources.
 #
+# [*install_dir*]
+#   Where to deploy the NodeJS instances into.
+#
+# [*source*]
+#  Where to fetch the NodeJS instances (either sources or binary distributions).
+#
 class nodejs::instances(
   Hash[String, Hash] $instances,
   String $node_version,
@@ -36,6 +42,7 @@ class nodejs::instances(
   String $nodejs_default_path,
   Integer $download_timeout,
   String $install_dir,
+  Optional[String] $source = undef,
 ) {
   if $caller_module_name != $module_name {
     warning('nodejs::instances is private!')
@@ -51,6 +58,7 @@ class nodejs::instances(
       default_node_version => undef,
       timeout              => $download_timeout,
       install_dir          => $install_dir,
+      source               => $source,
     }
   } else {
     create_resources('::nodejs::instance', node_instances($instances, true), {
@@ -61,6 +69,7 @@ class nodejs::instances(
       default_node_version => undef,
       timeout              => $download_timeout,
       install_dir          => $install_dir,
+      source               => $source,
     })
 
     if !defined(Nodejs::Instance["nodejs-custom-instance-${$node_version}"]) {
@@ -77,6 +86,7 @@ class nodejs::instances(
       default_node_version => $node_version,
       timeout              => $download_timeout,
       install_dir          => $install_dir,
+      source               => $source,
     })
   }
 

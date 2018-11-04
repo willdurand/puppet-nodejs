@@ -32,6 +32,9 @@
 # [*install_dir*]
 #   Installation directory for all node instances. By default `/usr/local/node`.
 #
+# [*source*]
+#   Which source to use instead of `nodejs.org/dist`. Optional parameter, `undef` by default.
+#
 # == Example:
 #
 #  include nodejs
@@ -52,6 +55,7 @@ class nodejs(
   Boolean $build_deps                = $::nodejs::params::build_deps,
   String $nodejs_default_path        = $::nodejs::params::nodejs_default_path,
   String $install_dir                = $::nodejs::params::install_dir,
+  Optional[String] $source           = $::nodejs::params::source,
 ) inherits ::nodejs::params  {
   $node_version        = evaluate_version($version)
 
@@ -73,6 +77,7 @@ class nodejs(
       nodejs_default_path => $nodejs_default_path,
       download_timeout    => $download_timeout,
       install_dir         => $install_dir,
+      source              => $source,
     } ->
     # TODO remove!
     file { '/etc/profile.d/nodejs.sh':

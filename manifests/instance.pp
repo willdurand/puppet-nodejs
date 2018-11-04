@@ -23,6 +23,9 @@
 # [*timeout*]
 #   Maximum download timeout.
 #
+# [*source*]
+#   Which source to use instead of `nodejs.org/dist`. Optional parameter, `undef` by default.
+#
 define nodejs::instance(
   Pattern[/^present|absent$/] $ensure,
   String $version,
@@ -31,7 +34,8 @@ define nodejs::instance(
   Integer $cpu_cores,
   Optional[String] $default_node_version,
   Integer $timeout,
-  String $install_dir
+  String $install_dir,
+  Optional[String] $source = undef,
 ) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
@@ -70,8 +74,13 @@ define nodejs::instance(
       mode   => '0644',
     })
 
+    $download_source = $source ? {
+      undef   => "https://nodejs.org/dist/${version}/${node_filename}",
+      default => $source,
+    }
+
     ::nodejs::instance::download { "nodejs-download-${version}":
-      source      => "https://nodejs.org/dist/${version}/${node_filename}",
+      source      => $download_source,
       destination => "${install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
       timeout     => $timeout,
