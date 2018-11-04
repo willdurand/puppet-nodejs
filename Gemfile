@@ -18,4 +18,6 @@ group :devel do
   gem 'coveralls', require: false
 
   gem 'rubocop'
+
+  gem 'metadata-json-lint'
 end

@@ -22,6 +22,7 @@ PuppetSyntax.exclude_paths            = exclude_paths
 
 desc "Run syntax, lint, and spec tests."
 task :test => [
+  :metadata_lint,
   :rubocop,
   :syntax,
   :lint,
