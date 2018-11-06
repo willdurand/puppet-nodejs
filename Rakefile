@@ -4,7 +4,9 @@ require 'puppet-syntax/tasks/puppet-syntax'
 require 'puppet_blacksmith/rake_tasks'
 require 'rubocop/rake_task'
 
-RuboCop::RakeTask.new
+RuboCop::RakeTask.new(:rubocop_local) do |t|
+  t.options = ['-c', '.rubocop.yml']
+end
 
 PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
@@ -23,7 +25,7 @@ PuppetSyntax.exclude_paths            = exclude_paths
 desc "Run syntax, lint, and spec tests."
 task :test => [
   :metadata_lint,
-  :rubocop,
+  :rubocop_local,
   :syntax,
   :lint,
   :spec,
