@@ -1,6 +1,15 @@
+# RSpec
 spec/fixtures/
+/coverage
+
+# Puppet
 pkg/
+
+# Bundler
 Gemfile.lock
 /.bundle/
 /vendor/
-/coverage
+
+# Beaker
+log/
+junit/

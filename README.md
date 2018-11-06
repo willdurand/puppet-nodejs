@@ -24,7 +24,6 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 The module depends on the following well-adopted and commonly used modules:
 
 * [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
-* [puppetlabs/gcc](https://github.com/puppetlabs/puppetlabs-gcc)
 
 The easiest approach to install this module is by using [r10k](https://github.com/puppetlabs/r10k):
 
@@ -33,7 +32,6 @@ forge 'http://forge.puppetlabs.com'
 
 mod 'willdurand/nodejs', '2.0.3'
 mod 'puppetlabs/stdlib', '5.1.0'
-mod 'puppetlabs/gcc', '0.3.0'
 ```
 
 The Puppet Master which evaluates the catalogue before deploying each node requires
@@ -303,7 +301,11 @@ The easiest way to get started is using [`bundler`](https://bundler.io):
 ```
 bundle install
 bundle exec rake test
+PUPPET_INSTALL_TYPE=agent BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml bundle exec rake acceptance
 ```
+
+**Note:** to run the acceptance tests that are part of rake's `test` target,
+[Docker](https://www.docker.com/) is required.
 
 ## Authors
 

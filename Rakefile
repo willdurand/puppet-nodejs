@@ -22,7 +22,12 @@ exclude_paths = [
 PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths            = exclude_paths
 
-desc "Run syntax, lint, and spec tests."
+desc "Run acceptance with beaker"
+RSpec::Core::RakeTask.new(:acceptance) do |t|
+  t.pattern = 'spec/acceptance'
+end
+
+desc "Run syntax, lint, spec and acceptance tests."
 task :test => [
   :metadata_lint,
   :rubocop_local,

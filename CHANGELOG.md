@@ -14,6 +14,9 @@ This document lists the changes of all recent versions since `2.0.0`.
 
 * ([#185](https://github.com/willdurand/puppet-nodejs/issues/185)) Allow to specify a custom source
   for NodeJS to override `nodejs.org/dist`.
+* Don't depend on `puppetlabs-gcc` anymore. It wasn't updated by PuppetLabs since 2015
+  and according to its metadata it doesn't support recent Puppet version which breaks the
+  `beaker` build.
 
 ### Further changes
 

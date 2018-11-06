@@ -131,8 +131,7 @@ define nodejs::instance(
         timeout => 0,
         require => [
           Exec["nodejs-unpack-${version}"],
-          Class['::gcc'],
-          Package['make'],
+          Class['::nodejs::instance::pkgs'],
         ],
         before  => File["nodejs-symlink-bin-with-version-${version}"],
       }

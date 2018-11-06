@@ -7,6 +7,7 @@ env:
   - PUPPET_VERSION="~> 4.10.12" STRICT_VARIABLES=yes RUBY_VERSION="2.4.0" TARGET=test
   - PUPPET_VERSION="~> 5.5.1" RUBY_VERSION="2.4.0" TARGET=test
   - PUPPET_VERSION="~> 6.0.3" RUBY_VERSION="2.5.1" TARGET=test
+  - TARGET=acceptance RUBY_VERSION="2.5.1" BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml
 
 before_install:
   - gem update bundler
@@ -17,3 +18,5 @@ before_install:
 script: "rake $TARGET"
 
 sudo: false
+
+services: docker

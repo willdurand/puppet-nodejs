@@ -5,6 +5,3 @@ fixtures:
     stdlib:
       repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
       ref: "5.1.0"
-    gcc:
-      repo: "git://github.com/puppetlabs/puppetlabs-gcc.git"
-      ref: "0.3.0"

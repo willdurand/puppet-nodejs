@@ -21,3 +21,12 @@ group :devel do
 
   gem 'metadata-json-lint'
 end
+
+group :beaker do
+  gem 'beaker'
+  gem 'beaker-rspec'
+  gem 'beaker-puppet'
+  gem 'beaker-docker'
+  gem 'beaker-puppet_install_helper'
+  gem 'beaker-module_install_helper'
+end

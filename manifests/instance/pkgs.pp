@@ -19,7 +19,15 @@ class nodejs::instance::pkgs(Boolean $make_install = false) {
   ensure_packages(['tar', 'wget'])
 
   if $make_install {
-    include ::gcc
+    # inherited from https://github.com/puppetlabs/puppetlabs-gcc/blob/master/manifests/params.pp,
+    # but the module is abandoned and only supports Puppet3.
+    $gcc_packages = $::osfamily ? {
+      'RedHat' => ['gcc', 'gcc-g++'],
+      'Debian' => ['gcc', 'build-essential'],
+      default  => fail("Class['::nodejs::instances::pkgs']: unsupported osfamily: ${::osfamily}")
+    }
+
+    ensure_packages($gcc_packages)
     ensure_packages(['make'])
   }
 }

@@ -57,7 +57,7 @@ class nodejs(
   String $install_dir                = $::nodejs::params::install_dir,
   Optional[String] $source           = $::nodejs::params::source,
 ) inherits ::nodejs::params  {
-  $node_version        = evaluate_version($version)
+  $node_version = evaluate_version($version)
 
   if $build_deps {
     Anchor['nodejs::start'] ->
