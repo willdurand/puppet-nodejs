@@ -21,6 +21,7 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 2,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should contain_nodejs__instance__download('nodejs-download-v4.4.7') \
@@ -50,6 +51,7 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 1,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should contain_exec('nodejs-make-install-v6.2.0') \
@@ -69,6 +71,7 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 2,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should contain_file('nodejs-install-dir') \
@@ -141,6 +144,7 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 1,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should contain_exec('nodejs-make-install-v6.0.0') \
@@ -159,6 +163,7 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 1,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should contain_file('nodejs-symlink-bin-with-version-v6.2.0') \
@@ -177,6 +182,7 @@ describe 'nodejs::instance', :type => :define do
       :make_install         => false,
       :default_node_version => nil,
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
 
     it { should_not contain_exec('nodejs-make-install-v6.2.0') }
@@ -192,6 +198,7 @@ describe 'nodejs::instance', :type => :define do
         :cpu_cores            => 1,
         :default_node_version => 'v4.6.0',
         :timeout              => 0,
+        :install_dir          => '/usr/local/node',
       }}
 
       it { should contain_file('/usr/local/node/node-v0.12.0') \
@@ -212,6 +219,7 @@ describe 'nodejs::instance', :type => :define do
         :cpu_cores            => 1,
         :default_node_version => 'v5.6.0',
         :timeout              => 0,
+        :install_dir          => '/usr/local/node',
       }}
 
       it { should compile.and_raise_error(/Can't remove the instance/) }
@@ -227,7 +235,26 @@ describe 'nodejs::instance', :type => :define do
       :cpu_cores            => 1,
       :default_node_version => 'v5.6.0',
       :timeout              => 0,
+      :install_dir          => '/usr/local/node',
     }}
+
+    describe 'custom source' do
+      let(:params) {{
+        :version              => 'v6.0.0',
+        :ensure               => 'present',
+        :make_install         => false,
+        :target_dir           => '/usr/local/bin',
+        :cpu_cores            => 1,
+        :default_node_version => 'v5.6.0',
+        :timeout              => 0,
+        :install_dir          => '/usr/local/node',
+        :source               => 'https://example.org/dist-nodejs'
+      }}
+
+      it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+        .with_source('https://example.org/dist-nodejs') \
+      }
+    end
 
     describe 'os' do
       describe 'darwin' do

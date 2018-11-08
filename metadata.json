@@ -47,17 +47,13 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">=3.2.1"
-    },
-    {
-      "name": "puppetlabs/gcc",
-      "version_requirement": ">=0.3.0"
+      "version_requirement": ">= 4.12.0 < 6.0.0"
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">=4.3.0 <7.0.0"
+      "version_requirement": ">= 4.3.0 < 7.0.0"
     }
   ]
 }

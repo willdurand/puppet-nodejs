@@ -15,16 +15,11 @@
 #   Timeout for the download command.
 #
 define nodejs::instance::download(
-  $source,
-  $destination,
-  $unless_test = true,
-  $timeout     = 0
+  String $source,
+  String $destination,
+  Boolean $unless_test = true,
+  Integer $timeout     = 0
 ) {
-  validate_bool($unless_test)
-  validate_string($destination)
-  validate_string($source)
-  validate_integer($timeout)
-
   if $caller_module_name != $module_name {
     warning('::nodejs::install::download is not meant for public use!')
   }

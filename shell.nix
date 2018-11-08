@@ -5,4 +5,9 @@ mkShell {
   buildInputs = [
     ruby bundler rubocop
   ];
+
+  shellHook = ''
+    export PUPPET_INSTALL_TYPE=agent
+    export BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml
+  '';
 }

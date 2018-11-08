@@ -11,7 +11,6 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 [willdurand/nodejs](https://forge.puppetlabs.com/willdurand/nodejs).
 
 ### Announcements
-
 * From now on `2.0` is maintenance-only and accepts bugfixes until `2.2` is released. On `master`
   the active development on `2.1` is currently happening. The docs of `2.0` can be found
   [here](https://github.com/willdurand/puppet-nodejs/tree/2.0#puppet-nodejs)
@@ -25,7 +24,6 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 The module depends on the following well-adopted and commonly used modules:
 
 * [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
-* [puppetlabs/gcc](https://github.com/puppetlabs/puppetlabs-gcc)
 
 The easiest approach to install this module is by using [r10k](https://github.com/puppetlabs/r10k):
 
@@ -34,8 +32,12 @@ forge 'http://forge.puppetlabs.com'
 
 mod 'willdurand/nodejs', '2.0.3'
 mod 'puppetlabs/stdlib', '5.1.0'
-mod 'puppetlabs/gcc', '0.3.0'
 ```
+
+The Puppet Master which evaluates the catalogue before deploying each node requires
+the following modules to properly evaluate the functions bundled with this module:
+
+* [semver](https://rubygems.org/gems/semver/versions/1.0.1)
 
 ## Usage
 
@@ -69,6 +71,28 @@ In order to compile from source with `gcc`, the `make_install` option must be `t
 ```puppet
 class { 'nodejs':
   version      => 'lts',
+  make_install => true,
+}
+```
+
+### Using a custom source
+
+It's also possible to deploy NodeJS instances to Puppet nodes from your own server.
+This can be helpful when e.g. distributing your own, patched version of NodeJS.
+
+The source can be specified like this:
+
+``` puppet
+class { '::nodejs':
+  source => 'https://example.org/dist-nodejs',
+}
+```
+
+It's also possible to compile the custom instance from source:
+
+``` puppet
+class { '::nodejs':
+  source       => 'https://example.org/src-nodejs',
   make_install => true,
 }
 ```
@@ -201,7 +225,15 @@ package { 'express':
 }
 ```
 
-### NPM installer
+### NPM installer (deprecated)
+
+Note: this API is deprecated and will be removed in `3.0`. It's recommended to either package your
+applications properly using `npm` and install them as package using the `npm` provider or to directly
+run `npm install` when deploying your application (e.g. with a custom Puppet module).
+
+This module is focused on setting up an environment with `nodejs`, application deployment should be handled
+in its own module. In the end this was just a wrapper on top of `npm` which runs an `exec` with
+`npm install` and a configurable user and lacks proper `ensure => absent` support.
 
 The `nodejs` installer can be used if a npm package should not be installed globally, but in a
 certain directory.
@@ -258,9 +290,7 @@ class { '::nodejs':
 In this case you'll need to take care of the following packages:
 
 - `tar`
-- `ruby`
 - `wget`
-- `semver` (GEM used by ruby)
 - `make` (if `make_install` = `true`)
 - `gcc` compiler (if `make_install` = `true`)
 
@@ -271,7 +301,11 @@ The easiest way to get started is using [`bundler`](https://bundler.io):
 ```
 bundle install
 bundle exec rake test
+PUPPET_INSTALL_TYPE=agent BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml bundle exec rake acceptance
 ```
+
+**Note:** to run the acceptance tests that are part of rake's `test` target,
+[Docker](https://www.docker.com/) is required.
 
 ## Authors
 

@@ -1,9 +1,10 @@
-require 'rubygems'
-require 'puppetlabs_spec_helper/module_spec_helper'
+require 'spec_base'
 require 'webmock/rspec'
-require 'rspec'
+require 'coveralls'
 
-WebMock.disable_net_connect!()
+Coveralls.wear!
+
+WebMock.disable_net_connect!
 
 nodejs_response = <<JSON
 [
@@ -22,18 +23,10 @@ nodejs_response = <<JSON
 ]
 JSON
 
+
 RSpec.configure do |config|
   config.before(:each) do
     stub_request(:get, "https://nodejs.org/dist/index.json")
       .to_return(:status => 200, :body => nodejs_response, :headers => {})
   end
-
-  config.after(:suite) do
-    RSpec::Puppet::Coverage.report!
-  end
 end
-
-$:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'modules', 'stdlib', 'lib')
-
-require 'coveralls'
-Coveralls.wear!

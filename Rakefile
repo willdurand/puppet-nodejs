@@ -4,7 +4,9 @@ require 'puppet-syntax/tasks/puppet-syntax'
 require 'puppet_blacksmith/rake_tasks'
 require 'rubocop/rake_task'
 
-RuboCop::RakeTask.new
+RuboCop::RakeTask.new(:rubocop_local) do |t|
+  t.options = ['-c', '.rubocop.yml']
+end
 
 PuppetLint.configuration.log_format       = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = false
@@ -20,9 +22,15 @@ exclude_paths = [
 PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths            = exclude_paths
 
-desc "Run syntax, lint, and spec tests."
+desc "Run acceptance with beaker"
+RSpec::Core::RakeTask.new(:acceptance) do |t|
+  t.pattern = 'spec/acceptance'
+end
+
+desc "Run syntax, lint, spec and acceptance tests."
 task :test => [
-  :rubocop,
+  :metadata_lint,
+  :rubocop_local,
   :syntax,
   :lint,
   :spec,

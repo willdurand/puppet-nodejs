@@ -2,6 +2,28 @@
 
 This document lists the changes of all recent versions since `2.0.0`.
 
+## 2.1.0
+
+### Minor breaking changes
+
+* Dropped EOLed Puppet 3.x
+* Don't install dev dependencies (`ruby`) anymore with `build_deps => true`. It's only needed on
+  the Puppet Master and shouldn't be deployed onto each node.
+
+### Other notable changes
+
+* ([#185](https://github.com/willdurand/puppet-nodejs/issues/185)) Allow to specify a custom source
+  for NodeJS to override `nodejs.org/dist`.
+* Don't depend on `puppetlabs-gcc` anymore. It wasn't updated by PuppetLabs since 2015
+  and according to its metadata it doesn't support recent Puppet version which breaks the
+  `beaker` build.
+
+### Further changes
+
+* Deprecated `::nodejs::npm`. The feature was always out of scope and introduced several hacks
+  to support several edge-cases. Instead it's recommended to write a custom module suited
+  for your application when deploying dependencies into a given directory.
+
 ## 2.0.3
 
 * ([#184](https://github.com/willdurand/puppet-nodejs/issues/184)) Added support

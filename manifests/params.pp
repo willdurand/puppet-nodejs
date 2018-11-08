@@ -24,4 +24,6 @@ class nodejs::params {
   $instances_to_remove = []
   $download_timeout    = 0
   $build_deps          = true
+  $nodejs_default_path = '/usr/local/node/node-default'
+  $source              = undef
 }
