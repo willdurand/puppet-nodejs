@@ -84,7 +84,7 @@ The source can be specified like this:
 
 ``` puppet
 class { '::nodejs':
-  source => 'https://example.org/dist-nodejs',
+  source => 'https://example.org/node-11.0.0-linux-x86.tar.gz', # node-$version-$os-$arch
 }
 ```
 
@@ -92,7 +92,7 @@ It's also possible to compile the custom instance from source:
 
 ``` puppet
 class { '::nodejs':
-  source       => 'https://example.org/src-nodejs',
+  source       => 'https://example.org/node-11.0.0.tar.gz', # node-$version
   make_install => true,
 }
 ```
