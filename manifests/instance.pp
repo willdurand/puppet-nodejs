@@ -28,7 +28,6 @@
 #
 define nodejs::instance(
   Pattern[/^present|absent$/] $ensure,
-  Optional[String] $version = undef,
   String $target_dir,
   Boolean $make_install,
   Integer $cpu_cores,
@@ -36,6 +35,7 @@ define nodejs::instance(
   Integer $timeout,
   String $install_dir,
   Optional[String] $source = undef,
+  Optional[String] $version = undef,
 ) {
   if $caller_module_name != $module_name {
     warning('nodejs::instance is private!')
