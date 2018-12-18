@@ -35,7 +35,7 @@ describe 'nodejs::instance', :type => :define do
     }
 
     it { should contain_exec('nodejs-unpack-v4.4.7') \
-      .with_command('tar -xzvf node-v4.4.7.tar.gz -C /usr/local/node/node-v4.4.7 --strip-components=1') \
+      .with_command('tar xvf node-v4.4.7.tar.gz -C /usr/local/node/node-v4.4.7 --strip-components=1') \
       .with_cwd('/usr/local/node') \
       .with_unless('test -f /usr/local/node/node-v4.4.7/bin/node')
     }
@@ -90,7 +90,7 @@ describe 'nodejs::instance', :type => :define do
     }
 
     it { should contain_exec('nodejs-unpack-v6.0.0') \
-      .with_command('tar -xzvf node-v6.0.0.tar.gz -C /usr/local/node/node-v6.0.0 --strip-components=1') \
+      .with_command('tar xvf node-v6.0.0.tar.gz -C /usr/local/node/node-v6.0.0 --strip-components=1') \
       .with_cwd('/usr/local/node') \
       .with_unless('test -f /usr/local/node/node-v6.0.0/bin/node')
     }
@@ -251,7 +251,7 @@ describe 'nodejs::instance', :type => :define do
         :source               => 'https://example.org/dist-nodejs'
       }}
 
-      it { should contain_nodejs__instance__download('nodejs-download-v6.0.0') \
+      it { should contain_nodejs__instance__download('nodejs-download-dist-nodejs') \
         .with_source('https://example.org/dist-nodejs') \
       }
     end

@@ -84,18 +84,24 @@ The source can be specified like this:
 
 ``` puppet
 class { '::nodejs':
-  source => 'https://example.org/node-11.0.0-linux-x86.tar.gz', # node-$version-$os-$arch
+  source => 'https://example.org/your-custom-nodejs-binaries.tar.gz',
 }
 ```
 
-It's also possible to compile the custom instance from source:
+It's also possible to compile the custom instance from source which is helpful when e.g.
+deploying a patched NodeJS:
 
 ``` puppet
 class { '::nodejs':
-  source       => 'https://example.org/node-11.0.0.tar.gz', # node-$version
+  source       => 'https://example.org/node-11.0.0.tar.gz',
   make_install => true,
 }
 ```
+
+Please note that the source needs to be a compressed tarball, but it doesn't matter
+which format is in use (`.xz`,`.gz` etc). However additional packages such as `xz-utils` for Debian
+have to be installed manually if needed (e.g. when providing a custom source which is bundled
+as `.tar.xz`).
 
 ### Setup with a given download timeout
 

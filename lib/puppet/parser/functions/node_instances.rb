@@ -6,9 +6,14 @@ module Puppet::Parser::Functions
 
     install           = args[1]
     normalize         = args[0].map do |n, h|
-      evaluation_args = [install ? h['version'] : n]
-      actual_version  = function_evaluate_version(evaluation_args)
-      hash            = { 'version' => actual_version }
+      if h.is_a?(Hash) && h.key?('source') && !h['source'].empty?
+        hash           = {}
+        actual_version = h['source']
+      else
+        evaluation_args = [install ? h['version'] : n]
+        actual_version  = function_evaluate_version(evaluation_args)
+        hash            = { 'version' => actual_version }
+      end
 
       [
         install ? "nodejs-custom-instance-#{actual_version}" : "nodejs-uninstall-custom-#{actual_version}",

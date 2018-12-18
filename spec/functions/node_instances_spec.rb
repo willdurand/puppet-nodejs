@@ -27,4 +27,11 @@ describe 'node_instances' do
       "version" => "v6.8.0"
     }
   })}
+
+  it { should run.with_params(
+    { "node-instance" => { "source" => "https://my-repo.local/node.tar.gz" }},
+    true
+  ).and_return({ "nodejs-custom-instance-https://my-repo.local/node.tar.gz" => {
+    "source"  => "https://my-repo.local/node.tar.gz",
+  }})}
 end

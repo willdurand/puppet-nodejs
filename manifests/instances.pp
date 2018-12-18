@@ -69,7 +69,6 @@ class nodejs::instances(
       default_node_version => undef,
       timeout              => $download_timeout,
       install_dir          => $install_dir,
-      source               => $source,
     })
 
     if !defined(Nodejs::Instance["nodejs-custom-instance-${$node_version}"]) {
@@ -86,11 +85,15 @@ class nodejs::instances(
       default_node_version => $node_version,
       timeout              => $download_timeout,
       install_dir          => $install_dir,
-      source               => $source,
     })
   }
 
-  $nodejs_version_path = "/usr/local/node/node-${$node_version}"
+  if $source == undef {
+    $nodejs_version_path = "${install_dir}/node-${node_version}"
+  } else {
+    $filename            = source_filename($source)
+    $nodejs_version_path = "${install_dir}/node-${filename}"
+  }
 
   file { $nodejs_default_path:
     ensure  => link,

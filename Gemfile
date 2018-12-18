@@ -29,4 +29,5 @@ group :beaker do
   gem 'beaker-docker'
   gem 'beaker-puppet_install_helper'
   gem 'beaker-module_install_helper'
+  gem 'serverspec'
 end

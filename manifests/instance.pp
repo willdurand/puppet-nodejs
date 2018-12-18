@@ -28,7 +28,7 @@
 #
 define nodejs::instance(
   Pattern[/^present|absent$/] $ensure,
-  String $version,
+  Optional[String] $version = undef,
   String $target_dir,
   Boolean $make_install,
   Integer $cpu_cores,
@@ -41,7 +41,19 @@ define nodejs::instance(
     warning('nodejs::instance is private!')
   }
 
-  $node_unpack_folder = "${install_dir}/node-${version}"
+  # if called properly from nodejs::instance this won't happen, however directly calls are unsupported
+  if ($version == undef) and ($source == undef) {
+    fail("Unexpected state reached! Either \$source or \$version must not be undef!")
+  }
+
+  if $source != undef {
+    $source_filename = source_filename($source)
+    $node_version    = $source_filename # use custom file format as version infix for resource names
+  } else {
+    $node_version = $version
+  }
+
+  $node_unpack_folder = "${install_dir}/node-${node_version}"
 
   if $ensure == present {
     $node_os = $::kernel ? {
@@ -56,15 +68,19 @@ define nodejs::instance(
       default  => 'x86',
     }
 
-    $node_filename = $make_install ? {
-      true  => "node-${version}.tar.gz",
-      false => "node-${version}-${node_os}-${node_arch}.tar.gz"
+    if $source == undef {
+      $node_filename = $make_install ? {
+        true  => "node-${node_version}.tar.gz",
+        false => "node-${node_version}-${node_os}-${node_arch}.tar.gz"
+      }
+    } else {
+      $node_filename = $source_filename
     }
 
     $node_symlink_target = "${node_unpack_folder}/bin/node"
-    $node_symlink        = "${target_dir}/node-${version}"
+    $node_symlink        = "${target_dir}/node-${node_version}"
     $npm_instance        = "${node_unpack_folder}/bin/npm"
-    $npm_symlink         = "${target_dir}/npm-${version}"
+    $npm_symlink         = "${target_dir}/npm-${node_version}"
 
     ensure_resource('file', 'nodejs-install-dir', {
       ensure => 'directory',
@@ -75,24 +91,24 @@ define nodejs::instance(
     })
 
     $download_source = $source ? {
-      undef   => "https://nodejs.org/dist/${version}/${node_filename}",
+      undef   => "https://nodejs.org/dist/${node_version}/${node_filename}",
       default => $source,
     }
 
-    ::nodejs::instance::download { "nodejs-download-${version}":
+    ::nodejs::instance::download { "nodejs-download-${node_version}":
       source      => $download_source,
       destination => "${install_dir}/${node_filename}",
       require     => File['nodejs-install-dir'],
       timeout     => $timeout,
     }
 
-    file { "nodejs-check-tar-${version}":
+    file { "nodejs-check-tar-${node_version}":
       ensure  => 'file',
       path    => "${install_dir}/${node_filename}",
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      require => ::Nodejs::Instance::Download["nodejs-download-${version}"],
+      require => ::Nodejs::Instance::Download["nodejs-download-${node_version}"],
     }
 
     file { $node_unpack_folder:
@@ -103,26 +119,26 @@ define nodejs::instance(
       require => File['nodejs-install-dir'],
     }
 
-    exec { "nodejs-unpack-${version}":
-      command => "tar -xzvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
+    exec { "nodejs-unpack-${node_version}":
+      command => "tar xvf ${node_filename} -C ${node_unpack_folder} --strip-components=1",
       path    => $::path,
       cwd     => $install_dir,
       user    => 'root',
       unless  => "test -f ${node_symlink_target}",
       require => [
-        File["nodejs-check-tar-${version}"],
+        File["nodejs-check-tar-${node_version}"],
         File[$node_unpack_folder],
         Package['tar'],
       ],
     }
 
     if $make_install {
-      notify { "Starting to compile NodeJS version ${version}":
-        before  => Exec["nodejs-make-install-${version}"],
-        require => Exec["nodejs-unpack-${version}"],
+      notify { "Starting to compile NodeJS version ${node_version}":
+        before  => Exec["nodejs-make-install-${node_version}"],
+        require => Exec["nodejs-unpack-${node_version}"],
       }
 
-      exec { "nodejs-make-install-${version}":
+      exec { "nodejs-make-install-${node_version}":
         command => "./configure --prefix=${node_unpack_folder} && make -j ${cpu_cores} && make -j ${cpu_cores} install",
         path    => "${node_unpack_folder}:/usr/bin:/bin:/usr/sbin:/sbin",
         cwd     => $node_unpack_folder,
@@ -130,39 +146,39 @@ define nodejs::instance(
         unless  => "test -f ${node_symlink_target}",
         timeout => 0,
         require => [
-          Exec["nodejs-unpack-${version}"],
+          Exec["nodejs-unpack-${node_version}"],
           Class['::nodejs::instance::pkgs'],
         ],
-        before  => File["nodejs-symlink-bin-with-version-${version}"],
+        before  => File["nodejs-symlink-bin-with-version-${node_version}"],
       }
     }
 
     $node_prefix = $target_dir
-    file { "nodejs-npmrc-etc-dir-${version}":
+    file { "nodejs-npmrc-etc-dir-${node_version}":
       ensure => directory,
       path   =>  "${node_unpack_folder}/etc",
     } ->
-    file { "nodejs-npmrc-${version}":
+    file { "nodejs-npmrc-${node_version}":
       ensure  => present,
       path    => "${node_unpack_folder}/etc/npmrc",
       content => template("${module_name}/npmrc")
     }
 
-    file { "nodejs-symlink-bin-with-version-${version}":
+    file { "nodejs-symlink-bin-with-version-${node_version}":
       ensure => 'link',
       path   => $node_symlink,
       target => $node_symlink_target,
     }
 
-    file { "npm-symlink-bin-with-version-${version}":
+    file { "npm-symlink-bin-with-version-${node_version}":
       ensure  => file,
       mode    => '0755',
       path    => $npm_symlink,
       content => template("${module_name}/npm.sh.erb"),
-      require => [File["nodejs-symlink-bin-with-version-${version}"]],
+      require => [File["nodejs-symlink-bin-with-version-${node_version}"]],
     }
   } else {
-    if $default_node_version == $version {
+    if $default_node_version == $node_version {
       fail('Can\'t remove the instance which is the default instance defined in the ::nodejs class!')
     }
 
@@ -171,10 +187,10 @@ define nodejs::instance(
       force   => true,
       recurse => true,
     } ->
-    file { "${target_dir}/node-${version}":
+    file { "${target_dir}/node-${node_version}":
       ensure => absent,
     } ->
-    file { "${target_dir}/npm-${version}":
+    file { "${target_dir}/npm-${node_version}":
       ensure => absent,
     }
   }
