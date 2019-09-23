@@ -4,6 +4,7 @@ spec/fixtures/
 
 # Puppet
 pkg/
+bin/
 
 # Bundler
 Gemfile.lock

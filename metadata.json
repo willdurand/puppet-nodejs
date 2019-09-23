@@ -1,7 +1,7 @@
 {
   "name": "willdurand-nodejs",
   "version": "2.1.0",
-  "author": "William Durand",
+  "author": "willdurand",
   "license": "MIT",
   "summary": "A module to install Node.js and NPM.",
   "source": "https://github.com/willdurand/puppet-nodejs",
