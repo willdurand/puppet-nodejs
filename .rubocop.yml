@@ -49,3 +49,9 @@ Style/RedundantBegin:
 
 Style/InverseMethods:
   Enabled: False
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
