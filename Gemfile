@@ -20,6 +20,8 @@ group :devel do
   gem 'rubocop'
 
   gem 'metadata-json-lint'
+
+  gem 'pdk', '~> 1.13'
 end
 
 group :beaker do
