@@ -80,7 +80,7 @@ Puppet::Type.type(:package).provide :npm, :parent => Puppet::Provider::Package d
 
   def uninstall
     options = ['--global']
-    options += join_options(resource[:uninstall_options]) if resources[:uninstall_options]
+    options += join_options(resource[:uninstall_options]) if resource[:uninstall_options]
     npm('uninstall', *options, resource[:name])
   end
 end
