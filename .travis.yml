@@ -19,3 +19,7 @@ script: "rake $TARGET"
 sudo: false
 
 services: docker
+
+jobs:
+  allow_failures:
+    - env: TARGET=acceptance RUBY_VERSION="2.5.1" BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml

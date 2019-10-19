@@ -21,7 +21,7 @@ group :devel do
 
   gem 'metadata-json-lint'
 
-  gem 'pdk', '~> 1.13'
+  gem 'pdk', git: 'https://github.com/puppetlabs/pdk', ref: '97e28b28b57f6a77aec0788fa3858bf624ce57f8'
 end
 
 group :beaker do

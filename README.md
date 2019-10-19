@@ -11,13 +11,15 @@ This module allows you to install [Node.js](https://nodejs.org/) and
 [willdurand/nodejs](https://forge.puppetlabs.com/willdurand/nodejs).
 
 ### Announcements
-* From now on `2.0` is maintenance-only and accepts bugfixes until `2.2` is released. On `master`
-  the active development on `2.1` is currently happening. The docs of `2.0` can be found
-  [here](https://github.com/willdurand/puppet-nodejs/tree/2.0#puppet-nodejs)
 
-* The `1.9` branch accepts patches to fix issues due to several compatibility breaks with `2.0`,
-  however **NO** active development will occur on `1.9` anymore.
-  The docs can be reviewed on the [1.9 branch](https://github.com/willdurand/puppet-nodejs/tree/1.9).
+* The latest release is [2.1](https://github.com/willdurand/puppet-nodejs/releases/tag/2.1.0).
+
+* On `master` development is happening for `2.2`.
+
+* Legacy [1.9](https://github.com/willdurand/puppet-nodejs/tree/1.9) is still maintained, but won't
+  receive any new features.
+
+* For further information, please look at the [Support](#support) chapter.
 
 ## Installation
 
@@ -319,6 +321,20 @@ PUPPET_INSTALL_TYPE=agent BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x6
 * Johannes Graf ([@grafjo](https://github.com/grafjo))
 * Maximilian Bosch ([@Ma27](https://github.com/Ma27))
 
+## Support
+
+There are currently two main branches available, namely the `1.9` branch and `2.x`. The
+support lifecycle is planned like this:
+
+* There's currently no plan to completely drop `1.9`. If there's demand for simple bugfixes
+  or security-related problems, patches will be accepted and released, however there won't be any
+  active feature development.
+
+* Each release of `2.x` is supported until the next after the next release is published. So e.g.
+  `2.0` is supported until `2.2` is published. Each release has its own branch where bugfixes
+  can be backported, on `master` the next minor or major release is developed.
+
+* There's currently no plan for a next major release.
 
 ## License
 

@@ -2,6 +2,12 @@
 
 This document lists the changes of all recent versions since `2.0.0`.
 
+## 2.1.1
+
+### Bugfixes
+
+* Fixed issue in `npm` package provider: [#191](https://github.com/willdurand/puppet-nodejs/pull/191)
+
 ## 2.1.0
 
 ### Minor breaking changes
