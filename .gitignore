@@ -14,3 +14,6 @@ Gemfile.lock
 # Beaker
 log/
 junit/
+
+# Direnv
+.direnv/
