@@ -58,7 +58,7 @@ class nodejs(
   Optional[String] $source           = $::nodejs::params::source,
 ) inherits ::nodejs::params  {
   $node_version = $source ? {
-    undef   => evaluate_version($version),
+    undef   => ::nodejs::evaluate_version($version),
     default => $source,
   }
 

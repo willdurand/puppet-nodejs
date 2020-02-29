@@ -47,7 +47,7 @@ define nodejs::instance(
   }
 
   if $source != undef {
-    $source_filename = source_filename($source)
+    $source_filename = ::nodejs::source_filename($source)
     $node_version    = $source_filename # use custom file format as version infix for resource names
   } else {
     $node_version = $version

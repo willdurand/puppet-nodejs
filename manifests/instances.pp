@@ -61,7 +61,7 @@ class nodejs::instances(
       source               => $source,
     }
   } else {
-    create_resources('::nodejs::instance', node_instances($instances, true), {
+    create_resources('::nodejs::instance', ::nodejs::node_instances($instances, true), {
       ensure               => present,
       target_dir           => $target_dir,
       make_install         => $make_install,
@@ -77,7 +77,7 @@ class nodejs::instances(
   }
 
   if count($instances_to_remove) > 0 {
-    create_resources('::nodejs::instance', node_instances($instances_to_remove, false), {
+    create_resources('::nodejs::instance', ::nodejs::node_instances($instances_to_remove, false), {
       ensure               => absent,
       make_install         => false,
       cpu_cores            => 0,
@@ -91,7 +91,7 @@ class nodejs::instances(
   if $source == undef {
     $nodejs_version_path = "${install_dir}/node-${node_version}"
   } else {
-    $filename            = source_filename($source)
+    $filename            = ::nodejs::source_filename($source)
     $nodejs_version_path = "${install_dir}/node-${filename}"
   }
 

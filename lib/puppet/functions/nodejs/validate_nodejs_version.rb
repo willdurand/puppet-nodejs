@@ -27,13 +27,10 @@ Puppet::Functions.create_function(:'nodejs::validate_nodejs_version') do
     repeated_param 'Any', :args
   end
 
-
   def default_impl(*args)
-    
     version = SemVer.new(args[0])
     if version < SemVer.new('v0.12.0')
       raise Puppet::ParseError, 'All NodeJS versions below `v0.12.0` are not supported!'
     end
-  
   end
 end

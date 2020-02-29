@@ -26,9 +26,7 @@ Puppet::Functions.create_function(:'nodejs::node_instances') do
     repeated_param 'Any', :args
   end
 
-
   def default_impl(*args)
-    
     raise(Puppet::ParseError, 'node_instances(): too few arguments') if args.empty?
 
     Puppet::Parser::Functions.function(:evaluate_version)
@@ -39,8 +37,7 @@ Puppet::Functions.create_function(:'nodejs::node_instances') do
         hash           = {}
         actual_version = h['source']
       else
-        evaluation_args = [install ? h['version'] : n]
-        actual_version  = function_evaluate_version(evaluation_args)
+        actual_version  = call_function('::nodejs::evaluate_version', install ? h['version'] : n)
         hash            = { 'version' => actual_version }
       end
 
@@ -51,6 +48,5 @@ Puppet::Functions.create_function(:'nodejs::node_instances') do
     end
 
     normalize.to_h
-  
   end
 end

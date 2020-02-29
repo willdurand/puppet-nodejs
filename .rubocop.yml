@@ -55,3 +55,12 @@ Style/FrozenStringLiteralComment:
 
 Style/NumericPredicate:
   Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false

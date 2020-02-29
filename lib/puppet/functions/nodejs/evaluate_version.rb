@@ -27,9 +27,7 @@ Puppet::Functions.create_function(:'nodejs::evaluate_version') do
     repeated_param 'Any', :args
   end
 
-
   def default_impl(*args)
-    
     raise(Puppet::ParseError, 'evaluate_version(): too few arguments') if args.empty?
 
     version = args[0]
@@ -45,9 +43,9 @@ Puppet::Functions.create_function(:'nodejs::evaluate_version') do
       return version
     end
 
+    warn get_version_from_branch
     return get_version_from_branch version if version =~ /^(?:(v)?)[0-9]+\.([0-9]+|x)$/
 
     raise Puppet::ParseError, 'evaluate_version(): version must be `lts`, `latest` or look like `x.x.x`'
-  
   end
 end
