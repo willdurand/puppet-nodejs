@@ -4,8 +4,6 @@ Puppet::Functions.create_function(:'nodejs::validate_nodejs_version') do
   end
 
   def default_impl(*args)
-    if args[0].start_with?('v0')
-      raise Puppet::ParseError, 'All NodeJS versions below `v0.12.0` are not supported!'
-    end
+    raise Puppet::ParseError, 'All NodeJS 0.x-versions are not supported!' if args[0] =~ /^v?0/
   end
 end
