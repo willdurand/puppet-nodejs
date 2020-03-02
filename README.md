@@ -36,11 +36,6 @@ mod 'willdurand/nodejs', '2.0.3'
 mod 'puppetlabs/stdlib', '5.1.0'
 ```
 
-The Puppet Master which evaluates the catalogue before deploying each node requires
-the following modules to properly evaluate the functions bundled with this module:
-
-* [semver](https://rubygems.org/gems/semver/versions/1.0.1)
-
 ## Usage
 
 ### Deploying a precompiled package
