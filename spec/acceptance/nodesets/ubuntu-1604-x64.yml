@@ -1,8 +1,17 @@
 HOSTS:
-  ubuntu-16.04:
+  ubuntu-18.04:
     roles: [master]
     hypervisor: docker
-    platform: ubuntu-16.04-amd64
-    image: ubuntu:16.04
+    platform: ubuntu-18.04-amd64
+    image: ubuntu:18.04
+    dockeropts:
+      HostConfig:
+        PublishAllPorts: true
+        Privileged: false
+        RestartPolicy:
+          Name: always
+        PortBindings:
+          "22/tcp":
+            - { HostIp: '0.0.0.0', HostPort: '2223' }
 CONFIG:
   type: foss
