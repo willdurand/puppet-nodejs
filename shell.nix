@@ -8,7 +8,7 @@ mkShell {
 
   shellHook = ''
     export PUPPET_INSTALL_TYPE=agent
-    export BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml
+    export BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1804-x64.yml
     export BEAKER_PUPPET_COLLECTION=puppet6
   '';
 }

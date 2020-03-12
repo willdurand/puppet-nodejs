@@ -304,7 +304,7 @@ The easiest way to get started is using [`bundler`](https://bundler.io):
 ```
 bundle install
 bundle exec rake test
-PUPPET_INSTALL_TYPE=agent BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml bundle exec rake acceptance
+PUPPET_INSTALL_TYPE=agent BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1804-x64.yml bundle exec rake acceptance
 ```
 
 **Note:** to run the acceptance tests that are part of rake's `test` target,

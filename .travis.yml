@@ -6,7 +6,7 @@ env:
   - PUPPET_VERSION="~> 4.3.0" RUBY_VERSION="2.6.0" TARGET=test
   - PUPPET_VERSION="~> 5.5.16" RUBY_VERSION="2.6.0" TARGET=test
   - PUPPET_VERSION="~> 6.13.0" RUBY_VERSION="2.6.0" TARGET=test
-  - TARGET=acceptance RUBY_VERSION="2.5.1" BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml BEAKER_PUPPET_COLLECTION=puppet6
+  - TARGET=acceptance RUBY_VERSION="2.5.1" BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1804-x64.yml BEAKER_PUPPET_COLLECTION=puppet6
 
 before_install:
   - gem update bundler
@@ -19,7 +19,3 @@ script: "rake $TARGET"
 sudo: false
 
 services: docker
-
-jobs:
-  allow_failures:
-    - env: TARGET=acceptance RUBY_VERSION="2.5.1" BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1604-x64.yml BEAKER_PUPPET_COLLECTION=puppet6
