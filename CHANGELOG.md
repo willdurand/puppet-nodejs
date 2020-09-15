@@ -2,6 +2,12 @@
 
 This document lists the changes of all recent versions since `2.0.0`.
 
+## 2.1.2
+
+### Bugfixes
+
+* Allow `puppetlabs-stdlib@6.x`.
+
 ## 2.1.1
 
 ### Bugfixes
