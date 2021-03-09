@@ -18,4 +18,6 @@ script: "rake $TARGET"
 
 sudo: false
 
+cache: bundler
+
 services: docker
