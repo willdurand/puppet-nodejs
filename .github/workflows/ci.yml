@@ -17,3 +17,5 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rake test
+      - name: Acceptance test
+        run: BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1804-x64.yml BEAKER_PUPPET_COLLECTION=puppet6 bundle exec rake acceptance
