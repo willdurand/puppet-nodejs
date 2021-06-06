@@ -21,8 +21,5 @@ describe 'nodejs::instance::pkgs', :type => :class do
 
     it { should contain_package('wget') }
     it { should contain_package('tar') }
-
-    it { should contain_package('make') }
-    it { should contain_package('gcc') }
   end
 end
