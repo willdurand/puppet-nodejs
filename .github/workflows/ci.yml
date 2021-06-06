@@ -19,3 +19,4 @@ jobs:
         run: bundle exec rake test
       - name: Acceptance test
         run: BEAKER_setfile=spec/acceptance/nodesets/ubuntu-1804-x64.yml BEAKER_PUPPET_COLLECTION=puppet6 bundle exec rake acceptance
+        if: ${{ matrix.puppet == '6.22.1' }}
