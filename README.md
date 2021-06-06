@@ -1,7 +1,7 @@
 puppet-nodejs
 =============
 
-[![BuildStatus](https://travis-ci.org/willdurand/puppet-nodejs.png?branch=master)](https://travis-ci.org/willdurand/puppet-nodejs)
+[![Build Status](https://github.com/willdurand/puppet-nodejs/actions/workflows/ci.yml/badge.svg)](https://github.com/willdurand/puppet-nodejs/actions)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/willdurand/nodejs.svg)](https://forge.puppetlabs.com/willdurand/nodejs)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/willdurand/nodejs.svg)](https://forge.puppetlabs.com/willdurand/nodejs)
 [![Coverage Status](https://coveralls.io/repos/github/willdurand/puppet-nodejs/badge.svg)](https://coveralls.io/github/willdurand/puppet-nodejs)
