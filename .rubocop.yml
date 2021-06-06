@@ -64,3 +64,12 @@ Metrics/CyclomaticComplexity:
 
 Style/GuardClause:
   Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: false
+
+Style/RedundantRegexpEscape:
+  Enabled: false
