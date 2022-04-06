@@ -42,7 +42,7 @@ def get_version_list
 
   http_proxy = ENV['http_proxy']
   if http_proxy.to_s != ''
-    if http_proxy =~ %r{/^http[s]{0,1}:\/\/.*/}
+    if http_proxy =~ /^http[s]{0,1}:\/\/.*/
       proxy = URI.parse(http_proxy)
     else
       proxy = URI.parse('http://' + http_proxy)
